@@ -9,8 +9,8 @@ define( 'PAGE_IMAGES_INSTALLED', true );
 $dir = dirname( __FILE__ );
 $wgAutoloadClasses['PageImages'] = "$dir/PageImages.body.php";
 
-$wgHooks['ParserMakeImageParams'][] = 'PageImages::registerImage';
-$wgHooks['LinksUpdate'][] = 'PageImages::getProperties';
+$wgHooks['ParserMakeImageParams'][] = 'PageImages::onParserMakeImageParams';
+$wgHooks['LinksUpdate'][] = 'PageImages::onLinksUpdate';
 
 $wgPageImagesScores = array(
 	'extension' => array(

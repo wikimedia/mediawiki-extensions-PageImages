@@ -2,14 +2,15 @@
 
 class PageImages {
 	/**
-	 *
+	 * ParserMakeImageParams hook handler, saes extended information about images used on page
+	 * @see https://www.mediawiki.org/wiki/Manual:Hooks/ParserMakeImageParams
 	 * @param Title $title
 	 * @param File|bool $file
 	 * @param array $params
 	 * @param Parser $parser
 	 * @return bool 
 	 */
-	public static function registerImage( Title $title, $file, array &$params, Parser $parser ) {
+	public static function onParserMakeImageParams( Title $title, $file, array &$params, Parser $parser ) {
 		if ( !$file ) {
 			return true;
 		}
@@ -30,7 +31,13 @@ class PageImages {
 		return true;
 	}
 
-	public static function getProperties( LinksUpdate $lu ) {
+	/**
+	 * LinksUpdate hook handler, sets at most 2 page properties depending on images on page
+	 * @see https://www.mediawiki.org/wiki/Manual:Hooks/LinksUpdate
+	 * @param LinksUpdate $lu
+	 * @return bool
+	 */
+	public static function onLinksUpdate( LinksUpdate $lu ) {
 		if ( !isset( $lu->getParserOutput()->pageImages ) ) {
 			return true;
 		}
@@ -75,6 +82,13 @@ class PageImages {
 		return true;
 	}
 
+	/**
+	 * Returns score for image, the more the better, if it is less than zero,
+	 * the image shouldn't be used for anything
+	 * @param array $image: Associative array describing an image
+	 * @param int $position: Image order on page
+	 * @return int
+	 */
 	private static function getScore( array $image, $position ) {
 		global $wgPageImagesScores;
 
