@@ -81,6 +81,16 @@ class ApiQueryPageImages extends ApiQueryBase {
 		);
 	}
 
+	public function getParamDescription() {
+		return array(
+			'prop' => array( 'What information to return',
+				' thumbnail - URL and dimensions of image associated with page, if any',
+				' hasphotos - whether this page contains photos'
+			),
+			'thumbsize' => 'Width of thumbnail image',
+		);
+	}
+
 	public function getVersion() {
 		return '$Id$';
 	}
