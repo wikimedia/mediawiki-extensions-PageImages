@@ -1,7 +1,18 @@
 <?php
 
 class PageImages {
-	public static function registerImage( Title $title, File $file, array &$params, Parser $parser ) {
+	/**
+	 *
+	 * @param Title $title
+	 * @param File|bool $file
+	 * @param array $params
+	 * @param Parser $parser
+	 * @return bool 
+	 */
+	public static function registerImage( Title $title, $file, array &$params, Parser $parser ) {
+		if ( !$file ) {
+			return true;
+		}
 		$out = $parser->getOutput();
 		if ( !isset( $out->pageImages ) ) {
 			$out->pageImages = array();
@@ -47,7 +58,7 @@ class PageImages {
 			},
 			$jpegs
 		);
-		arsort( $jpegScores );
+		rsort( $jpegScores );
 		if ( count( $jpegScores ) && $jpegScores[0] >= 0 ) {
 			$lu->mProperties['has_photos'] = 1;
 		}
