@@ -27,13 +27,18 @@ class ApiQueryPageImages extends ApiQueryBase {
 		}
 		$this->addWhere( array( 'pp_page' => array_keys( $titles ), 'pp_propname' => $propNames ) );
 		$this->addOption( 'ORDER BY', 'pp_page' );
+
 		$res = $this->select( __METHOD__ );
+		$lastId = 0;
+		$vals = array();
 		foreach ( $res as $row ) {
-			$vals = array();
+			if ( $lastId && $lastId != $row->pp_page && !$this->addData( $lastId, $vals ) ) {
+				break;
+			}
+			$lastId = $row->pp_page;
 			if ( $row->pp_propname == 'has_photos' ) {
 				$vals['hasphotos'] = '';
 			} elseif ( $row->pp_propname == 'page_image' ) {
-				//$title = Title::makeTitle( NS_FILE,  );
 				$file = wfFindFile( $row->pp_value );
 				if ( $file ) {
 					$thumb = $file->transform( array( 'width' => $size, 'height' => $size ) );
@@ -46,10 +51,20 @@ class ApiQueryPageImages extends ApiQueryBase {
 					}
 				}
 			}
-			if ( count( $vals ) ) {
-				$this->addPageSubItem( $row->pp_page, $vals );
-			}
 		}
+		$this->addData( $lastId, $vals );
+	}
+
+	private function addData( $pageId, array &$data ) {
+		$fit = true;
+		if ( count( $data ) ) {
+			$fit = $this->getResult()->addValue( array( 'query', 'pages' ), $pageId, $data );
+			$data = array();
+		}
+		if ( !$fit ) {
+			$this->setContinueEnumParameter( 'continue', $pageId );
+		}
+		return $fit;
 	}
 
 	public function getAllowedParams() {
