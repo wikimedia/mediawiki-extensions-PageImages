@@ -7,10 +7,13 @@ if ( !defined( 'MEDIAWIKI' ) ) {
 define( 'PAGE_IMAGES_INSTALLED', true );
 
 $dir = dirname( __FILE__ );
+$wgAutoloadClasses['ApiQueryPageImages'] = "$dir/ApiQueryPageImages.php";
 $wgAutoloadClasses['PageImages'] = "$dir/PageImages.body.php";
 
 $wgHooks['ParserMakeImageParams'][] = 'PageImages::onParserMakeImageParams';
 $wgHooks['LinksUpdate'][] = 'PageImages::onLinksUpdate';
+
+$wgAPIPropModules['pageimages'] = 'ApiQueryPageImages';
 
 $wgPageImagesScores = array(
 	'extension' => array(
