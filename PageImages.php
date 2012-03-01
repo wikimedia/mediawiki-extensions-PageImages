@@ -4,7 +4,13 @@ if ( !defined( 'MEDIAWIKI' ) ) {
 	die;
 }
 
-define( 'PAGE_IMAGES_INSTALLED', true );
+$wgExtensionCredits['other'][] = array(
+	'path'           => __FILE__,
+	'name'           => 'PageImages',
+	'descriptionmsg' => 'pageimages-desc',
+	'author'         => 'Max Semenik',
+	'url'            => 'https://www.mediawiki.org/wiki/Extension:PageImages'
+);
 
 $dir = dirname( __FILE__ );
 $wgAutoloadClasses['ApiQueryPageImages'] = "$dir/ApiQueryPageImages.php";
