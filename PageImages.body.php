@@ -8,7 +8,7 @@ class PageImages {
 	 * @param File|bool $file
 	 * @param array $params
 	 * @param Parser $parser
-	 * @return bool 
+	 * @return bool
 	 */
 	public static function onParserMakeImageParams( Title $title, $file, array &$params, Parser $parser ) {
 		if ( !$file ) {
@@ -80,7 +80,7 @@ class PageImages {
 		if ( $image ) {
 			$lu->mProperties['page_image'] = $image;
 		}
-		
+
 		return true;
 	}
 
