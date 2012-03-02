@@ -4,7 +4,7 @@ if ( !defined( 'MEDIAWIKI' ) ) {
 	die;
 }
 
-$wgExtensionCredits['other'][] = array(
+$wgExtensionCredits['api'][] = array(
 	'path'           => __FILE__,
 	'name'           => 'PageImages',
 	'descriptionmsg' => 'pageimages-desc',
@@ -35,3 +35,24 @@ $wgPageImagesScores = array(
 		500 => 5, // Larger images are panoramas, less suitable
 	),
 );
+
+$wgPageImagesBlacklist = array(
+	array(
+		'type' => 'db',
+		'page' => 'MediaWiki:Pageimages-blackist',
+		'db' => false, // current wiki
+	),
+	/*
+	array(
+		'type' => 'db',
+		'page' => 'MediaWiki:Pageimages-blackist',
+		'db' => 'commonswiki',
+	),
+	array(
+		'type' => 'url',
+		'url' => 'http://example.com/w/index.php?title=somepage&action=raw',
+	),
+	 */
+);
+
+$wgPageImagesBlacklistExpiry = 60 * 15;

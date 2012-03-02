@@ -26,7 +26,7 @@ class PageImages {
 				$myParams['handler']['width'] = 250;
 			}
 		}
-		$myParams['file'] = $title->getDBkey();
+		$myParams['filename'] = $title->getDBkey();
 		$out->pageImages[] = $myParams;
 		return true;
 	}
@@ -41,12 +41,14 @@ class PageImages {
 		if ( !isset( $lu->getParserOutput()->pageImages ) ) {
 			return true;
 		}
+		//wfDebugDieBacktrace();
+		//var_dump($lu->getParserOutput()->pageImages);die;
 		$images = $lu->getParserOutput()->pageImages;
 		$scores = array();
 		$imagesByExtension = array( 'jpg' => array(), 'jpeg' => array() );
 		$counter = 0;
 		foreach ( $images as $image ) {
-			$fileName = $image['file'];
+			$fileName = $image['filename'];
 			$extension = strtolower( substr( $fileName, strrpos( $fileName, '.' ) + 1 ) );
 			$image['extension'] = $extension;
 			if ( !isset( $imagesByExtension[$extension][$fileName] ) ) {
@@ -105,6 +107,102 @@ class PageImages {
 		if ( isset( $wgPageImagesScores['position'][$position] ) ) {
 			$score += $wgPageImagesScores['position'][$position];
 		}
+		$blacklist = self::getBlacklist();
+		if ( isset( $blacklist[$image['filename']] ) ) {
+			$score -= 100;
+		}
 		return $score;
+	}
+
+	/**
+	 * Returns a list of images blacklisted from influencing this extension's output
+	 * @return array: Flipped associative array in format "image BDB key" => int
+	 */
+	private static function getBlacklist() {
+		global $wgPageImagesBlacklist, $wgPageImagesBlacklistExpiry, $wgMemc;
+		static $list = false;
+		if ( $list !== false ) {
+			return $list;
+		}
+		wfProfileIn( __METHOD__ );
+		$key = wfMemcKey( 'pageimages', 'blacklist' );
+		$list = $wgMemc->get( $key );
+		if ( $list !== false ) {
+			wfProfileOut( __METHOD__ );
+			return $list;
+		}
+		wfDebug( __METHOD__ . "(): cache miss\n" );
+		$list = array();
+		foreach ( $wgPageImagesBlacklist as $source ) {
+			switch ( $source['type'] ) {
+				case 'db':
+					$list = array_merge( $list, self::getDbBlacklist( $source['db'], $source['page'] ) );
+					break;
+				case 'url':
+					$list = array_merge( $list, self::getUrlBlacklist( $source['url'] ) );
+					break;
+				default:
+					throw new MWException( __METHOD__ . "(): unrecognized image blacklist type '{$source['type']}'" );
+			}
+		}
+		$list = array_flip( $list );
+		$wgMemc->set( $key, $list, $wgPageImagesBlacklistExpiry );
+		wfProfileOut( __METHOD__ );
+		return $list;
+	}
+
+	/**
+	 * Returns list of images linked by the given blacklist page
+	 * @param string|int $dbName: Database name or false for current database
+	 * @param string $page
+	 * @return array
+	 */
+	private static function getDbBlacklist( $dbName, $page ) {
+		wfProfileIn( __METHOD__ );
+		$dbr = wfGetDB( DB_SLAVE, array(), $dbName );
+		$title = Title::newFromText( $page );
+		$list = array();
+		$id = $dbr->selectField( 'page',
+			'page_id',
+			array( 'page_namespace' => $title->getNamespace(), 'page_title' => $title->getDBkey() ),
+			__METHOD__
+		);
+		if ( $id ) {
+			$res = $dbr->select( 'pagelinks',
+				'pl_title',
+				array( 'pl_from' => $id, 'pl_namespace' => NS_FILE ),
+				__METHOD__
+			);
+			foreach ( $res as $row ) {
+				$list[] = $row->pl_title;
+			}
+		}
+		wfProfileOut( __METHOD__ );
+		return $list;
+	}
+
+	/**
+	 * Returns list of images on given remote blacklist page.
+	 * Not quite 100% bulletproof due to localised namespaces and so on.
+	 * Though if you beat people if they add bad entries to the list... :)
+	 * @param string $url
+	 * @return array
+	 */
+	private static function getUrlBlacklist( $url ) {
+		global $wgFileExtensions;
+		wfProfileIn( __METHOD__ );
+		$list = array();
+		$text = Http::get( $url, 3 );
+		$regex = '/\[\[:([^|\#]*?\.(?:' . implode( '|', $wgFileExtensions ) . '))/i';
+		if ( $text && preg_match_all( $regex, $text, $matches ) ) {
+			foreach ( $matches[1] as $s ) {
+				$t = Title::makeTitleSafe( NS_FILE, $s );
+				if ( $t ) {
+					$list[] = $t->getDBkey();
+				}
+			}
+		}
+		wfProfileOut( __METHOD__ );
+		return $list;
 	}
 }
