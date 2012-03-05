@@ -16,6 +16,8 @@ $dir = dirname( __FILE__ );
 $wgAutoloadClasses['ApiQueryPageImages'] = "$dir/ApiQueryPageImages.php";
 $wgAutoloadClasses['PageImages'] = "$dir/PageImages.body.php";
 
+$wgExtensionMessagesFiles['PageImages'] = "$dir/PageImages.i18n.php";
+
 $wgHooks['ParserMakeImageParams'][] = 'PageImages::onParserMakeImageParams';
 $wgHooks['LinksUpdate'][] = 'PageImages::onLinksUpdate';
 
