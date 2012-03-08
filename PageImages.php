@@ -20,6 +20,7 @@ $wgExtensionMessagesFiles['PageImages'] = "$dir/PageImages.i18n.php";
 
 $wgHooks['ParserMakeImageParams'][] = 'PageImages::onParserMakeImageParams';
 $wgHooks['LinksUpdate'][] = 'PageImages::onLinksUpdate';
+$wgHooks['OpenSearchXml'][] = 'PageImages::onOpenSearchXml';
 
 $wgAPIPropModules['pageimages'] = 'ApiQueryPageImages';
 
@@ -57,4 +58,12 @@ $wgPageImagesBlacklist = array(
 	 */
 );
 
+/**
+ * How long blacklist cache lives
+ */
 $wgPageImagesBlacklistExpiry = 60 * 15;
+
+/**
+ * Whether this extension's image information should be used by OpenSearchXml
+ */
+$wgPageImagesExpandOpenSearchXml = false;

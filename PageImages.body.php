@@ -84,6 +84,32 @@ class PageImages {
 		return true;
 	}
 
+	public static function onOpenSearchXml( &$results ) {
+		global $wgPageImagesExpandOpenSearchXml;
+		if ( !$wgPageImagesExpandOpenSearchXml || !count( $results ) ) {
+			return true;
+		}
+		$pageIds = array_keys( $results );
+		$api = new ApiMain(
+			new FauxRequest( array(
+				'action' => 'query',
+				'prop' => 'pageimages',
+				'piprop' => 'thumbnail',
+				'pageids' => implode( '|', $pageIds ),
+			) )
+		);
+		$api->execute();
+		$data = $api->getResultData();
+		foreach ( $pageIds as $id ) {
+			if ( isset( $data['query']['pages'][$id]['thumb'] ) ) {
+				$results[$id]['image'] = $data['query']['pages'][$id]['thumb'];
+			} else {
+				$results[$id]['image'] = null;
+			}
+		}
+		return true;
+	}
+
 	/**
 	 * Returns score for image, the more the better, if it is less than zero,
 	 * the image shouldn't be used for anything

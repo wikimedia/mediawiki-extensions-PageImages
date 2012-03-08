@@ -59,7 +59,7 @@ class ApiQueryPageImages extends ApiQueryBase {
 					$thumb = $file->transform( array( 'width' => $size, 'height' => $size ) );
 					if ( $thumb ) {
 						$vals['thumb'] = array(
-							'src' => wfExpandUrl( $thumb->getUrl(), PROTO_CURRENT ),
+							'source' => wfExpandUrl( $thumb->getUrl(), PROTO_CURRENT ),
 							'width' => $thumb->getWidth(),
 							'height' => $thumb->getHeight(),
 						);
