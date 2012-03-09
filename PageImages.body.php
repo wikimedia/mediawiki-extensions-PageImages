@@ -96,6 +96,7 @@ class PageImages {
 				'prop' => 'pageimages',
 				'piprop' => 'thumbnail',
 				'pageids' => implode( '|', $pageIds ),
+				'pilimit' => count( $results ),
 			) )
 		);
 		$api->execute();
