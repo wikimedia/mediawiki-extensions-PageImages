@@ -4,6 +4,8 @@ if ( !defined( 'MEDIAWIKI' ) ) {
 	die;
 }
 
+define( 'PAGE_IMAGES_INSTALLED', true );
+
 $wgExtensionCredits['api'][] = array(
 	'path'           => __FILE__,
 	'name'           => 'PageImages',
