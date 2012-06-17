@@ -12,6 +12,13 @@ $messages['qqq'] = array(
 	'pageimages-desc' => '{{desc}}',
 );
 
+/** Belarusian (Taraškievica orthography) (‪Беларуская (тарашкевіца)‬)
+ * @author Wizardist
+ */
+$messages['be-tarask'] = array(
+	'pageimages-desc' => 'Зьбірае зьвесткі пра выявы, выкарыстаныя на старонцы',
+);
+
 /** German (Deutsch)
  * @author Kghbln
  */
@@ -24,6 +31,13 @@ $messages['de'] = array(
  */
 $messages['dsb'] = array(
 	'pageimages-desc' => 'Zběra informacije wó wobrazach, kótarež su na boku',
+);
+
+/** French (français)
+ * @author DavidL
+ */
+$messages['fr'] = array(
+	'pageimages-desc' => 'Recueille des informations sur les images utilisées sur les pages',
 );
 
 /** Galician (Galego)
