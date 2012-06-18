@@ -61,11 +61,25 @@ $messages['it'] = array(
 	'pageimages-desc' => 'Raccoglie informazioni sulle immagini utilizzate nella pagina',
 );
 
+/** Colognian (Ripoarisch)
+ * @author Purodha
+ */
+$messages['ksh'] = array(
+	'pageimages-desc' => 'Deiht Aanjabe sammelle övver Belder, di en Sigge jebruch wääde.',
+);
+
 /** Macedonian (македонски)
  * @author Bjankuloski06
  */
 $messages['mk'] = array(
 	'pageimages-desc' => 'Собира информации за сликите што се користат на дадена страница',
+);
+
+/** Dutch (Nederlands)
+ * @author AvatarTeam
+ */
+$messages['nl'] = array(
+	'pageimages-desc' => 'Verzamelt informatie over afbeeldingen die worden gebruikt op de pagina',
 );
 
 /** Tagalog (Tagalog)
