@@ -33,6 +33,13 @@ $messages['dsb'] = array(
 	'pageimages-desc' => 'Zběra informacije wó wobrazach, kótarež su na boku',
 );
 
+/** Spanish (español)
+ * @author Armando-Martin
+ */
+$messages['es'] = array(
+	'pageimages-desc' => 'Recopila información sobre las imágenes utilizadas en la página',
+);
+
 /** French (français)
  * @author DavidL
  */
@@ -40,7 +47,7 @@ $messages['fr'] = array(
 	'pageimages-desc' => 'Recueille des informations sur les images utilisées sur les pages',
 );
 
-/** Galician (Galego)
+/** Galician (galego)
  * @author Toliño
  */
 $messages['gl'] = array(
@@ -66,6 +73,13 @@ $messages['it'] = array(
  */
 $messages['ksh'] = array(
 	'pageimages-desc' => 'Deiht Aanjabe sammelle övver Belder, di en Sigge jebruch wääde.',
+);
+
+/** Luxembourgish (Lëtzebuergesch)
+ * @author Robby
+ */
+$messages['lb'] = array(
+	'pageimages-desc' => 'Sammelt Informatiounen iwwer Biller déi op der Säit benotzt ginn',
 );
 
 /** Macedonian (македонски)
