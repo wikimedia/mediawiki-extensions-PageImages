@@ -61,6 +61,13 @@ $messages['hsb'] = array(
 	'pageimages-desc' => 'Zběra informacije wo wobrazach, kotrež su na stronje',
 );
 
+/** Interlingua (interlingua)
+ * @author McDutchie
+ */
+$messages['ia'] = array(
+	'pageimages-desc' => 'Collige informationes sur le imagines usate in un pagina',
+);
+
 /** Italian (italiano)
  * @author Beta16
  */
