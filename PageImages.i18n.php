@@ -75,6 +75,13 @@ $messages['it'] = array(
 	'pageimages-desc' => 'Raccoglie informazioni sulle immagini utilizzate nella pagina',
 );
 
+/** Korean (한국어)
+ * @author 아라
+ */
+$messages['ko'] = array(
+	'pageimages-desc' => '문서에 쓰이는 그림에 대한 정보 수집',
+);
+
 /** Colognian (Ripoarisch)
  * @author Purodha
  */
