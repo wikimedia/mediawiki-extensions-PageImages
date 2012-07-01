@@ -12,7 +12,7 @@ $messages['qqq'] = array(
 	'pageimages-desc' => '{{desc}}',
 );
 
-/** Belarusian (Taraškievica orthography) (‪Беларуская (тарашкевіца)‬)
+/** Belarusian (Taraškievica orthography) (‪беларуская (тарашкевіца)‬)
  * @author Wizardist
  */
 $messages['be-tarask'] = array(
@@ -26,7 +26,7 @@ $messages['de'] = array(
 	'pageimages-desc' => 'Ermöglicht das Sammeln von Informationen zu Bildern, die sich auf einer Seite befinden',
 );
 
-/** Lower Sorbian (Dolnoserbski)
+/** Lower Sorbian (dolnoserbski)
  * @author Michawiki
  */
 $messages['dsb'] = array(
@@ -54,7 +54,7 @@ $messages['gl'] = array(
 	'pageimages-desc' => 'Recolle información sobre as imaxes usadas nunha páxina',
 );
 
-/** Upper Sorbian (Hornjoserbsce)
+/** Upper Sorbian (hornjoserbsce)
  * @author Michawiki
  */
 $messages['hsb'] = array(
