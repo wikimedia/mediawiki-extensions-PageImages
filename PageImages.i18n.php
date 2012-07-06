@@ -110,6 +110,20 @@ $messages['nl'] = array(
 	'pageimages-desc' => 'Verzamelt informatie over afbeeldingen die worden gebruikt op de pagina',
 );
 
+/** Polish (polski)
+ * @author Woytecr
+ */
+$messages['pl'] = array(
+	'pageimages-desc' => 'Zbiera informacje o obrazach wykorzystywanych na stronie',
+);
+
+/** Piedmontese (Piemontèis)
+ * @author Dragonòt
+ */
+$messages['pms'] = array(
+	'pageimages-desc' => 'A cheuj anformassion a propòsit ëd le figure dovrà an sla pagina',
+);
+
 /** Tagalog (Tagalog)
  * @author AnakngAraw
  */
