@@ -118,10 +118,11 @@ $messages['pl'] = array(
 );
 
 /** Piedmontese (Piemontèis)
+ * @author Borichèt
  * @author Dragonòt
  */
 $messages['pms'] = array(
-	'pageimages-desc' => 'A cheuj anformassion a propòsit ëd le figure dovrà an sla pagina',
+	'pageimages-desc' => "A cheuj dj'anformassion a propòsit ëd le figure dovrà an sla pàgina",
 );
 
 /** Tagalog (Tagalog)
