@@ -20,11 +20,20 @@ $wgAutoloadClasses['PageImages'] = "$dir/PageImages.body.php";
 
 $wgExtensionMessagesFiles['PageImages'] = "$dir/PageImages.i18n.php";
 
+$wgHooks['ArticleDeleteComplete'][] = 'PageImages::onArticleDeleteComplete';
 $wgHooks['ParserMakeImageParams'][] = 'PageImages::onParserMakeImageParams';
 $wgHooks['LinksUpdate'][] = 'PageImages::onLinksUpdate';
-$wgHooks['OpenSearchXml'][] = 'PageImages::onOpenSearchXml';
+$wgHooks['LoadExtensionSchemaUpdates'][] = 'PageImages::onLoadExtensionSchemaUpdates';
 
-$wgAPIPropModules['pageimages'] = 'ApiQueryPageImages';
+/**
+ * Add define( 'PAGE_IMAGES_HIDDEN_MODE' ) to your LocalSettings.php if you want PageImages
+ * to collect data but not make it available yet.
+ */
+if ( !defined( 'PAGE_IMAGES_HIDDEN_MODE' ) ) {
+	$wgHooks['OpenSearchXml'][] = 'PageImages::onOpenSearchXml';
+
+	$wgAPIPropModules['pageimages'] = 'ApiQueryPageImages';
+}
 
 $wgPageImagesScores = array(
 	'extension' => array(
@@ -69,3 +78,8 @@ $wgPageImagesBlacklistExpiry = 60 * 15;
  * Whether this extension's image information should be used by OpenSearchXml
  */
 $wgPageImagesExpandOpenSearchXml = false;
+
+/**
+ * Collect data only for these namespaces
+ */
+$wgPageImagesNamespaces = array( NS_MAIN );

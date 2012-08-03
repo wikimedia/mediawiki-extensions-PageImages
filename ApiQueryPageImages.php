@@ -1,7 +1,6 @@
 <?php
 
 class ApiQueryPageImages extends ApiQueryBase {
-	private $count = 0, $limit;
 
 	public function __construct( $query, $moduleName ) {
 		parent::__construct( $query, $moduleName, 'pi' );
@@ -17,48 +16,38 @@ class ApiQueryPageImages extends ApiQueryBase {
 		$params = $this->extractRequestParams();
 		$prop = array_flip( $params['prop'] );
 		if ( !count( $prop ) ) {
-			$this->dieUsage(  );
+			$this->dieUsage( 'No properties selected', '_noprop' );
 		}
 		$size = $params['thumbsize'];
-		$this->limit = $params['limit'];
+		$limit = $params['limit'];
 
-		$this->addTables( 'page_props' );
-		$this->addFields( array( 'pp_page', 'pp_propname', 'pp_value' ) );
-		$propNames = array();
-		$propMapping = array( 'hasphotos' => 'has_photos', 'thumbnail' => 'page_image' );
+		$this->addTables( 'page_images' );
+		$this->addFields( array( 'pi_page' ) );
+		$propMapping = array( 'thumbnail' => 'pi_thumbnail', 'imagecount' => 'pi_images', 'totalscore' => 'pi_total_score' );
 		foreach ( $propMapping as $apiName => $dbName ) {
-			if ( isset( $prop[$apiName] ) ) {
-				$propNames[] = $dbName;
-			}
+			$this->addFieldsIf( $dbName, isset( $prop[$apiName] ) );
 		}
-		$this->addWhere( array( 'pp_page' => array_keys( $titles ), 'pp_propname' => $propNames ) );
+		$this->addWhere( array( 'pi_page' => array_keys( $titles ) ) );
 		if ( isset( $params['continue'] ) ) {
 			// is_numeric() accepts floats, so...
 			if ( preg_match( '/^\d+$/', $params['continue'] ) ) {
-				$this->addWhere( 'pp_page >= ' . intval( $params['continue'] ) );
+				$this->addWhere( 'pi_page >= ' . intval( $params['continue'] ) );
 			} else {
 				$this->dieUsage( 'Invalid continue param. You should pass the original value returned by the previous query' , '_badcontinue' );
 			}
 		}
-		$this->addOption( 'ORDER BY', 'pp_page' );
-		$this->addOption( 'LIMIT', $this->limit * count( $prop ) + 1 );
+		$this->addOption( 'ORDER BY', 'pi_page' );
+		$this->addOption( 'LIMIT', $limit + 1 );
 
 		$res = $this->select( __METHOD__ );
-		$lastId = 0;
-		$vals = array();
 		foreach ( $res as $row ) {
-			if ( $lastId && $lastId != $row->pp_page && !$this->addData( $lastId, $vals ) ) {
-				break;
-			}
-			$lastId = $row->pp_page;
-			if ( $row->pp_propname == 'has_photos' ) {
-				$vals['hasphotos'] = '';
-			} elseif ( $row->pp_propname == 'page_image' ) {
-				$file = wfFindFile( $row->pp_value );
+			$vals = array();
+			if ( isset( $prop['thumbnail'] ) ) {
+				$file = wfFindFile( $row->pi_thumbnail );
 				if ( $file ) {
 					$thumb = $file->transform( array( 'width' => $size, 'height' => $size ) );
 					if ( $thumb ) {
-						$vals['thumb'] = array(
+						$vals['thumbnail'] = array(
 							'source' => wfExpandUrl( $thumb->getUrl(), PROTO_CURRENT ),
 							'width' => $thumb->getWidth(),
 							'height' => $thumb->getHeight(),
@@ -66,21 +55,17 @@ class ApiQueryPageImages extends ApiQueryBase {
 					}
 				}
 			}
+			if ( isset( $prop['imagecount'] ) ) {
+				$vals['imagecount'] = $row->pi_images;
+			}
+			if ( isset( $prop['totalscore'] ) ) {
+				$vals['totalscore'] = $row->pi_total_score;
+			}
+			$fit = $this->getResult()->addValue( array( 'query', 'pages' ), $row->pi_page, $vals );
+			if ( !$fit ) {
+				$this->setContinueEnumParameter( 'continue', $row->pi_page );
+			}
 		}
-		$this->addData( $lastId, $vals );
-	}
-
-	private function addData( $pageId, array &$data ) {
-		$fit = true;
-		if ( count( $data ) ) {
-			$fit = ++$this->count <= $this->limit
-				&& $this->getResult()->addValue( array( 'query', 'pages' ), $pageId, $data );
-			$data = array();
-		}
-		if ( !$fit ) {
-			$this->setContinueEnumParameter( 'continue', $pageId );
-		}
-		return $fit;
 	}
 
 	public function getDescription() {
@@ -90,9 +75,9 @@ class ApiQueryPageImages extends ApiQueryBase {
 	public function getAllowedParams() {
 		return array(
 			'prop' => array(
-				ApiBase::PARAM_TYPE => array( 'thumbnail', 'hasphotos' ),
+				ApiBase::PARAM_TYPE => array( 'thumbnail', 'imagecount', 'totalscore' ),
 				ApiBase::PARAM_ISMULTI => true,
-				ApiBase::PARAM_DFLT => 'thumbnail|hasphotos',
+				ApiBase::PARAM_DFLT => 'thumbnail',
 			),
 			'thumbsize' => array(
 				ApiBase::PARAM_TYPE => 'integer',
@@ -115,7 +100,8 @@ class ApiQueryPageImages extends ApiQueryBase {
 		return array(
 			'prop' => array( 'What information to return',
 				' thumbnail - URL and dimensions of image associated with page, if any',
-				' hasphotos - whether this page contains photos'
+				' imagecount - Number of distinct illustrations on page',
+				' totalscore - Sum of image scores',
 			),
 			'thumbsize' => 'Width of thumbnail image',
 			'limit' => 'Properties of how many pages to return',

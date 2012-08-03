@@ -2,6 +2,26 @@
 
 class PageImages {
 	/**
+	 * Update this when changing the scoring rules
+	 */
+	const VERSION = 1;
+	/**
+	 * Returns true if data for this title should be saved
+	 *
+	 * @param Title $title
+	 * @return bool
+	 */
+	private static function processThisTitle( Title $title ) {
+		static $flipped = false;
+		if ( $flipped === false ) {
+			global $wgPageImagesNamespaces;
+			$flipped = array_flip( $wgPageImagesNamespaces );
+		}
+		return isset( $flipped[$title->getNamespace()] );
+	}
+
+
+	/**
 	 * ParserMakeImageParams hook handler, saes extended information about images used on page
 	 * @see https://www.mediawiki.org/wiki/Manual:Hooks/ParserMakeImageParams
 	 * @param Title $title
@@ -11,7 +31,7 @@ class PageImages {
 	 * @return bool
 	 */
 	public static function onParserMakeImageParams( Title $title, $file, array &$params, Parser $parser ) {
-		if ( !$file ) {
+		if ( !$file || !self::processThisTitle( $parser->getTitle() ) ) {
 			return true;
 		}
 		$out = $parser->getOutput();
@@ -32,17 +52,15 @@ class PageImages {
 	}
 
 	/**
-	 * LinksUpdate hook handler, sets at most 2 page properties depending on images on page
+	 * LinksUpdate hook handler, saves the information in the database
 	 * @see https://www.mediawiki.org/wiki/Manual:Hooks/LinksUpdate
 	 * @param LinksUpdate $lu
 	 * @return bool
 	 */
 	public static function onLinksUpdate( LinksUpdate $lu ) {
-		if ( !isset( $lu->getParserOutput()->pageImages ) ) {
+		if ( !isset( $lu->getParserOutput()->pageImages ) || !self::processThisTitle( $lu->getTitle() ) ) {
 			return true;
 		}
-		//wfDebugDieBacktrace();
-		//var_dump($lu->getParserOutput()->pageImages);die;
 		$images = $lu->getParserOutput()->pageImages;
 		$scores = array();
 		$imagesByExtension = array( 'jpg' => array(), 'jpeg' => array() );
@@ -68,19 +86,54 @@ class PageImages {
 			$jpegs
 		);
 		rsort( $jpegScores );
-		if ( count( $jpegScores ) && $jpegScores[0] >= 0 ) {
-			$lu->mProperties['has_photos'] = 1;
-		}
-		$image = false;
+		$image = null;
+		$count = 0;
+		$totalScore = 0;
 		foreach ( $scores as $name => $score ) {
-			if ( $score > 0 && ( !$image || $score > $scores[$image] ) ) {
-				$image = $name;
+			if ( $score > 0 ) {
+				$count++;
+				$totalScore += $score;
+				if ( !$image || $score > $scores[$image] ) {
+					$image = $name;
+				}
 			}
 		}
-		if ( $image ) {
-			$lu->mProperties['page_image'] = $image;
+		$dbw = wfGetDB( DB_MASTER );
+		$pageId = $lu->getTitle()->getArticleID( Title::GAID_FOR_UPDATE );
+		if ( is_null( $image ) || !$count ) {
+			$dbw->delete( 'page_images',
+				array( 'pi_page' => $pageId ),
+				__METHOD__
+			);
+		} else {
+			$dbw->replace( 'page_images', 'pi_page', array(
+				'pi_page' => $pageId,
+				'pi_thumbnail' => $image,
+				'pi_images' => $count,
+				'pi_total_score' => $totalScore,
+				'pi_version' => self::VERSION,
+			),
+			__METHOD__
+			);
 		}
 
+		return true;
+	}
+
+	/**
+	 * ArticleDeleteComplete hook handler
+	 * @see https://www.mediawiki.org/wiki/Manual:Hooks/ArticleDeleteComplete
+	 *
+	 * @param WikiPage $article
+	 * @param User $user
+	 * @param string $reason
+	 * @param int $id
+	 *
+	 * @return bool
+	 */
+	public static function onArticleDeleteComplete( &$article, User &$user, $reason, $id ) {
+		$dbw = wfGetDB( DB_MASTER );
+		$dbw->delete( 'page_images', array( 'pi_page' => $id ), __METHOD__ );
 		return true;
 	}
 
@@ -89,6 +142,7 @@ class PageImages {
 		if ( !$wgPageImagesExpandOpenSearchXml || !count( $results ) ) {
 			return true;
 		}
+		wfProfileIn( __METHOD__ );
 		$pageIds = array_keys( $results );
 		$api = new ApiMain(
 			new FauxRequest( array(
@@ -108,6 +162,18 @@ class PageImages {
 				$results[$id]['image'] = null;
 			}
 		}
+		wfProfileOut( __METHOD__ );
+		return true;
+	}
+
+	/**
+	 * LoadExtensionSchemaUpdates hook handler
+	 * @see https://www.mediawiki.org/wiki/Manual:Hooks/LoadExtensionSchemaUpdates
+	 * @param \DatabaseUpdater $updater
+	 * @return bool
+	 */
+	public static function onLoadExtensionSchemaUpdates( DatabaseUpdater $updater ) {
+		$updater->addExtensionTable( 'page_images', dirname( __FILE__ ) . '/PageImages.sql' );
 		return true;
 	}
 
