@@ -75,6 +75,13 @@ $messages['it'] = array(
 	'pageimages-desc' => 'Raccoglie informazioni sulle immagini utilizzate nella pagina',
 );
 
+/** Japanese (日本語)
+ * @author Shirayuki
+ */
+$messages['ja'] = array(
+	'pageimages-desc' => 'ページで使用されている画像についての情報を収集する',
+);
+
 /** Korean (한국어)
  * @author 아라
  */
