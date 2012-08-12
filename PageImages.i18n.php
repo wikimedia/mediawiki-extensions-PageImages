@@ -54,6 +54,13 @@ $messages['gl'] = array(
 	'pageimages-desc' => 'Recolle información sobre as imaxes usadas nunha páxina',
 );
 
+/** Hebrew (עברית)
+ * @author Amire80
+ */
+$messages['he'] = array(
+	'pageimages-desc' => 'איסוף מידע על תמונות שמשמשות בדף',
+);
+
 /** Upper Sorbian (hornjoserbsce)
  * @author Michawiki
  */
