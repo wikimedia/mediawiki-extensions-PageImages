@@ -12,6 +12,13 @@ $messages['qqq'] = array(
 	'pageimages-desc' => '{{desc}}',
 );
 
+/** Asturian (asturianu)
+ * @author Xuacu
+ */
+$messages['ast'] = array(
+	'pageimages-desc' => "Recueye información de les imaxes que s'usen nuna páxina",
+);
+
 /** Belarusian (Taraškievica orthography) (‪беларуская (тарашкевіца)‬)
  * @author Wizardist
  */
