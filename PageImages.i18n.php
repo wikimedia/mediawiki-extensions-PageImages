@@ -19,7 +19,7 @@ $messages['ast'] = array(
 	'pageimages-desc' => "Recueye información de les imaxes que s'usen nuna páxina",
 );
 
-/** Belarusian (Taraškievica orthography) (‪беларуская (тарашкевіца)‬)
+/** Belarusian (Taraškievica orthography) (беларуская (тарашкевіца)‎)
  * @author Wizardist
  */
 $messages['be-tarask'] = array(
