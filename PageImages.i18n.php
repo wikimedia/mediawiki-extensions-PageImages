@@ -2,12 +2,12 @@
 
 $messages = array();
 
-// en translation
 $messages['en'] = array (
 	'pageimages-desc' => 'Collects information about images used on page',
 );
 
-/** Message documentation (Message documentation) */
+/** Message documentation (Message documentation)
+ */
 $messages['qqq'] = array(
 	'pageimages-desc' => '{{desc}}',
 );
@@ -152,4 +152,3 @@ $messages['pms'] = array(
 $messages['tl'] = array(
 	'pageimages-desc' => 'Nagtitipon ng kabatiran patungkol sa mga larawang ginagamit sa ibabaw ng pahina',
 );
-
