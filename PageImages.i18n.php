@@ -152,3 +152,10 @@ $messages['pms'] = array(
 $messages['tl'] = array(
 	'pageimages-desc' => 'Nagtitipon ng kabatiran patungkol sa mga larawang ginagamit sa ibabaw ng pahina',
 );
+
+/** Simplified Chinese (中文（简体）‎)
+ * @author Yfdyh000
+ */
+$messages['zh-hans'] = array(
+	'pageimages-desc' => '收集有关图像在页面上使用的信息',
+);
