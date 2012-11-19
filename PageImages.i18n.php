@@ -124,6 +124,12 @@ $messages['mk'] = array(
 	'pageimages-desc' => 'Собира информации за сликите што се користат на дадена страница',
 );
 
+/** Norwegian Bokmål (norsk (bokmål)‎)
+ */
+$messages['nb'] = array(
+	'pageimages-desc' => 'Samler informasjon om bilder som brukes på siden',
+);
+
 /** Dutch (Nederlands)
  * @author AvatarTeam
  */
