@@ -159,6 +159,13 @@ $messages['tl'] = array(
 	'pageimages-desc' => 'Nagtitipon ng kabatiran patungkol sa mga larawang ginagamit sa ibabaw ng pahina',
 );
 
+/** Ukrainian (українська)
+ * @author Base
+ */
+$messages['uk'] = array(
+	'pageimages-desc' => 'Збирає сторінку про зображення, що використовуються на сторінці',
+);
+
 /** Simplified Chinese (中文（简体）‎)
  * @author Yfdyh000
  */
