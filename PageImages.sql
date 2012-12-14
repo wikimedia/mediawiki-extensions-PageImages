@@ -10,4 +10,4 @@ CREATE TABLE /*_*/page_images(
   pi_total_score int NOT NULL,
   -- Record version in case scoring system changes
   pi_version tinyint NOT NULL
-)/*$wgTableOptions*/;
+)/*$wgDBTableOptions*/;
