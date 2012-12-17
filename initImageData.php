@@ -17,6 +17,8 @@ class InitImageData extends Maintenance {
 	}
 
 	public function execute() {
+		global $wgPageImagesNamespaces;
+
 		$id = 0;
 
 		do {
@@ -34,7 +36,7 @@ class InitImageData extends Maintenance {
 				$ns = explode( ',', $this->getOption( 'namespaces' ) );
 				$conds['page_namespace'] = $ns;
 			} else {
-				$conds[] = 'page_namespace != ' . NS_FILE;
+				$conds['page_namespace'] = $wgPageImagesNamespaces;
 			}
 			if ( $this->hasOption( 'earlier-than' ) ) {
 				$conds[] = "page_touched < '{$this->getOption( 'earlier-than' )}'";

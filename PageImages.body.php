@@ -2,10 +2,6 @@
 
 class PageImages {
 	/**
-	 * Update this when changing the scoring rules
-	 */
-	const VERSION = 1;
-	/**
 	 * Returns true if data for this title should be saved
 	 *
 	 * @param Title $title
@@ -19,7 +15,6 @@ class PageImages {
 		}
 		return isset( $flipped[$title->getNamespace()] );
 	}
-
 
 	/**
 	 * ParserMakeImageParams hook handler, saes extended information about images used on page
@@ -52,91 +47,44 @@ class PageImages {
 	}
 
 	/**
-	 * LinksUpdate hook handler, saves the information in the database
+	 * LinksUpdate hook handler, sets at most 2 page properties depending on images on page
 	 * @see https://www.mediawiki.org/wiki/Manual:Hooks/LinksUpdate
 	 * @param LinksUpdate $lu
 	 * @return bool
 	 */
 	public static function onLinksUpdate( LinksUpdate $lu ) {
-		if ( !isset( $lu->getParserOutput()->pageImages ) || !self::processThisTitle( $lu->getTitle() ) ) {
+		if ( !isset( $lu->getParserOutput()->pageImages ) ) {
 			return true;
 		}
 		$images = $lu->getParserOutput()->pageImages;
 		$scores = array();
-		$imagesByExtension = array( 'jpg' => array(), 'jpeg' => array() );
 		$counter = 0;
 		foreach ( $images as $image ) {
 			$fileName = $image['filename'];
-			$extension = strtolower( substr( $fileName, strrpos( $fileName, '.' ) + 1 ) );
-			$image['extension'] = $extension;
-			if ( !isset( $imagesByExtension[$extension][$fileName] ) ) {
-				$imagesByExtension[$extension][$fileName] = true;
-			}
 			if ( !isset( $scores[$fileName] ) ) {
 				$scores[$fileName] = -1;
 			}
 			$scores[$fileName] = max( $scores[$fileName], self::getScore( $image, $counter++ ) );
 		}
-		$jpegs = array_merge( array_keys( $imagesByExtension['jpg'] ),
-			array_keys( $imagesByExtension['jpeg'] )
-		);
-		$jpegScores = array_map( function( $name ) use ( $scores ) {
-				return $scores[$name];
-			},
-			$jpegs
-		);
-		rsort( $jpegScores );
-		$image = null;
-		$count = 0;
-		$totalScore = 0;
+		$image = false;
 		foreach ( $scores as $name => $score ) {
-			if ( $score > 0 ) {
-				$count++;
-				$totalScore += $score;
-				if ( !$image || $score > $scores[$image] ) {
-					$image = $name;
-				}
+			if ( $score > 0 && ( !$image || $score > $scores[$image] ) ) {
+				$image = $name;
 			}
 		}
-		$dbw = wfGetDB( DB_MASTER );
-		$pageId = $lu->getTitle()->getArticleID( Title::GAID_FOR_UPDATE );
-		if ( is_null( $image ) || !$count ) {
-			$dbw->delete( 'page_images',
-				array( 'pi_page' => $pageId ),
-				__METHOD__
-			);
-		} else {
-			$dbw->replace( 'page_images', 'pi_page', array(
-				'pi_page' => $pageId,
-				'pi_thumbnail' => $image,
-				'pi_images' => $count,
-				'pi_total_score' => $totalScore,
-				'pi_version' => self::VERSION,
-			),
-			__METHOD__
-			);
+		if ( $image ) {
+			$lu->mProperties['page_image'] = $image;
 		}
 
 		return true;
 	}
 
 	/**
-	 * ArticleDeleteComplete hook handler
-	 * @see https://www.mediawiki.org/wiki/Manual:Hooks/ArticleDeleteComplete
-	 *
-	 * @param WikiPage $article
-	 * @param User $user
-	 * @param string $reason
-	 * @param int $id
-	 *
+	 * OpenSearchXml hook handler, enhances Extension:OpenSearchXml results with this GagaImages data
+	 * @see https://www.mediawiki.org/wiki/Manual:Hooks/LinksUpdate
+	 * @param array $results
 	 * @return bool
 	 */
-	public static function onArticleDeleteComplete( &$article, User &$user, $reason, $id ) {
-		$dbw = wfGetDB( DB_MASTER );
-		$dbw->delete( 'page_images', array( 'pi_page' => $id ), __METHOD__ );
-		return true;
-	}
-
 	public static function onOpenSearchXml( &$results ) {
 		global $wgPageImagesExpandOpenSearchXml;
 		if ( !$wgPageImagesExpandOpenSearchXml || !count( $results ) ) {
@@ -167,17 +115,6 @@ class PageImages {
 	}
 
 	/**
-	 * LoadExtensionSchemaUpdates hook handler
-	 * @see https://www.mediawiki.org/wiki/Manual:Hooks/LoadExtensionSchemaUpdates
-	 * @param \DatabaseUpdater $updater
-	 * @return bool
-	 */
-	public static function onLoadExtensionSchemaUpdates( DatabaseUpdater $updater ) {
-		$updater->addExtensionTable( 'page_images', dirname( __FILE__ ) . '/PageImages.sql' );
-		return true;
-	}
-
-	/**
 	 * Returns score for image, the more the better, if it is less than zero,
 	 * the image shouldn't be used for anything
 	 * @param array $image: Associative array describing an image
@@ -188,9 +125,6 @@ class PageImages {
 		global $wgPageImagesScores;
 
 		$score = 0;
-		if ( isset( $wgPageImagesScores['extension'][$image['extension']] ) ) {
-			$score += $wgPageImagesScores['extension'][$image['extension']];
-		}
 		foreach ( $wgPageImagesScores['width'] as $maxWidth => $scoreDiff ) {
 			if ( $image['handler']['width'] <= $maxWidth ) {
 				$score += $scoreDiff;
@@ -202,7 +136,7 @@ class PageImages {
 		}
 		$blacklist = self::getBlacklist();
 		if ( isset( $blacklist[$image['filename']] ) ) {
-			$score -= 100;
+			$score -= 1000;
 		}
 		return $score;
 	}

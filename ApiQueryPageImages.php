@@ -1,7 +1,6 @@
 <?php
 
 class ApiQueryPageImages extends ApiQueryBase {
-
 	public function __construct( $query, $moduleName ) {
 		parent::__construct( $query, $moduleName, 'pi' );
 	}
@@ -21,29 +20,36 @@ class ApiQueryPageImages extends ApiQueryBase {
 		$size = $params['thumbsize'];
 		$limit = $params['limit'];
 
-		$this->addTables( 'page_images' );
-		$this->addFields( array( 'pi_page' ) );
-		$propMapping = array( 'thumbnail' => 'pi_thumbnail', 'imagecount' => 'pi_images', 'totalscore' => 'pi_total_score' );
-		foreach ( $propMapping as $apiName => $dbName ) {
-			$this->addFieldsIf( $dbName, isset( $prop[$apiName] ) );
-		}
-		$this->addWhere( array( 'pi_page' => array_keys( $titles ) ) );
+		$this->addTables( 'page_props' );
+		$this->addFields( array( 'pp_page', 'pp_propname', 'pp_value' ) );
+		$this->addWhere( array( 'pp_page' => array_keys( $titles ), 'pp_propname' => 'page_image' ) );
 		if ( isset( $params['continue'] ) ) {
 			// is_numeric() accepts floats, so...
-			if ( preg_match( '/^\d+$/', $params['continue'] ) ) {
-				$this->addWhere( 'pi_page >= ' . intval( $params['continue'] ) );
+			if ( intval( $params['continue'] ) == $params['continue'] ) {
+				$this->addWhere( 'pp_page >= ' . intval( $params['continue'] ) );
 			} else {
 				$this->dieUsage( 'Invalid continue param. You should pass the original value returned by the previous query' , '_badcontinue' );
 			}
 		}
-		$this->addOption( 'ORDER BY', 'pi_page' );
+		$this->addOption( 'ORDER BY', 'pp_page' );
 		$this->addOption( 'LIMIT', $limit + 1 );
 
+		wfProfileIn( __METHOD__ . '-select' );
 		$res = $this->select( __METHOD__ );
+		wfProfileOut( __METHOD__ . '-select' );
+
+		wfProfileIn( __METHOD__ . '-results' );
+		$count = 0;
 		foreach ( $res as $row ) {
+			$pageId = $row->pp_page;
+			if ( ++$count > $limit ) {
+				$this->setContinueEnumParameter( 'continue', $pageId );
+				echo 'break';
+				break;
+			}
 			$vals = array();
 			if ( isset( $prop['thumbnail'] ) ) {
-				$file = wfFindFile( $row->pi_thumbnail );
+				$file = wfFindFile( $row->pp_value );
 				if ( $file ) {
 					$thumb = $file->transform( array( 'width' => $size, 'height' => $size ) );
 					if ( $thumb ) {
@@ -55,17 +61,18 @@ class ApiQueryPageImages extends ApiQueryBase {
 					}
 				}
 			}
-			if ( isset( $prop['imagecount'] ) ) {
-				$vals['imagecount'] = $row->pi_images;
+			if ( isset( $prop['name'] ) ) {
+				$vals['pageimage'] = $row->pp_value;
 			}
-			if ( isset( $prop['totalscore'] ) ) {
-				$vals['totalscore'] = $row->pi_total_score;
-			}
-			$fit = $this->getResult()->addValue( array( 'query', 'pages' ), $row->pi_page, $vals );
+			$fit = $this->getResult()->addValue( array( 'query', 'pages' ), $pageId, $vals );
 			if ( !$fit ) {
-				$this->setContinueEnumParameter( 'continue', $row->pi_page );
+				$this->setContinueEnumParameter( 'continue', $pageId );
+				break;
 			}
 		}
+		wfProfileOut( __METHOD__ . '-results' );
+
+		wfProfileOut( __METHOD__ );
 	}
 
 	public function getDescription() {
@@ -75,9 +82,9 @@ class ApiQueryPageImages extends ApiQueryBase {
 	public function getAllowedParams() {
 		return array(
 			'prop' => array(
-				ApiBase::PARAM_TYPE => array( 'thumbnail', 'imagecount', 'totalscore' ),
+				ApiBase::PARAM_TYPE => array( 'thumbnail', 'name' ),
 				ApiBase::PARAM_ISMULTI => true,
-				ApiBase::PARAM_DFLT => 'thumbnail',
+				ApiBase::PARAM_DFLT => 'thumbnail|name',
 			),
 			'thumbsize' => array(
 				ApiBase::PARAM_TYPE => 'integer',
@@ -87,8 +94,8 @@ class ApiQueryPageImages extends ApiQueryBase {
 				ApiBase::PARAM_DFLT => 1,
 				ApiBase::PARAM_TYPE => 'limit',
 				ApiBase::PARAM_MIN => 1,
-				ApiBase::PARAM_MAX => ApiBase::LIMIT_BIG1,
-				ApiBase::PARAM_MAX2 => ApiBase::LIMIT_BIG2,
+				ApiBase::PARAM_MAX => 50,
+				ApiBase::PARAM_MAX2 => 100,
 			),
 			'continue' => array(
 				ApiBase::PARAM_TYPE => 'integer',
@@ -100,10 +107,9 @@ class ApiQueryPageImages extends ApiQueryBase {
 		return array(
 			'prop' => array( 'What information to return',
 				' thumbnail - URL and dimensions of image associated with page, if any',
-				' imagecount - Number of distinct illustrations on page',
-				' totalscore - Sum of image scores',
+				' name - image title'
 			),
-			'thumbsize' => 'Width of thumbnail image',
+			'thumbsize' => 'Thumbnail width',
 			'limit' => 'Properties of how many pages to return',
 			'continue' => 'When more results are available, use this to continue',
 		);
@@ -118,6 +124,6 @@ class ApiQueryPageImages extends ApiQueryBase {
 	}
 
 	public function getVersion() {
-		return '$Id$';
+		return '';
 	}
 }
