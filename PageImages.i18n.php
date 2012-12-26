@@ -4,12 +4,14 @@ $messages = array();
 
 $messages['en'] = array (
 	'pageimages-desc' => 'Collects information about images used on page',
+	'pageimages-blacklist' => '', # do not translate or duplicate this message to other languages
 );
 
 /** Message documentation (Message documentation)
  */
 $messages['qqq'] = array(
 	'pageimages-desc' => '{{desc}}',
+	'pageimages-blacklist' => 'List of images. They will never be selected as page images',
 );
 
 /** Asturian (asturianu)

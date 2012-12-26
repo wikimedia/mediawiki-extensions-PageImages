@@ -38,13 +38,13 @@ $wgPageImagesScores = array(
 $wgPageImagesBlacklist = array(
 	array(
 		'type' => 'db',
-		'page' => 'MediaWiki:Pageimages-blackist',
+		'page' => 'MediaWiki:Pageimages-blacklist',
 		'db' => false, // current wiki
 	),
 	/*
 	array(
 		'type' => 'db',
-		'page' => 'MediaWiki:Pageimages-blackist',
+		'page' => 'MediaWiki:Pageimages-blacklist',
 		'db' => 'commonswiki',
 	),
 	array(
