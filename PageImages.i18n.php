@@ -49,6 +49,13 @@ $messages['es'] = array(
 	'pageimages-desc' => 'Recopila información sobre las imágenes utilizadas en la página',
 );
 
+/** Finnish (suomi)
+ * @author VezonThunder
+ */
+$messages['fi'] = array(
+	'pageimages-desc' => 'Kerää tietoa sivulla käytetyistä kuvista',
+);
+
 /** French (français)
  * @author DavidL
  */
