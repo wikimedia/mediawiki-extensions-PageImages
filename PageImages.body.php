@@ -35,10 +35,13 @@ class PageImages {
 		}
 		$myParams = $params;
 		if ( !isset( $myParams['handler']['width'] ) ) {
-			if ( !isset( $myParams['thumbnail'] ) ) {
-				$myParams['handler']['width'] = $file->getWidth();
-			} else {
+			if ( isset( $myParams['frame']['thumbnail'] )
+				|| isset( $myParams['frame']['thumb'] )
+				|| isset( $myParams['frame']['frameless'] ) )
+			{
 				$myParams['handler']['width'] = 250;
+			} else {
+				$myParams['handler']['width'] = $file->getWidth();
 			}
 		}
 		$myParams['filename'] = $title->getDBkey();
