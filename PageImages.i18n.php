@@ -49,6 +49,13 @@ $messages['es'] = array(
 	'pageimages-desc' => 'Recopila información sobre las imágenes utilizadas en la página',
 );
 
+/** Estonian (eesti)
+ * @author Pikne
+ */
+$messages['et'] = array(
+	'pageimages-desc' => 'Kogub teavet leheküljel kasutatud piltide kohta.',
+);
+
 /** Finnish (suomi)
  * @author VezonThunder
  */
