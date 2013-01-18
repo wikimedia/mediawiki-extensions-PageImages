@@ -25,7 +25,8 @@ class InitImageData extends Maintenance {
 			$tables = array( 'page', 'imagelinks' );
 			$conds = array(
 				"page_id > $id",
-				'il_from IS NOT NULL'
+				'il_from IS NOT NULL',
+				'page_is_redirect' => 0,
 			);
 			$fields = array( 'page_id' );
 			$joinConds = array( 'imagelinks' => array(
@@ -49,9 +50,9 @@ class InitImageData extends Maintenance {
 			foreach ( $res as $row ) {
 				$id = $row->page_id;
 				RefreshLinks::fixLinksFromArticle( $id );
+				wfWaitForSlaves();
 			}
 			$this->output( "$id\n" );
-			wfWaitForSlaves();
 		} while ( $res->numRows() );
 		$this->output( "done\n" );
 	}
