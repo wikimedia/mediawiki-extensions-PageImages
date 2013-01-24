@@ -168,6 +168,13 @@ $messages['pms'] = array(
 	'pageimages-desc' => "A cheuj dj'anformassion a propòsit ëd le figure dovrà an sla pàgina",
 );
 
+/** tarandíne (tarandíne)
+ * @author Joetaras
+ */
+$messages['roa-tara'] = array(
+	'pageimages-desc' => "Collezzione 'mbormaziune sus a le immaggine ausate sus 'à pàgene",
+);
+
 /** Tagalog (Tagalog)
  * @author AnakngAraw
  */
