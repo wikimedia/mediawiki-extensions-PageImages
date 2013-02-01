@@ -28,6 +28,13 @@ $messages['be-tarask'] = array(
 	'pageimages-desc' => 'Зьбірае зьвесткі пра выявы, выкарыстаныя на старонцы',
 );
 
+/** Czech (česky)
+ * @author Mormegil
+ */
+$messages['cs'] = array(
+	'pageimages-desc' => 'Sbírá informace o obrázcích používaných na stránce',
+);
+
 /** German (Deutsch)
  * @author Kghbln
  */
