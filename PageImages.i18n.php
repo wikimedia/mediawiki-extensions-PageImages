@@ -196,6 +196,13 @@ $messages['uk'] = array(
 	'pageimages-desc' => 'Збирає сторінку про зображення, що використовуються на сторінці',
 );
 
+/** Vietnamese (Tiếng Việt)
+ * @author Minh Nguyen
+ */
+$messages['vi'] = array(
+	'pageimages-desc' => 'Thu tập thông tin về các hình ảnh trên trang',
+);
+
 /** Simplified Chinese (中文（简体）‎)
  * @author Yfdyh000
  */
