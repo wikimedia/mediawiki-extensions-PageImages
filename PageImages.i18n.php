@@ -147,6 +147,13 @@ $messages['mk'] = array(
 	'pageimages-desc' => 'Собира информации за сликите што се користат на дадена страница',
 );
 
+/** Malay (Bahasa Melayu)
+ * @author Anakmalaysia
+ */
+$messages['ms'] = array(
+	'pageimages-desc' => 'Mengumpul maklumat tentang gambar-gambar yang digunakan pada halaman',
+);
+
 /** Norwegian Bokmål (norsk (bokmål)‎)
  */
 $messages['nb'] = array(
