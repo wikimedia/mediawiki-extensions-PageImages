@@ -189,6 +189,13 @@ $messages['roa-tara'] = array(
 	'pageimages-desc' => "Collezzione 'mbormaziune sus a le immaggine ausate sus 'à pàgene",
 );
 
+/** Swedish (svenska)
+ * @author Ainali
+ */
+$messages['sv'] = array(
+	'pageimages-desc' => 'Samlar in information om bilder som används på sidan',
+);
+
 /** Tagalog (Tagalog)
  * @author AnakngAraw
  */
