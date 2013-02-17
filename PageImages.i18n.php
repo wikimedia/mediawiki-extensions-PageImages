@@ -147,6 +147,13 @@ $messages['mk'] = array(
 	'pageimages-desc' => 'Собира информации за сликите што се користат на дадена страница',
 );
 
+/** Malayalam (മലയാളം)
+ * @author Praveenp
+ */
+$messages['ml'] = array(
+	'pageimages-desc' => 'താളുകളിൽ ഉപയോഗിച്ചിരിക്കുന്ന ചിത്രങ്ങളുടെ വിവരം ശേഖരിക്കുന്നതിനുള്ള സൗകര്യം',
+);
+
 /** Malay (Bahasa Melayu)
  * @author Anakmalaysia
  */
