@@ -8,9 +8,10 @@ $messages['en'] = array (
 );
 
 /** Message documentation (Message documentation)
+ * @author Shirayuki
  */
 $messages['qqq'] = array(
-	'pageimages-desc' => '{{desc}}',
+	'pageimages-desc' => '{{desc|name=Page Images|url=http://www.mediawiki.org/wiki/Extension:PageImages}}',
 	'pageimages-blacklist' => 'List of images. They will never be selected as page images',
 );
 
