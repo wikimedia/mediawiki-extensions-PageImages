@@ -169,7 +169,7 @@ $messages['ms'] = array(
 	'pageimages-desc' => 'Mengumpul maklumat tentang gambar-gambar yang digunakan pada halaman',
 );
 
-/** Norwegian Bokmål (norsk (bokmål)‎)
+/** Norwegian Bokmål (norsk bokmål)
  */
 $messages['nb'] = array(
 	'pageimages-desc' => 'Samler informasjon om bilder som brukes på siden',
