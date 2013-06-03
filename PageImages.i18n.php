@@ -106,6 +106,13 @@ $messages['ia'] = array(
 	'pageimages-desc' => 'Collige informationes sur le imagines usate in un pagina',
 );
 
+/** Iloko (Ilokano)
+ * @author Lam-ang
+ */
+$messages['ilo'] = array(
+	'pageimages-desc' => 'Agurnong kadagiti pakaammo a maipanggep kadagiti ladawan a naus-usar iti panid',
+);
+
 /** Italian (italiano)
  * @author Beta16
  */
