@@ -1,5 +1,8 @@
 <?php
-
+/**
+ * Expose image information for a page via a new prop=pageimages API.
+ * See https://www.mediawiki.org/wiki/Extension:PageImages#API
+ */
 class ApiQueryPageImages extends ApiQueryBase {
 	public function __construct( $query, $moduleName ) {
 		parent::__construct( $query, $moduleName, 'pi' );
@@ -7,8 +10,8 @@ class ApiQueryPageImages extends ApiQueryBase {
 
 	public function execute() {
 		wfProfileIn( __METHOD__ );
-		$titles = $this->getPageSet()->getGoodTitles();
-		if ( count( $titles ) == 0 ) {
+		$allTitles = $this->getPageSet()->getGoodTitles();
+		if ( count( $allTitles ) == 0 ) {
 			wfProfileOut( __METHOD__ );
 			return;
 		}
@@ -20,59 +23,95 @@ class ApiQueryPageImages extends ApiQueryBase {
 		$size = $params['thumbsize'];
 		$limit = $params['limit'];
 
-		$this->addTables( 'page_props' );
-		$this->addFields( array( 'pp_page', 'pp_propname', 'pp_value' ) );
-		$this->addWhere( array( 'pp_page' => array_keys( $titles ), 'pp_propname' => 'page_image' ) );
+		// Find the offset based on the continue param
+		$offset = 0;
 		if ( isset( $params['continue'] ) ) {
-			// is_numeric() accepts floats, so...
-			if ( intval( $params['continue'] ) == $params['continue'] ) {
-				$this->addWhere( 'pp_page >= ' . intval( $params['continue'] ) );
-			} else {
+			// Get the position (not the key) of the 'continue' page within the
+			// array of titles. Set this as the offset.
+			$pageIds = array_keys( $allTitles );
+			$offset = array_search( intval( $params['continue'] ), $pageIds );
+			// If the 'continue' page wasn't found, die with error
+			if ( !$offset ) {
 				$this->dieUsage( 'Invalid continue param. You should pass the original value returned by the previous query' , '_badcontinue' );
 			}
 		}
-		$this->addOption( 'ORDER BY', 'pp_page' );
-		$this->addOption( 'LIMIT', $limit + 1 );
 
-		wfProfileIn( __METHOD__ . '-select' );
-		$res = $this->select( __METHOD__ );
-		wfProfileOut( __METHOD__ . '-select' );
+		// Slice the part of the array we want to find images for
+		$titles = array_slice( $allTitles, $offset, $limit, true );
 
-		wfProfileIn( __METHOD__ . '-results' );
-		$count = 0;
-		foreach ( $res as $row ) {
-			$pageId = $row->pp_page;
-			if ( ++$count > $limit ) {
-				$this->setContinueEnumParameter( 'continue', $pageId );
-				echo 'break';
-				break;
-			}
-			$vals = array();
-			if ( isset( $prop['thumbnail'] ) ) {
-				$file = wfFindFile( $row->pp_value );
-				if ( $file ) {
-					$thumb = $file->transform( array( 'width' => $size, 'height' => $size ) );
-					if ( $thumb ) {
-						$vals['thumbnail'] = array(
-							'source' => wfExpandUrl( $thumb->getUrl(), PROTO_CURRENT ),
-							'width' => $thumb->getWidth(),
-							'height' => $thumb->getHeight(),
-						);
-					}
-				}
-			}
-			if ( isset( $prop['name'] ) ) {
-				$vals['pageimage'] = $row->pp_value;
-			}
-			$fit = $this->getResult()->addValue( array( 'query', 'pages' ), $pageId, $vals );
-			if ( !$fit ) {
-				$this->setContinueEnumParameter( 'continue', $pageId );
-				break;
+		// Get the next item in the title array and use it to set the continue value
+		$nextItemArray = array_slice( $allTitles, $offset + $limit, 1, true );
+		if ( $nextItemArray ) {
+			$this->setContinueEnumParameter( 'continue', key( $nextItemArray ) );
+		}
+
+		// Find any titles in the file namespace so we can handle those separately
+		$filePageTitles = array();
+		foreach ( $titles as $id => $title ) {
+			if ( $title->inNamespace( NS_FILE ) ) {
+				$filePageTitles[$id] = $title;
+				unset( $titles[$id] );
 			}
 		}
-		wfProfileOut( __METHOD__ . '-results' );
+
+		// Extract page images from the page_props table
+		if ( count( $titles ) > 0 ) {
+			$this->addTables( 'page_props' );
+			$this->addFields( array( 'pp_page', 'pp_propname', 'pp_value' ) );
+			$this->addWhere( array( 'pp_page' => array_keys( $titles ), 'pp_propname' => 'page_image' ) );
+
+			wfProfileIn( __METHOD__ . '-select' );
+			$res = $this->select( __METHOD__ );
+			wfProfileOut( __METHOD__ . '-select' );
+
+			wfProfileIn( __METHOD__ . '-results-pages' );
+			foreach ( $res as $row ) {
+				$pageId = $row->pp_page;
+				$fileName = $row->pp_value;
+				$this->setResultValues( $prop, $pageId, $fileName, $size );
+			}
+			wfProfileOut( __METHOD__ . '-results-pages' );
+		} // End page props image extraction
+
+		// Extract images from file namespace pages. In this case we just use
+		// the file itself rather than searching for a page_image. (Bug 50252)
+		wfProfileIn( __METHOD__ . '-results-files' );
+		foreach ( $filePageTitles as $pageId => $title ) {
+			$fileName = $title->getDBkey();
+			$this->setResultValues( $prop, $pageId, $fileName, $size );
+		}
+		wfProfileOut( __METHOD__ . '-results-files' );
 
 		wfProfileOut( __METHOD__ );
+	}
+
+	/**
+	 * For a given page, set API return values for thumbnail and pageimage as needed
+	 *
+	 * @param array $prop The prop values from the API request
+	 * @param integer $pageId The ID of the page
+	 * @param string $fileName The name of the file to transform
+	 * @param integer $size The thumbsize value from the API request
+	 */
+	protected function setResultValues( $prop, $pageId, $fileName, $size ) {
+		$vals = array();
+		if ( isset( $prop['thumbnail'] ) ) {
+			$file = wfFindFile( $fileName );
+			if ( $file ) {
+				$thumb = $file->transform( array( 'width' => $size, 'height' => $size ) );
+				if ( $thumb && $thumb->getUrl() ) {
+					$vals['thumbnail'] = array(
+						'source' => wfExpandUrl( $thumb->getUrl(), PROTO_CURRENT ),
+						'width' => $thumb->getWidth(),
+						'height' => $thumb->getHeight()
+					);
+				}
+			}
+		}
+		if ( isset( $prop['name'] ) ) {
+			$vals['pageimage'] = $fileName;
+		}
+		$this->getResult()->addValue( array( 'query', 'pages' ), $pageId, $vals );
 	}
 
 	public function getDescription() {
