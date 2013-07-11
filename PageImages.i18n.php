@@ -64,6 +64,13 @@ $messages['et'] = array(
 	'pageimages-desc' => 'Kogub teavet leheküljel kasutatud piltide kohta.',
 );
 
+/** Persian (فارسی)
+ * @author Reza1615
+ */
+$messages['fa'] = array(
+	'pageimages-desc' => 'جمع‌آوری اطلاعات درباره تصاویر مورد استفاده در صفحه',
+);
+
 /** Finnish (suomi)
  * @author VezonThunder
  */
