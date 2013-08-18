@@ -138,7 +138,7 @@ $messages['ja'] = array(
  * @author 아라
  */
 $messages['ko'] = array(
-	'pageimages-desc' => '문서에 쓰이는 그림에 대한 정보 수집',
+	'pageimages-desc' => '문서에 쓰이는 그림에 대한 정보를 모읍니다',
 );
 
 /** Colognian (Ripoarisch)
