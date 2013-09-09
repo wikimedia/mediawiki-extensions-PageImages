@@ -245,3 +245,10 @@ $messages['vi'] = array(
 $messages['zh-hans'] = array(
 	'pageimages-desc' => '收集有关图像在页面上使用的信息',
 );
+
+/** Traditional Chinese (中文（繁體）‎)
+ * @author Justincheng12345
+ */
+$messages['zh-hant'] = array(
+	'pageimages-desc' => '收集有關頁面中圖像的資訊',
+);
