@@ -211,6 +211,13 @@ $messages['roa-tara'] = array(
 	'pageimages-desc' => "Collezzione 'mbormaziune sus a le immaggine ausate sus 'à pàgene",
 );
 
+/** Russian (русский)
+ * @author Okras
+ */
+$messages['ru'] = array(
+	'pageimages-desc' => 'Собирает информацию об изображениях, используемых на странице',
+);
+
 /** Swedish (svenska)
  * @author Ainali
  */
