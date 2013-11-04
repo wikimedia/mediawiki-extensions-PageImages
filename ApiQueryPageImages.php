@@ -58,7 +58,7 @@ class ApiQueryPageImages extends ApiQueryBase {
 		if ( count( $titles ) > 0 ) {
 			$this->addTables( 'page_props' );
 			$this->addFields( array( 'pp_page', 'pp_propname', 'pp_value' ) );
-			$this->addWhere( array( 'pp_page' => array_keys( $titles ), 'pp_propname' => 'page_image' ) );
+			$this->addWhere( array( 'pp_page' => array_keys( $titles ), 'pp_propname' => PageImages::PROP_NAME ) );
 
 			wfProfileIn( __METHOD__ . '-select' );
 			$res = $this->select( __METHOD__ );

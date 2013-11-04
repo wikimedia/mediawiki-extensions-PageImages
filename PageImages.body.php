@@ -2,6 +2,34 @@
 
 class PageImages {
 	/**
+	 * Page property used to store the page image information
+	 */
+	const PROP_NAME = 'page_image';
+
+	/**
+	 * Returns page image for a given title
+	 *
+	 * @param Title $title: Title to get page image for
+	 *
+	 * @return File|null
+	 */
+	public static function getPageImage( Title $title ) {
+		wfProfileIn( __METHOD__ );
+		$dbr = wfGetDB( DB_SLAVE );
+		$name = $dbr->selectField( 'page_props',
+			'pp_value',
+			array( 'pp_page' => $title->getArticleID(), 'pp_propname' => self::PROP_NAME ),
+			__METHOD__
+		);
+		$file = null;
+		if ( $name ) {
+			$file = wfFindFile( $name );
+		}
+		wfProfileOut( __METHOD__ );
+		return $file;
+	}
+
+	/**
 	 * Returns true if data for this title should be saved
 	 *
 	 * @param Title $title
@@ -76,7 +104,7 @@ class PageImages {
 			}
 		}
 		if ( $image ) {
-			$lu->mProperties['page_image'] = $image;
+			$lu->mProperties[self::PROP_NAME] = $image;
 		}
 
 		return true;
