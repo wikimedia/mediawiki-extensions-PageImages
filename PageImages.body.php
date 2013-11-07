@@ -111,8 +111,7 @@ class PageImages {
 	}
 
 	/**
-	 * OpenSearchXml hook handler, enhances Extension:OpenSearchXml results with this GagaImages data
-	 * @see https://www.mediawiki.org/wiki/Manual:Hooks/LinksUpdate
+	 * OpenSearchXml hook handler, enhances Extension:OpenSearchXml results with this extension's data
 	 * @param array $results
 	 * @return bool
 	 */
@@ -135,8 +134,8 @@ class PageImages {
 		$api->execute();
 		$data = $api->getResultData();
 		foreach ( $pageIds as $id ) {
-			if ( isset( $data['query']['pages'][$id]['thumb'] ) ) {
-				$results[$id]['image'] = $data['query']['pages'][$id]['thumb'];
+			if ( isset( $data['query']['pages'][$id]['thumbnail'] ) ) {
+				$results[$id]['image'] = $data['query']['pages'][$id]['thumbnail'];
 			} else {
 				$results[$id]['image'] = null;
 			}
