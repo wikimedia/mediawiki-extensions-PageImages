@@ -29,7 +29,7 @@ $messages['be-tarask'] = array(
 	'pageimages-desc' => 'Зьбірае зьвесткі пра выявы, выкарыстаныя на старонцы',
 );
 
-/** Czech (česky)
+/** Czech (čeština)
  * @author Mormegil
  */
 $messages['cs'] = array(
