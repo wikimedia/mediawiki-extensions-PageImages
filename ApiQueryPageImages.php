@@ -148,7 +148,7 @@ class ApiQueryPageImages extends ApiQueryBase {
 				' thumbnail - URL and dimensions of image associated with page, if any',
 				' name - image title'
 			),
-			'thumbsize' => 'Thumbnail width',
+			'thumbsize' => 'Maximum thumbnail dimension',
 			'limit' => 'Properties of how many pages to return',
 			'continue' => 'When more results are available, use this to continue',
 		);
