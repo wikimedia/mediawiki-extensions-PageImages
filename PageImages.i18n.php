@@ -29,6 +29,13 @@ $messages['be-tarask'] = array(
 	'pageimages-desc' => 'Зьбірае зьвесткі пра выявы, выкарыстаныя на старонцы',
 );
 
+/** Chechen (нохчийн)
+ * @author Умар
+ */
+$messages['ce'] = array(
+	'pageimages-desc' => 'АгӀонашкахь лелина долу суьртийн хаам схьагулбо',
+);
+
 /** Czech (čeština)
  * @author Mormegil
  */
