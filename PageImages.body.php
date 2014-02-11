@@ -73,6 +73,8 @@ class PageImages {
 			}
 		}
 		$myParams['filename'] = $title->getDBkey();
+		$myParams['fullwidth'] = $file->getWidth();
+		$myParams['fullheight'] = $file->getHeight();
 		$out->pageImages[] = $myParams;
 		return true;
 	}
@@ -87,6 +89,7 @@ class PageImages {
 		if ( !isset( $lu->getParserOutput()->pageImages ) ) {
 			return true;
 		}
+		wfProfileIn( __METHOD__ );
 		$images = $lu->getParserOutput()->pageImages;
 		$scores = array();
 		$counter = 0;
@@ -106,6 +109,7 @@ class PageImages {
 		if ( $image ) {
 			$lu->mProperties[self::PROP_NAME] = $image;
 		}
+		wfProfileOut( __METHOD__ );
 
 		return true;
 	}
@@ -154,21 +158,53 @@ class PageImages {
 	private static function getScore( array $image, $position ) {
 		global $wgPageImagesScores;
 
-		$score = 0;
-		foreach ( $wgPageImagesScores['width'] as $maxWidth => $scoreDiff ) {
-			if ( $image['handler']['width'] <= $maxWidth ) {
-				$score += $scoreDiff;
-				break;
-			}
-		}
+		$score = self::scoreFromTable( $image['handler']['width'], $wgPageImagesScores['width'] );
+
 		if ( isset( $wgPageImagesScores['position'][$position] ) ) {
 			$score += $wgPageImagesScores['position'][$position];
 		}
+
+		$ratio = intval( self::getRatio( $image ) * 10 );
+		$score += self::scoreFromTable( $ratio, $wgPageImagesScores['ratio'] );
+
 		$blacklist = self::getBlacklist();
 		if ( isset( $blacklist[$image['filename']] ) ) {
-			$score -= 1000;
+			$score = -1000;
 		}
 		return $score;
+	}
+
+	/**
+	 * Returns width/height ratio of an image as displayed or 0 is not available
+	 *
+	 * @param array $image
+	 * @return int
+	 */
+	private static function getRatio( array $image ) {
+		$width = $image['fullwidth'];
+		$height = $image['fullheight'];
+		if ( !$width || !$height ) {
+			return 0;
+		}
+		return $width / $height;
+	}
+
+	/**
+	 * Returns score based on table of ranges
+	 *
+	 * @param int|float $value
+	 * @param array $scores
+	 * @return int
+	 */
+	private static function scoreFromTable( $value, array $scores ) {
+		$lastScore = 0;
+		foreach ( $scores as $boundary => $score ) {
+			if ( $value <= $boundary ) {
+				return $score;
+			}
+			$lastScore = $score;
+		}
+		return $lastScore;
 	}
 
 	/**

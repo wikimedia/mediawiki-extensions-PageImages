@@ -26,12 +26,26 @@ $wgHooks['OpenSearchXml'][] = 'PageImages::onOpenSearchXml';
 
 $wgAPIPropModules['pageimages'] = 'ApiQueryPageImages';
 
+/**
+ * Configures how various aspects of image affect its score
+ */
 $wgPageImagesScores = array(
+	/** position of image in article */
 	'position' => array( 8, 6, 4, 3 ),
+	/** image width */
 	'width' => array(
 		99 => -100, // Very small images are usually from maintenace or stub templates
 		300 => 10,
 		500 => 5, // Larger images are panoramas, less suitable
+		501 => 0,
+	),
+	/** width/height ratio, in tenths */
+	'ratio' => array(
+		3 => -100,
+		5 => 0,
+		20 => 5,
+		30 => 0,
+		31 => -100,
 	),
 );
 
