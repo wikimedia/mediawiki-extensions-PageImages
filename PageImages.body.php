@@ -45,7 +45,7 @@ class PageImages {
 	}
 
 	/**
-	 * ParserMakeImageParams hook handler, saes extended information about images used on page
+	 * ParserMakeImageParams hook handler, saves extended information about images used on page
 	 * @see https://www.mediawiki.org/wiki/Manual:Hooks/ParserMakeImageParams
 	 * @param Title $title
 	 * @param File|bool $file
