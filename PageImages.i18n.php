@@ -225,6 +225,13 @@ $messages['ru'] = array(
 	'pageimages-desc' => 'Собирает информацию об изображениях, используемых на странице',
 );
 
+/** Scots (Scots)
+ * @author John Reid
+ */
+$messages['sco'] = array(
+	'pageimages-desc' => 'Collects information aneat eimages uised oan page',
+);
+
 /** Swedish (svenska)
  * @author Ainali
  */
