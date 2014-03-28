@@ -14,11 +14,11 @@ $wgExtensionCredits['api'][] = array(
 	'url'            => 'https://www.mediawiki.org/wiki/Extension:PageImages'
 );
 
-$dir = dirname( __FILE__ );
-$wgAutoloadClasses['ApiQueryPageImages'] = "$dir/ApiQueryPageImages.php";
-$wgAutoloadClasses['PageImages'] = "$dir/PageImages.body.php";
+$wgAutoloadClasses['ApiQueryPageImages'] = __DIR__ . "/ApiQueryPageImages.php";
+$wgAutoloadClasses['PageImages'] = __DIR__ . "/PageImages.body.php";
 
-$wgExtensionMessagesFiles['PageImages'] = "$dir/PageImages.i18n.php";
+$wgMessagesDirs['PageImages'] = __DIR__ . '/i18n';
+$wgExtensionMessagesFiles['PageImages'] = __DIR__ . "/PageImages.i18n.php";
 
 $wgHooks['ParserMakeImageParams'][] = 'PageImages::onParserMakeImageParams';
 $wgHooks['LinksUpdate'][] = 'PageImages::onLinksUpdate';
