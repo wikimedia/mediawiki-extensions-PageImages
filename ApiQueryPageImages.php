@@ -85,6 +85,10 @@ class ApiQueryPageImages extends ApiQueryBase {
 		wfProfileOut( __METHOD__ );
 	}
 
+	public function getCacheMode( $params ) {
+		return 'public';
+	}
+
 	/**
 	 * For a given page, set API return values for thumbnail and pageimage as needed
 	 *
