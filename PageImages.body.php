@@ -80,6 +80,8 @@ class PageImages {
 	 * @param File $file
 	 */
 	private static function calcWidth( array &$params, File $file ) {
+		global $wgThumbLimits, $wgDefaultUserOptions;
+
 		if ( isset( $params['handler']['width'] ) ) {
 			return;
 		}
@@ -90,7 +92,7 @@ class PageImages {
 			|| isset( $params['frame']['thumb'] )
 			|| isset( $params['frame']['frameless'] ) )
 		{
-			$params['handler']['width'] = 250;
+			$params['handler']['width'] = $wgThumbLimits[$wgDefaultUserOptions['thumbsize']];
 		} else {
 			$params['handler']['width'] = $file->getWidth();
 		}
