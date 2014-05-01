@@ -62,21 +62,38 @@ class PageImages {
 			$out->pageImages = array();
 		}
 		$myParams = $params;
-		if ( !isset( $myParams['handler']['width'] ) ) {
-			if ( isset( $myParams['frame']['thumbnail'] )
-				|| isset( $myParams['frame']['thumb'] )
-				|| isset( $myParams['frame']['frameless'] ) )
-			{
-				$myParams['handler']['width'] = 250;
-			} else {
-				$myParams['handler']['width'] = $file->getWidth();
-			}
-		}
+		self::calcWidth( $myParams, $file );
+
 		$myParams['filename'] = $title->getDBkey();
 		$myParams['fullwidth'] = $file->getWidth();
 		$myParams['fullheight'] = $file->getHeight();
 		$out->pageImages[] = $myParams;
 		return true;
+	}
+
+	/**
+	 * Estimates image size as displayed if not explicitly provided.
+	 * We don't follow the core size calculation algorithm precisely because it's not required and editor's
+	 * intentions are more important than the precise number.
+	 *
+	 * @param array $params
+	 * @param File $file
+	 */
+	private static function calcWidth( array &$params, File $file ) {
+		if ( isset( $params['handler']['width'] ) ) {
+			return;
+		}
+		if ( isset( $params['handler']['height'] ) && $file->getHeight() > 0 ) {
+			$params['handler']['width'] =
+				$file->getWidth() * ( $params['handler']['height'] / $file->getHeight() );
+		} elseif ( isset( $params['frame']['thumbnail'] )
+			|| isset( $params['frame']['thumb'] )
+			|| isset( $params['frame']['frameless'] ) )
+		{
+			$params['handler']['width'] = 250;
+		} else {
+			$params['handler']['width'] = $file->getWidth();
+		}
 	}
 
 	/**
