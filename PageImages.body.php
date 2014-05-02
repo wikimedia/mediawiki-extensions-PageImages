@@ -134,6 +134,45 @@ class PageImages {
 	}
 
 	/**
+	 * InfoAction hook handler, adds the page image to the info=action page
+	 * @see https://www.mediawiki.org/wiki/Manual:Hooks/InfoAction
+	 * @param IContextSource $context
+	 * @param array $pageInfo
+	 * @return bool
+	 */
+	public static function onInfoAction( IContextSource $context, &$pageInfo ) {
+		global $wgDefaultUserOptions, $wgThumbLimits;
+
+		wfProfileIn( __METHOD__ );
+		$imageFile = self::getPageImage( $context->getTitle() );
+		if ( $imageFile === null ) {
+			// The page has no image
+			wfProfileOut( __METHOD__ );
+			return true;
+		}
+
+		$thumbSetting = $context->getUser()->getOption(
+			'thumbsize',
+			$wgDefaultUserOptions['thumbsize']
+		);
+		$thumbSize = $wgThumbLimits[$thumbSetting];
+
+		$imageHtml = $imageFile->transform( array( 'width' => $thumbSize ) )->toHtml(
+			array(
+				'alt' => $imageFile->getTitle()->getText(),
+				'desc-link' => true,
+			)
+		);
+
+		$pageInfo['header-basic'][] = array(
+			$context->msg( 'pageimages-info-label' ),
+			$imageHtml
+		);
+		wfProfileOut( __METHOD__ );
+		return true;
+	}
+
+	/**
 	 * OpenSearchXml hook handler, enhances Extension:OpenSearchXml results with this extension's data
 	 * @param array $results
 	 * @return bool

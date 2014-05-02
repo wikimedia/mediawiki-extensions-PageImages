@@ -23,6 +23,7 @@ $wgExtensionMessagesFiles['PageImages'] = __DIR__ . "/PageImages.i18n.php";
 $wgHooks['ParserMakeImageParams'][] = 'PageImages::onParserMakeImageParams';
 $wgHooks['LinksUpdate'][] = 'PageImages::onLinksUpdate';
 $wgHooks['OpenSearchXml'][] = 'PageImages::onOpenSearchXml';
+$wgHooks['InfoAction'][] = 'PageImages::onInfoAction';
 
 $wgAPIPropModules['pageimages'] = 'ApiQueryPageImages';
 
