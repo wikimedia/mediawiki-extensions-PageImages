@@ -1,8 +1,10 @@
 {
 	"@metadata": {
 		"authors": [
-			"Kghbln"
+			"Kghbln",
+			"Metalhead64"
 		]
 	},
-	"pageimages-desc": "Ermöglicht das Sammeln von Informationen zu Bildern, die sich auf einer Seite befinden"
+	"pageimages-desc": "Ermöglicht das Sammeln von Informationen zu Bildern, die sich auf einer Seite befinden",
+	"pageimages-info-label": "Seitenbild"
 }

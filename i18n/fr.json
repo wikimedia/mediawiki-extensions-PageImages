@@ -1,8 +1,10 @@
 {
 	"@metadata": {
 		"authors": [
-			"DavidL"
+			"DavidL",
+			"Gomoko"
 		]
 	},
-	"pageimages-desc": "Recueille des informations sur les images utilisées sur les pages"
+	"pageimages-desc": "Recueille des informations sur les images utilisées sur les pages",
+	"pageimages-info-label": "Image de la page"
 }
