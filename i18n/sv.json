@@ -1,8 +1,10 @@
 {
 	"@metadata": {
 		"authors": [
-			"Ainali"
+			"Ainali",
+			"Lokal Profil"
 		]
 	},
-	"pageimages-desc": "Samlar in information om bilder som används på sidan"
+	"pageimages-desc": "Samlar in information om bilder som används på sidan",
+	"pageimages-info-label": "Sidbild"
 }
