@@ -11,7 +11,7 @@ class PageImages {
 	 *
 	 * @param Title $title: Title to get page image for
 	 *
-	 * @return File|null
+	 * @return File|bool
 	 */
 	public static function getPageImage( Title $title ) {
 		wfProfileIn( __METHOD__ );
@@ -21,7 +21,7 @@ class PageImages {
 			array( 'pp_page' => $title->getArticleID(), 'pp_propname' => self::PROP_NAME ),
 			__METHOD__
 		);
-		$file = null;
+		$file = false;
 		if ( $name ) {
 			$file = wfFindFile( $name );
 		}
@@ -145,7 +145,7 @@ class PageImages {
 
 		wfProfileIn( __METHOD__ );
 		$imageFile = self::getPageImage( $context->getTitle() );
-		if ( $imageFile === null ) {
+		if ( !$imageFile ) {
 			// The page has no image
 			wfProfileOut( __METHOD__ );
 			return true;
@@ -157,7 +157,12 @@ class PageImages {
 		);
 		$thumbSize = $wgThumbLimits[$thumbSetting];
 
-		$imageHtml = $imageFile->transform( array( 'width' => $thumbSize ) )->toHtml(
+		$thumb = $imageFile->transform( array( 'width' => $thumbSize ) );
+		if ( !$thumb ) {
+			wfProfileOut( __METHOD__ );
+			return true;
+		}
+		$imageHtml = $thumb->toHtml(
 			array(
 				'alt' => $imageFile->getTitle()->getText(),
 				'desc-link' => true,
