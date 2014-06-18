@@ -24,6 +24,7 @@ $wgHooks['ParserMakeImageParams'][] = 'PageImages::onParserMakeImageParams';
 $wgHooks['LinksUpdate'][] = 'PageImages::onLinksUpdate';
 $wgHooks['OpenSearchXml'][] = 'PageImages::onOpenSearchXml';
 $wgHooks['InfoAction'][] = 'PageImages::onInfoAction';
+$wgHooks['AfterParserFetchFileAndTitle'][] = 'PageImages::onAfterParserFetchFileAndTitle';
 
 $wgAPIPropModules['pageimages'] = 'ApiQueryPageImages';
 
@@ -33,12 +34,17 @@ $wgAPIPropModules['pageimages'] = 'ApiQueryPageImages';
 $wgPageImagesScores = array(
 	/** position of image in article */
 	'position' => array( 8, 6, 4, 3 ),
-	/** image width */
+	/** image width as shown on page */
 	'width' => array(
 		99 => -100, // Very small images are usually from maintenace or stub templates
 		300 => 10,
 		500 => 5, // Larger images are panoramas, less suitable
 		501 => 0,
+	),
+	/** real width of a gallery image */
+	'galleryImageWidth' => array(
+		99 => -100,
+		100 => 0,
 	),
 	/** width/height ratio, in tenths */
 	'ratio' => array(
@@ -83,3 +89,8 @@ $wgPageImagesExpandOpenSearchXml = false;
  * Collect data only for these namespaces
  */
 $wgPageImagesNamespaces = array( NS_MAIN );
+
+/**
+ * If set to true, allows selecting images from galleries as page images
+ */
+$wgPageImagesUseGalleries = false;

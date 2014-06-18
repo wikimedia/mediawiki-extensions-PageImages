@@ -54,21 +54,53 @@ class PageImages {
 	 * @return bool
 	 */
 	public static function onParserMakeImageParams( Title $title, $file, array &$params, Parser $parser ) {
+		self::processFile( $parser, $file, $params );
+		return true;
+	}
+
+	/**
+	 * AfterParserFetchFileAndTitle hook handler, saves information about gallery images
+	 * @param Parser $parser
+	 * @param ImageGalleryBase $ig
+	 * @return bool
+	 */
+	public static function onAfterParserFetchFileAndTitle( Parser $parser, ImageGalleryBase $ig ) {
+		foreach ( $ig->getImages() as $image ) {
+			self::processFile( $parser, $image[0], null );
+		}
+		return true;
+	}
+
+	/**
+	 * @param Parser $parser
+	 * @param File|Title|null $file
+	 * @param array|null $handlerParams
+	 */
+	private static function processFile( Parser $parser, $file, $handlerParams ) {
 		if ( !$file || !self::processThisTitle( $parser->getTitle() ) ) {
-			return true;
+			return;
+		}
+		if ( !$file instanceof File ) {
+			$file = wfFindFile( $file );
+			if ( !$file ) {
+				return;
+			}
 		}
 		$out = $parser->getOutput();
 		if ( !isset( $out->pageImages ) ) {
 			$out->pageImages = array();
 		}
-		$myParams = $params;
-		self::calcWidth( $myParams, $file );
+		if ( is_array( $handlerParams ) ) {
+			$myParams = $handlerParams;
+			self::calcWidth( $myParams, $file );
+		} else {
+			$myParams = array();
+		}
 
-		$myParams['filename'] = $title->getDBkey();
+		$myParams['filename'] = $file->getTitle()->getDBkey();
 		$myParams['fullwidth'] = $file->getWidth();
 		$myParams['fullheight'] = $file->getHeight();
 		$out->pageImages[] = $myParams;
-		return true;
 	}
 
 	/**
@@ -223,7 +255,13 @@ class PageImages {
 	private static function getScore( array $image, $position ) {
 		global $wgPageImagesScores;
 
-		$score = self::scoreFromTable( $image['handler']['width'], $wgPageImagesScores['width'] );
+		if ( isset( $image['handler'] ) ) {
+			// Standalone image
+			$score = self::scoreFromTable( $image['handler']['width'], $wgPageImagesScores['width'] );
+		} else {
+			// From gallery
+			$score = self::scoreFromTable( $image['fullwidth'], $wgPageImagesScores['galleryImageWidth'] );
+		}
 
 		if ( isset( $wgPageImagesScores['position'][$position] ) ) {
 			$score += $wgPageImagesScores['position'][$position];
