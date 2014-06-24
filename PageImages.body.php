@@ -92,7 +92,9 @@ class PageImages {
 			|| isset( $params['frame']['thumb'] )
 			|| isset( $params['frame']['frameless'] ) )
 		{
-			$params['handler']['width'] = $wgThumbLimits[$wgDefaultUserOptions['thumbsize']];
+			$params['handler']['width'] = isset( $wgThumbLimits[$wgDefaultUserOptions['thumbsize']] )
+				? $wgThumbLimits[$wgDefaultUserOptions['thumbsize']]
+				: 250;
 		} else {
 			$params['handler']['width'] = $file->getWidth();
 		}
