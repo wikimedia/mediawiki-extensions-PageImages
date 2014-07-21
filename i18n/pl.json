@@ -1,8 +1,10 @@
 {
 	"@metadata": {
 		"authors": [
-			"Woytecr"
+			"Woytecr",
+			"WTM"
 		]
 	},
-	"pageimages-desc": "Zbiera informacje o obrazach wykorzystywanych na stronie"
+	"pageimages-desc": "Zbiera informacje o grafikach wykorzystywanych na stronie",
+	"pageimages-info-label": "Grafika dla strony"
 }
