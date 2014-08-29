@@ -161,14 +161,6 @@ class ApiQueryPageImages extends ApiQueryBase {
 		);
 	}
 
-	public function getPossibleErrors() {
-		return array_merge( parent::getPossibleErrors(), array(
-				array( 'code' => '_noprop', 'info' => 'At least one prop should be specified' ),
-				array( 'code' => '_badcontinue', 'info' => 'Invalid continue param. You should pass the original value returned by the previous query' ),
-			)
-		);
-	}
-
 	public function getVersion() {
 		return '';
 	}
