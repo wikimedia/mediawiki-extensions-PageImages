@@ -25,6 +25,7 @@ $wgHooks['LinksUpdate'][] = 'PageImages::onLinksUpdate';
 $wgHooks['OpenSearchXml'][] = 'PageImages::onOpenSearchXml';
 $wgHooks['InfoAction'][] = 'PageImages::onInfoAction';
 $wgHooks['AfterParserFetchFileAndTitle'][] = 'PageImages::onAfterParserFetchFileAndTitle';
+$wgHooks['SpecialMobileEditWatchlist::images'][] = 'PageImages::onSpecialMobileEditWatchlist_images';
 
 $wgAPIPropModules['pageimages'] = 'ApiQueryPageImages';
 

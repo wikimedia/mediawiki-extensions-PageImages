@@ -223,26 +223,76 @@ class PageImages {
 		}
 		wfProfileIn( __METHOD__ );
 		$pageIds = array_keys( $results );
-		$api = new ApiMain(
-			new FauxRequest( array(
-				'action' => 'query',
-				'prop' => 'pageimages',
-				'piprop' => 'thumbnail',
-				'pageids' => implode( '|', $pageIds ),
-				'pilimit' => count( $results ),
-			) )
-		);
-		$api->execute();
-		$data = $api->getResultData();
+		$data = self::getImages( $pageIds, 50 );
 		foreach ( $pageIds as $id ) {
-			if ( isset( $data['query']['pages'][$id]['thumbnail'] ) ) {
-				$results[$id]['image'] = $data['query']['pages'][$id]['thumbnail'];
+			if ( isset( $data[$id]['thumbnail'] ) ) {
+				$results[$id]['image'] = $data[$id]['thumbnail'];
 			} else {
 				$results[$id]['image'] = null;
 			}
 		}
 		wfProfileOut( __METHOD__ );
 		return true;
+	}
+
+	/**
+	 * SpecialMobileEditWatchlist::images hook handler, adds images to mobile watchlist A-Z view
+	 *
+	 * @param IContextSource $context
+	 * @param $watchlist
+	 * @param $images
+	 * @return true
+	 */
+	public static function onSpecialMobileEditWatchlist_images( IContextSource $context, $watchlist,
+		&$images
+	) {
+		$ids = array();
+		foreach ( $watchlist as $ns => $pages ) {
+			foreach ( array_keys( $pages ) as $dbKey ) {
+				$title = Title::makeTitle( $ns, $dbKey );
+				// Getting page ID here is safe because SpecialEditWatchlist::getWatchlistInfo()
+				// uses LinkBatch
+				$id = $title->getArticleID();
+				if ( $id ) {
+					$ids[$id] = $dbKey;
+				}
+			}
+		}
+		$data = self::getImages( array_keys( $ids ) );
+		foreach ( $data as $id => $page ) {
+			if ( isset( $page['pageimage'] ) ) {
+				$images[ $page['ns'] ][ $ids[$id] ] = $page['pageimage'];
+			}
+		}
+		return true;
+	}
+
+	/**
+	 * Returns image information for pages with given ids
+	 *
+	 * @param array $pageIds
+	 * @param $size
+	 * @return array
+	 */
+	private static function getImages( array $pageIds, $size = 0 ) {
+		$request = array(
+			'action' => 'query',
+			'prop' => 'pageimages',
+			'piprop' => 'name',
+			'pageids' => implode( '|', $pageIds ),
+			'pilimit' => 'max',
+		);
+		if ( $size ) {
+			$request['piprop'] = 'thumbnail';
+			$request['pithumbsize'] = $size;
+		}
+		$api = new ApiMain( new FauxRequest( $request ) );
+		$api->execute();
+		$data = $api->getResultData();
+		if ( isset( $data['query']['pages'] ) ) {
+			return $data['query']['pages'];
+		}
+		return array();
 	}
 
 	/**
