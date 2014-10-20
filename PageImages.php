@@ -37,10 +37,10 @@ $wgPageImagesScores = array(
 	'position' => array( 8, 6, 4, 3 ),
 	/** image width as shown on page */
 	'width' => array(
-		99 => -100, // Very small images are usually from maintenace or stub templates
-		300 => 10,
-		500 => 5, // Larger images are panoramas, less suitable
-		501 => 0,
+		119 => -100, // Very small images are usually from maintenace or stub templates
+		400 => 10,
+		600 => 5, // Larger images are panoramas, less suitable
+		601 => 0,
 	),
 	/** real width of a gallery image */
 	'galleryImageWidth' => array(
