@@ -4,5 +4,9 @@
 	},
 	"pageimages-desc": "Collects information about images used on page",
 	"pageimages-blacklist": "",
-	"pageimages-info-label": "Page image"
+	"pageimages-info-label": "Page image",
+	"apihelp-query+pageimages-description": "Returns information about images on the page, such as thumbnail and presence of photos.",
+	"apihelp-query+pageimages-param-prop": "Which information to return:\n;thumbnail:URL and dimensions of image associated with page, if any.\n;name:Image title.",
+	"apihelp-query+pageimages-param-thumbsize": "Maximum thumbnail dimension.",
+	"apihelp-query+pageimages-param-limit": "Properties of how many pages to return."
 }

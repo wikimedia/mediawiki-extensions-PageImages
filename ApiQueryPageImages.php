@@ -121,6 +121,9 @@ class ApiQueryPageImages extends ApiQueryBase {
 		$this->getResult()->addValue( array( 'query', 'pages' ), $pageId, $vals );
 	}
 
+	/**
+	 * @deprecated since MediaWiki core 1.25
+	 */
 	public function getDescription() {
 		return 'Returns information about images on the page such as thumbnail and presence of photos.';
 	}
@@ -145,10 +148,15 @@ class ApiQueryPageImages extends ApiQueryBase {
 			),
 			'continue' => array(
 				ApiBase::PARAM_TYPE => 'integer',
+				/** @todo Once support for MediaWiki < 1.25 is dropped, just use ApiBase::PARAM_HELP_MSG directly */
+				constant( 'ApiBase::PARAM_HELP_MSG' ) ?: '' => 'api-help-param-continue',
 			),
 		);
 	}
 
+	/**
+	 * @deprecated since MediaWiki core 1.25
+	 */
 	public function getParamDescription() {
 		return array(
 			'prop' => array( 'What information to return',
@@ -159,9 +167,5 @@ class ApiQueryPageImages extends ApiQueryBase {
 			'limit' => 'Properties of how many pages to return',
 			'continue' => 'When more results are available, use this to continue',
 		);
-	}
-
-	public function getVersion() {
-		return '';
 	}
 }
