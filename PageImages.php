@@ -22,7 +22,8 @@ $wgExtensionMessagesFiles['PageImages'] = __DIR__ . "/PageImages.i18n.php";
 
 $wgHooks['ParserMakeImageParams'][] = 'PageImages::onParserMakeImageParams';
 $wgHooks['LinksUpdate'][] = 'PageImages::onLinksUpdate';
-$wgHooks['OpenSearchXml'][] = 'PageImages::onOpenSearchXml';
+$wgHooks['OpenSearchXml'][] = 'PageImages::onApiOpenSearchSuggest';
+$wgHooks['ApiOpenSearchSuggest'][] = 'PageImages::onApiOpenSearchSuggest';
 $wgHooks['InfoAction'][] = 'PageImages::onInfoAction';
 $wgHooks['AfterParserFetchFileAndTitle'][] = 'PageImages::onAfterParserFetchFileAndTitle';
 $wgHooks['SpecialMobileEditWatchlist::images'][] = 'PageImages::onSpecialMobileEditWatchlist_images';
@@ -82,7 +83,7 @@ $wgPageImagesBlacklist = array(
 $wgPageImagesBlacklistExpiry = 60 * 15;
 
 /**
- * Whether this extension's image information should be used by OpenSearchXml
+ * Whether this extension's image information should be used by OpenSearch
  */
 $wgPageImagesExpandOpenSearchXml = false;
 
