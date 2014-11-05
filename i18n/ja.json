@@ -5,5 +5,6 @@
 		]
 	},
 	"pageimages-desc": "ページで使用されている画像についての情報を収集する",
-	"pageimages-info-label": "ページの画像"
+	"pageimages-info-label": "ページの画像",
+	"apihelp-query+pageimages-param-limit": "返すページの件数です。"
 }
