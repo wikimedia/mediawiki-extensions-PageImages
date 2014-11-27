@@ -212,11 +212,11 @@ class PageImages {
 	}
 
 	/**
-	 * OpenSearchXml hook handler, enhances Extension:OpenSearchXml results with this extension's data
+	 * ApiOpenSearchSuggest hook handler, enhances ApiOpenSearch results with this extension's data
 	 * @param array $results
 	 * @return bool
 	 */
-	public static function onOpenSearchXml( &$results ) {
+	public static function onApiOpenSearchSuggest( &$results ) {
 		global $wgPageImagesExpandOpenSearchXml;
 		if ( !$wgPageImagesExpandOpenSearchXml || !count( $results ) ) {
 			return true;
