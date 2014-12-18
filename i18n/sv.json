@@ -6,5 +6,8 @@
 		]
 	},
 	"pageimages-desc": "Samlar in information om bilder som används på sidan",
-	"pageimages-info-label": "Sidbild"
+	"pageimages-info-label": "Sidbild",
+	"apihelp-query+pageimages-description": "Returnerar information om bilder på sidan, så som miniatyrer och närvaro av fotografier.",
+	"apihelp-query+pageimages-param-prop": "Vilken information som ska returneras:\n;thumbnail:URL och dimensioner av bild associerad med sidan, om någon.\n;name:Bildtitel",
+	"apihelp-query+pageimages-param-thumbsize": "Maximala dimensioner för miniatyr."
 }
