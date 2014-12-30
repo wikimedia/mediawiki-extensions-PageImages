@@ -288,11 +288,17 @@ class PageImages {
 		}
 		$api = new ApiMain( new FauxRequest( $request ) );
 		$api->execute();
-		$data = $api->getResultData();
-		if ( isset( $data['query']['pages'] ) ) {
-			return $data['query']['pages'];
+		if ( defined( 'ApiResult::META_CONTENT' ) ) {
+			return ApiResult::removeMetadataNonRecursive(
+				(array)$api->getResult()->getResultData( array( 'query', 'pages' ) )
+			);
+		} else {
+			$data = $api->getResultData();
+			if ( isset( $data['query']['pages'] ) ) {
+				return $data['query']['pages'];
+			}
+			return array();
 		}
-		return array();
 	}
 
 	/**
