@@ -388,7 +388,7 @@ class PageImages {
 					$list = array_merge( $list, self::getUrlBlacklist( $source['url'] ) );
 					break;
 				default:
-					throw new MWException( __METHOD__ . "(): unrecognized image blacklist type '{$source['type']}'" );
+					throw new Exception( __METHOD__ . "(): unrecognized image blacklist type '{$source['type']}'" );
 			}
 		}
 		$list = array_flip( $list );
