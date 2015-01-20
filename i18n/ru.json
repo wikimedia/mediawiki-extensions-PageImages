@@ -5,5 +5,7 @@
 		]
 	},
 	"pageimages-desc": "Собирает информацию об изображениях, используемых на странице",
-	"pageimages-info-label": "Изображение страницы"
+	"pageimages-info-label": "Изображение страницы",
+	"apihelp-query+pageimages-description": "Возвращает информацию об изображениях на страницы, такие как эскиз и наличие фотографий.",
+	"apihelp-query+pageimages-param-thumbsize": "Максимальный размер эскизов."
 }
