@@ -14,7 +14,6 @@ class PageImages {
 	 * @return File|bool
 	 */
 	public static function getPageImage( Title $title ) {
-		wfProfileIn( __METHOD__ );
 		$dbr = wfGetDB( DB_SLAVE );
 		$name = $dbr->selectField( 'page_props',
 			'pp_value',
@@ -25,7 +24,6 @@ class PageImages {
 		if ( $name ) {
 			$file = wfFindFile( $name );
 		}
-		wfProfileOut( __METHOD__ );
 		return $file;
 	}
 
@@ -142,7 +140,6 @@ class PageImages {
 		if ( !isset( $lu->getParserOutput()->pageImages ) ) {
 			return true;
 		}
-		wfProfileIn( __METHOD__ );
 		$images = $lu->getParserOutput()->pageImages;
 		$scores = array();
 		$counter = 0;
@@ -162,7 +159,6 @@ class PageImages {
 		if ( $image ) {
 			$lu->mProperties[self::PROP_NAME] = $image;
 		}
-		wfProfileOut( __METHOD__ );
 
 		return true;
 	}
@@ -177,11 +173,9 @@ class PageImages {
 	public static function onInfoAction( IContextSource $context, &$pageInfo ) {
 		global $wgDefaultUserOptions, $wgThumbLimits;
 
-		wfProfileIn( __METHOD__ );
 		$imageFile = self::getPageImage( $context->getTitle() );
 		if ( !$imageFile ) {
 			// The page has no image
-			wfProfileOut( __METHOD__ );
 			return true;
 		}
 
@@ -193,7 +187,6 @@ class PageImages {
 
 		$thumb = $imageFile->transform( array( 'width' => $thumbSize ) );
 		if ( !$thumb ) {
-			wfProfileOut( __METHOD__ );
 			return true;
 		}
 		$imageHtml = $thumb->toHtml(
@@ -207,7 +200,7 @@ class PageImages {
 			$context->msg( 'pageimages-info-label' ),
 			$imageHtml
 		);
-		wfProfileOut( __METHOD__ );
+
 		return true;
 	}
 
@@ -218,10 +211,10 @@ class PageImages {
 	 */
 	public static function onApiOpenSearchSuggest( &$results ) {
 		global $wgPageImagesExpandOpenSearchXml;
+
 		if ( !$wgPageImagesExpandOpenSearchXml || !count( $results ) ) {
 			return true;
 		}
-		wfProfileIn( __METHOD__ );
 		$pageIds = array_keys( $results );
 		$data = self::getImages( $pageIds, 50 );
 		foreach ( $pageIds as $id ) {
@@ -231,7 +224,7 @@ class PageImages {
 				$results[$id]['image'] = null;
 			}
 		}
-		wfProfileOut( __METHOD__ );
+
 		return true;
 	}
 
@@ -366,15 +359,15 @@ class PageImages {
 	 */
 	private static function getBlacklist() {
 		global $wgPageImagesBlacklist, $wgPageImagesBlacklistExpiry, $wgMemc;
+
 		static $list = false;
 		if ( $list !== false ) {
 			return $list;
 		}
-		wfProfileIn( __METHOD__ );
+
 		$key = wfMemcKey( 'pageimages', 'blacklist' );
 		$list = $wgMemc->get( $key );
 		if ( $list !== false ) {
-			wfProfileOut( __METHOD__ );
 			return $list;
 		}
 		wfDebug( __METHOD__ . "(): cache miss\n" );
@@ -393,7 +386,6 @@ class PageImages {
 		}
 		$list = array_flip( $list );
 		$wgMemc->set( $key, $list, $wgPageImagesBlacklistExpiry );
-		wfProfileOut( __METHOD__ );
 		return $list;
 	}
 
@@ -404,7 +396,6 @@ class PageImages {
 	 * @return array
 	 */
 	private static function getDbBlacklist( $dbName, $page ) {
-		wfProfileIn( __METHOD__ );
 		$dbr = wfGetDB( DB_SLAVE, array(), $dbName );
 		$title = Title::newFromText( $page );
 		$list = array();
@@ -423,7 +414,7 @@ class PageImages {
 				$list[] = $row->pl_title;
 			}
 		}
-		wfProfileOut( __METHOD__ );
+
 		return $list;
 	}
 
@@ -436,7 +427,7 @@ class PageImages {
 	 */
 	private static function getUrlBlacklist( $url ) {
 		global $wgFileExtensions;
-		wfProfileIn( __METHOD__ );
+
 		$list = array();
 		$text = Http::get( $url, 3 );
 		$regex = '/\[\[:([^|\#]*?\.(?:' . implode( '|', $wgFileExtensions ) . '))/i';
@@ -448,7 +439,7 @@ class PageImages {
 				}
 			}
 		}
-		wfProfileOut( __METHOD__ );
+
 		return $list;
 	}
 }

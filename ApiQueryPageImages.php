@@ -9,10 +9,8 @@ class ApiQueryPageImages extends ApiQueryBase {
 	}
 
 	public function execute() {
-		wfProfileIn( __METHOD__ );
 		$allTitles = $this->getPageSet()->getGoodTitles();
 		if ( count( $allTitles ) == 0 ) {
-			wfProfileOut( __METHOD__ );
 			return;
 		}
 		$params = $this->extractRequestParams();
@@ -60,29 +58,21 @@ class ApiQueryPageImages extends ApiQueryBase {
 			$this->addFields( array( 'pp_page', 'pp_propname', 'pp_value' ) );
 			$this->addWhere( array( 'pp_page' => array_keys( $titles ), 'pp_propname' => PageImages::PROP_NAME ) );
 
-			wfProfileIn( __METHOD__ . '-select' );
 			$res = $this->select( __METHOD__ );
-			wfProfileOut( __METHOD__ . '-select' );
 
-			wfProfileIn( __METHOD__ . '-results-pages' );
 			foreach ( $res as $row ) {
 				$pageId = $row->pp_page;
 				$fileName = $row->pp_value;
 				$this->setResultValues( $prop, $pageId, $fileName, $size );
 			}
-			wfProfileOut( __METHOD__ . '-results-pages' );
 		} // End page props image extraction
 
 		// Extract images from file namespace pages. In this case we just use
 		// the file itself rather than searching for a page_image. (Bug 50252)
-		wfProfileIn( __METHOD__ . '-results-files' );
 		foreach ( $filePageTitles as $pageId => $title ) {
 			$fileName = $title->getDBkey();
 			$this->setResultValues( $prop, $pageId, $fileName, $size );
 		}
-		wfProfileOut( __METHOD__ . '-results-files' );
-
-		wfProfileOut( __METHOD__ );
 	}
 
 	public function getCacheMode( $params ) {
