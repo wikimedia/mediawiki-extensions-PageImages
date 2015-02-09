@@ -175,4 +175,15 @@ class ApiQueryPageImages extends ApiQueryBase {
 			'continue' => 'When more results are available, use this to continue',
 		);
 	}
+
+	/**
+	 * @see ApiBase::getExamplesMessages()
+	 */
+	protected function getExamplesMessages() {
+		return array(
+			'action=query&prop=pageimages&titles=Albert%20Einstein&pithumbsize=100' =>
+				'apihelp-query+pageimages-example-1',
+		);
+	}
+
 }
