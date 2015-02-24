@@ -4,5 +4,6 @@
 			"Purodha"
 		]
 	},
-	"pageimages-desc": "Deiht Aanjabe sammelle övver Belder, di en Sigge jebruch wääde."
+	"pageimages-desc": "Deiht Aanjabe sammelle övver Belder, di en Sigge jebruch wääde.",
+	"apihelp-query+pageimages-param-limit": "De Eijeschaffte vun wihvill Sigge ußjävve."
 }
