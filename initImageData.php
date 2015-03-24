@@ -24,7 +24,7 @@ class InitImageData extends Maintenance {
 		do {
 			$tables = array( 'page', 'imagelinks' );
 			$conds = array(
-				"page_id > $id",
+				'page_id > ' . (int) $id,
 				'il_from IS NOT NULL',
 				'page_is_redirect' => 0,
 			);
