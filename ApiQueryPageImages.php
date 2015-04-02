@@ -89,25 +89,34 @@ class ApiQueryPageImages extends ApiQueryBase {
 	 */
 	protected function setResultValues( $prop, $pageId, $fileName, $size ) {
 		$vals = array();
-		if ( isset( $prop['thumbnail'] ) ) {
+		if ( isset( $prop['thumbnail'] ) || isset( $prop['source'] ) ) {
 			$file = wfFindFile( $fileName );
-			if ( $file ) {
-				$thumb = $file->transform( array( 'width' => $size, 'height' => $size ) );
-				if ( $thumb && $thumb->getUrl() ) {
-					$vals['thumbnail'] = array(
-						'source' => wfExpandUrl( $thumb->getUrl(), PROTO_CURRENT ),
-						// You can request a thumb 1000x larger than the original which will return a Thumb
-						// object that will lie about its size but have the original as an image.
-						// Therefore, sanitize image size.
-						'width' => min( $thumb->getWidth(), $file->getWidth() ),
-						'height' => min( $thumb->getHeight(), $file->getHeight() ),
-					);
+
+			if ( isset( $prop['thumbnail'] ) ) {
+				if ( $file ) {
+					$thumb = $file->transform( array( 'width' => $size, 'height' => $size ) );
+					if ( $thumb && $thumb->getUrl() ) {
+						$vals['thumbnail'] = array(
+							'source' => wfExpandUrl( $thumb->getUrl(), PROTO_CURRENT ),
+							// You can request a thumb 1000x larger than the original which will return a Thumb
+							// object that will lie about its size but have the original as an image.
+							// Therefore, sanitize image size.
+							'width' => min( $thumb->getWidth(), $file->getWidth() ),
+							'height' => min( $thumb->getHeight(), $file->getHeight() ),
+						);
+					}
 				}
 			}
+
+			if ( isset( $prop['source'] ) ) {
+				$vals['source'] = wfExpandUrl( $file->getUrl(), PROTO_CURRENT );
+			}
 		}
+
 		if ( isset( $prop['name'] ) ) {
 			$vals['pageimage'] = $fileName;
 		}
+
 		$this->getResult()->addValue( array( 'query', 'pages' ), $pageId, $vals );
 	}
 
@@ -121,7 +130,7 @@ class ApiQueryPageImages extends ApiQueryBase {
 	public function getAllowedParams() {
 		return array(
 			'prop' => array(
-				ApiBase::PARAM_TYPE => array( 'thumbnail', 'name' ),
+				ApiBase::PARAM_TYPE => array( 'thumbnail', 'name', 'source' ),
 				ApiBase::PARAM_ISMULTI => true,
 				ApiBase::PARAM_DFLT => 'thumbnail|name',
 			),
@@ -151,7 +160,8 @@ class ApiQueryPageImages extends ApiQueryBase {
 		return array(
 			'prop' => array( 'What information to return',
 				' thumbnail - URL and dimensions of image associated with page, if any',
-				' name - image title'
+				' name - image title',
+				' source - URL to the image original',
 			),
 			'thumbsize' => 'Maximum thumbnail dimension',
 			'limit' => 'Properties of how many pages to return',
