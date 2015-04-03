@@ -89,7 +89,7 @@ class ApiQueryPageImages extends ApiQueryBase {
 	 */
 	protected function setResultValues( $prop, $pageId, $fileName, $size ) {
 		$vals = array();
-		if ( isset( $prop['thumbnail'] ) || isset( $prop['source'] ) ) {
+		if ( isset( $prop['thumbnail'] ) || isset( $prop['original'] ) ) {
 			$file = wfFindFile( $fileName );
 
 			if ( isset( $prop['thumbnail'] ) ) {
@@ -108,8 +108,15 @@ class ApiQueryPageImages extends ApiQueryBase {
 				}
 			}
 
-			if ( isset( $prop['source'] ) ) {
-				$vals['source'] = wfExpandUrl( $file->getUrl(), PROTO_CURRENT );
+			if ( isset( $prop['original'] ) ) {
+				$original_url = wfExpandUrl( $file->getUrl(), PROTO_CURRENT );
+				if ( isset( $vals['thumbnail'] ) ) {
+					$vals['thumbnail']['original'] = $original_url;
+				} else {
+					$vals['thumbnail'] = array(
+						'original' => $original_url,
+					);
+				}
 			}
 		}
 
@@ -130,7 +137,7 @@ class ApiQueryPageImages extends ApiQueryBase {
 	public function getAllowedParams() {
 		return array(
 			'prop' => array(
-				ApiBase::PARAM_TYPE => array( 'thumbnail', 'name', 'source' ),
+				ApiBase::PARAM_TYPE => array( 'thumbnail', 'name', 'original' ),
 				ApiBase::PARAM_ISMULTI => true,
 				ApiBase::PARAM_DFLT => 'thumbnail|name',
 			),
@@ -161,7 +168,7 @@ class ApiQueryPageImages extends ApiQueryBase {
 			'prop' => array( 'What information to return',
 				' thumbnail - URL and dimensions of image associated with page, if any',
 				' name - image title',
-				' source - URL to the image original',
+				' original - URL to the image original',
 			),
 			'thumbsize' => 'Maximum thumbnail dimension',
 			'limit' => 'Properties of how many pages to return',
