@@ -7,5 +7,6 @@
 	},
 	"pageimages-desc": "Recolle información sobre as imaxes usadas nunha páxina",
 	"pageimages-info-label": "Imaxe da páxina",
-	"apihelp-query+pageimages-description": "Devolve información sobre as imaxes na páxina, coma miniaturas e presencia de fotos."
+	"apihelp-query+pageimages-description": "Devolve información sobre as imaxes na páxina, coma miniaturas e presencia de fotos.",
+	"apihelp-query+pageimages-param-thumbsize": "Dimensión máxima da miniatura."
 }
