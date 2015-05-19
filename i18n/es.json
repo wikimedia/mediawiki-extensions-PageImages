@@ -1,8 +1,10 @@
 {
 	"@metadata": {
 		"authors": [
-			"Armando-Martin"
+			"Armando-Martin",
+			"Ryo567"
 		]
 	},
-	"pageimages-desc": "Recopila información sobre las imágenes utilizadas en la página"
+	"pageimages-desc": "Recopila información sobre las imágenes utilizadas en la página",
+	"apihelp-query+pageimages-param-thumbsize": "Tamaño máximo de la miniatura."
 }
