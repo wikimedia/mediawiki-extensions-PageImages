@@ -2,9 +2,11 @@
 	"@metadata": {
 		"authors": [
 			"Armando-Martin",
-			"Ryo567"
+			"Ryo567",
+			"Macofe"
 		]
 	},
 	"pageimages-desc": "Recopila información sobre las imágenes utilizadas en la página",
+	"pageimages-info-label": "Imagen de la página",
 	"apihelp-query+pageimages-param-thumbsize": "Tamaño máximo de la miniatura."
 }
