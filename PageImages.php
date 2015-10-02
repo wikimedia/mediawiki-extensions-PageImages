@@ -28,6 +28,12 @@ $wgHooks['InfoAction'][] = 'PageImages::onInfoAction';
 $wgHooks['AfterParserFetchFileAndTitle'][] = 'PageImages::onAfterParserFetchFileAndTitle';
 $wgHooks['SpecialMobileEditWatchlist::images'][] = 'PageImages::onSpecialMobileEditWatchlist_images';
 
+$wgHooks['UnitTestsList'][] = function( array &$paths ) {
+	$paths[] = __DIR__ . '/tests/phpunit';
+
+	return true;
+};
+
 $wgAPIPropModules['pageimages'] = 'ApiQueryPageImages';
 
 /**

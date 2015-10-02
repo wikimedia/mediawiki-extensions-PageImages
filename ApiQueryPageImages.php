@@ -8,11 +8,46 @@ class ApiQueryPageImages extends ApiQueryBase {
 		parent::__construct( $query, $moduleName, 'pi' );
 	}
 
-	public function execute() {
-		$allTitles = $this->getPageSet()->getGoodTitles();
-		if ( count( $allTitles ) == 0 ) {
-			return;
+	/**
+	 * Gets the set of titles to get page images for.
+	 *
+	 * Note well that the set of titles comprises the set of "good" titles
+	 * (see {@see ApiPageSet::getGoodTitles}) union the set of "missing"
+	 * titles in the File namespace that might correspond to foreign files.
+	 * The latter are included because titles in the File namespace are
+	 * expected to be found with {@see wfFindFile}.
+	 *
+	 * @return array A map of page ID, which will be negative in the case
+	 *  of missing titles in the File namespace, to Title object
+	 */
+	protected function getTitles() {
+		$pageSet = $this->getPageSet();
+		$titles = $pageSet->getGoodTitles();
+
+		// T98791: We want foreign files to be treated like local files
+		// in #execute, so include the set of missing filespace pages,
+		// which were initially rejected in ApiPageSet#execute.
+		$missingTitles = $pageSet->getMissingTitlesByNamespace();
+		$missingFileTitles = isset( $missingTitles[NS_FILE] )
+			? $missingTitles[NS_FILE]
+			: array();
+
+		// $titles is a map of ID to title object, which is ideal,
+		// whereas $missingFileTitles is a map of title text to ID.
+		$missingFileTitles = array_map( function ( $text ) {
+			return Title::newFromText( $text, NS_FILE );
+		}, array_flip( $missingFileTitles ) );
+
+		// N.B. We can't use array_merge here as it doesn't preserve
+		// keys.
+		foreach ( $missingFileTitles as $id => $title ) {
+			$titles[$id] = $title;
 		}
+
+		return $titles;
+	}
+
+	public function execute() {
 		$params = $this->extractRequestParams();
 		$prop = array_flip( $params['prop'] );
 		if ( !count( $prop ) ) {
@@ -20,6 +55,12 @@ class ApiQueryPageImages extends ApiQueryBase {
 		}
 		$size = $params['thumbsize'];
 		$limit = $params['limit'];
+
+		$allTitles = $this->getTitles();
+
+		if ( count( $allTitles ) === 0 ) {
+			return;
+		}
 
 		// Find the offset based on the continue param
 		$offset = 0;
