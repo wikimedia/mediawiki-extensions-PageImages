@@ -2,11 +2,12 @@
 	"@metadata": {
 		"authors": [
 			"Shirayuki",
-			"Sujiniku"
+			"Sujiniku",
+			"2nd-player"
 		]
 	},
 	"pageimages-desc": "ページで使用されている画像についての情報を収集する",
 	"pageimages-info-label": "ページの画像",
-	"apihelp-query+pageimages-example-1": "ページ上の画像の名前と <kbd>100</kbd> ピクセルのサムネイルの取得を、<kbd>アルバート・アインシュタイン</kbd>のページから取得します。",
+	"apihelp-query+pageimages-example-1": "ページ <kbd>Albert Einstein</kbd> 上の画像の名前と <kbd>100</kbd> ピクセルのサムネイルを取得する。",
 	"apihelp-query+pageimages-param-limit": "返すページの件数です。"
 }
