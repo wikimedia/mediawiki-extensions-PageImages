@@ -50,7 +50,7 @@ class ApiQueryPageImagesProxy extends ApiQueryPageImages {
  */
 class ApiQueryPageImagesTest extends PHPUnit_Framework_TestCase {
 
-	private function getApi() {
+	private function newInstance() {
 		$context = $this->getMockBuilder( 'IContextSource' )
 			->disableOriginalConstructor()
 			->getMock();
@@ -73,33 +73,33 @@ class ApiQueryPageImagesTest extends PHPUnit_Framework_TestCase {
 	}
 
 	public function testConstructor() {
-		$api = $this->getApi();
-		$this->assertInstanceOf( 'ApiQueryPageImages', $api );
+		$instance = $this->newInstance();
+		$this->assertInstanceOf( 'ApiQueryPageImages', $instance );
 	}
 
 	public function testGetDescription() {
-		$api = $this->getApi();
-		$description = $api->getDescription();
+		$instance = $this->newInstance();
+		$description = $instance->getDescription();
 		$this->assertInternalType( 'string', $description );
 		$this->assertNotEmpty( $description );
 	}
 
 	public function testGetCacheMode() {
-		$api = $this->getApi();
-		$this->assertSame( 'public', $api->getCacheMode( array() ) );
+		$instance = $this->newInstance();
+		$this->assertSame( 'public', $instance->getCacheMode( array() ) );
 	}
 
 	public function testGetAllowedParams() {
-		$api = $this->getApi();
-		$params = $api->getAllowedParams();
+		$instance = $this->newInstance();
+		$params = $instance->getAllowedParams();
 		$this->assertInternalType( 'array', $params );
 		$this->assertNotEmpty( $params );
 		$this->assertContainsOnly( 'array', $params );
 	}
 
 	public function testGetParamDescription() {
-		$api = $this->getApi();
-		$descriptions = $api->getParamDescription();
+		$instance = $this->newInstance();
+		$descriptions = $instance->getParamDescription();
 		$this->assertInternalType( 'array', $descriptions );
 		$this->assertNotEmpty( $descriptions );
 	}
