@@ -4,7 +4,7 @@ namespace PageImages\Tests;
 
 use MediaWikiTestCase;
 use PageImages;
-use stdClass;
+use ParserOutput;
 use Title;
 
 /**
@@ -35,10 +35,10 @@ class PageImagesTest extends MediaWikiTestCase {
 	}
 
 	public function testOnLinksUpdate() {
-		$parserOutput = new stdClass();
-		$parserOutput->pageImages = array(
+		$parserOutput = new ParserOutput();
+		$parserOutput->setExtensionData( 'pageImages', array(
 			array( 'filename' => 'A.jpg', 'fullwidth' => 100, 'fullheight' => 50 ),
-		);
+		) );
 
 		$linksUpdate = $this->getMockBuilder( 'LinksUpdate' )
 			->disableOriginalConstructor()
