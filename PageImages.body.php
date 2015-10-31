@@ -89,10 +89,6 @@ class PageImages {
 			}
 		}
 
-		$out = $parser->getOutput();
-		if ( !isset( $out->pageImages ) ) {
-			$out->pageImages = array();
-		}
 		if ( is_array( $handlerParams ) ) {
 			$myParams = $handlerParams;
 			self::calcWidth( $myParams, $file );
@@ -103,7 +99,11 @@ class PageImages {
 		$myParams['filename'] = $file->getTitle()->getDBkey();
 		$myParams['fullwidth'] = $file->getWidth();
 		$myParams['fullheight'] = $file->getHeight();
-		$out->pageImages[] = $myParams;
+
+		$out = $parser->getOutput();
+		$pageImages = $out->getExtensionData( 'pageImages' ) ?: array();
+		$pageImages[] = $myParams;
+		$out->setExtensionData( 'pageImages', $pageImages );
 	}
 
 	/**
@@ -144,11 +144,11 @@ class PageImages {
 	 * @return bool
 	 */
 	public static function onLinksUpdate( LinksUpdate $linksUpdate ) {
-		if ( !isset( $linksUpdate->getParserOutput()->pageImages ) ) {
+		$images = $linksUpdate->getParserOutput()->getExtensionData( 'pageImages' );
+		if ( $images === null ) {
 			return true;
 		}
 
-		$images = $linksUpdate->getParserOutput()->pageImages;
 		$scores = array();
 		$counter = 0;
 		foreach ( $images as $image ) {
