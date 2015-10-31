@@ -221,7 +221,7 @@ class PageImages {
 	 * @param array[] &$results
 	 * @return bool
 	 */
-	public static function onApiOpenSearchSuggest( &$results ) {
+	public static function onApiOpenSearchSuggest( array &$results ) {
 		global $wgPageImagesExpandOpenSearchXml;
 
 		if ( !$wgPageImagesExpandOpenSearchXml || !count( $results ) ) {
@@ -247,10 +247,10 @@ class PageImages {
 	 * @param IContextSource $context
 	 * @param array[] $watchlist
 	 * @param array[] &$images
-	 * @return true
+	 * @return bool Always true
 	 */
-	public static function onSpecialMobileEditWatchlist_images( IContextSource $context, $watchlist,
-		&$images
+	public static function onSpecialMobileEditWatchlist_images( IContextSource $context, array $watchlist,
+		array &$images
 	) {
 		$ids = array();
 		foreach ( $watchlist as $ns => $pages ) {
@@ -312,8 +312,8 @@ class PageImages {
 	 * Returns score for image, the more the better, if it is less than zero,
 	 * the image shouldn't be used for anything
 	 *
-	 * @param array $image: Associative array describing an image
-	 * @param int $position: Image order on page
+	 * @param array $image Associative array describing an image
+	 * @param int $position Image order on page
 	 * @return int
 	 */
 	private static function getScore( array $image, $position ) {
@@ -346,7 +346,7 @@ class PageImages {
 	 * Returns width/height ratio of an image as displayed or 0 is not available
 	 *
 	 * @param array $image
-	 * @return float
+	 * @return float|int
 	 */
 	private static function getRatio( array $image ) {
 		$width = $image['fullwidth'];

@@ -17,7 +17,7 @@ class ApiQueryPageImages extends ApiQueryBase {
 	 * The latter are included because titles in the File namespace are
 	 * expected to be found with {@see wfFindFile}.
 	 *
-	 * @return array A map of page ID, which will be negative in the case
+	 * @return Title[] A map of page ID, which will be negative in the case
 	 *  of missing titles in the File namespace, to Title object
 	 */
 	protected function getTitles() {
@@ -124,11 +124,11 @@ class ApiQueryPageImages extends ApiQueryBase {
 	 * For a given page, set API return values for thumbnail and pageimage as needed
 	 *
 	 * @param array $prop The prop values from the API request
-	 * @param integer $pageId The ID of the page
+	 * @param int $pageId The ID of the page
 	 * @param string $fileName The name of the file to transform
-	 * @param integer $size The thumbsize value from the API request
+	 * @param int $size The thumbsize value from the API request
 	 */
-	protected function setResultValues( $prop, $pageId, $fileName, $size ) {
+	protected function setResultValues( array $prop, $pageId, $fileName, $size ) {
 		$vals = array();
 		if ( isset( $prop['thumbnail'] ) || isset( $prop['original'] ) ) {
 			$file = wfFindFile( $fileName );
