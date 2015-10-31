@@ -48,6 +48,7 @@ class PageImagesTest extends MediaWikiTestCase {
 			->will( $this->returnValue( $parserOutput ) );
 
 		$this->assertTrue( PageImages::onLinksUpdate( $linksUpdate ) );
+		$this->assertTrue( property_exists( $linksUpdate, 'mProperties' ), 'precondition' );
 		$this->assertSame( 'A.jpg', $linksUpdate->mProperties[PageImages::PROP_NAME] );
 	}
 

@@ -44,10 +44,12 @@ class PageImages {
 
 	/**
 	 * ParserMakeImageParams hook handler, saves extended information about images used on page
+	 *
 	 * @see https://www.mediawiki.org/wiki/Manual:Hooks/ParserMakeImageParams
+	 *
 	 * @param Title $title
 	 * @param File|bool $file
-	 * @param array $params
+	 * @param array &$params
 	 * @param Parser $parser
 	 * @return bool
 	 */
@@ -58,6 +60,7 @@ class PageImages {
 
 	/**
 	 * AfterParserFetchFileAndTitle hook handler, saves information about gallery images
+	 *
 	 * @param Parser $parser
 	 * @param ImageGalleryBase $ig
 	 * @return bool
@@ -78,12 +81,14 @@ class PageImages {
 		if ( !$file || !self::processThisTitle( $parser->getTitle() ) ) {
 			return;
 		}
+
 		if ( !$file instanceof File ) {
 			$file = wfFindFile( $file );
 			if ( !$file ) {
 				return;
 			}
 		}
+
 		$out = $parser->getOutput();
 		if ( !isset( $out->pageImages ) ) {
 			$out->pageImages = array();
@@ -106,7 +111,7 @@ class PageImages {
 	 * We don't follow the core size calculation algorithm precisely because it's not required and editor's
 	 * intentions are more important than the precise number.
 	 *
-	 * @param array $params
+	 * @param array &$params
 	 * @param File $file
 	 */
 	private static function calcWidth( array &$params, File $file ) {
@@ -132,15 +137,18 @@ class PageImages {
 
 	/**
 	 * LinksUpdate hook handler, sets at most 2 page properties depending on images on page
+	 *
 	 * @see https://www.mediawiki.org/wiki/Manual:Hooks/LinksUpdate
-	 * @param LinksUpdate $lu
+	 *
+	 * @param LinksUpdate $linksUpdate
 	 * @return bool
 	 */
-	public static function onLinksUpdate( LinksUpdate $lu ) {
-		if ( !isset( $lu->getParserOutput()->pageImages ) ) {
+	public static function onLinksUpdate( LinksUpdate $linksUpdate ) {
+		if ( !isset( $linksUpdate->getParserOutput()->pageImages ) ) {
 			return true;
 		}
-		$images = $lu->getParserOutput()->pageImages;
+
+		$images = $linksUpdate->getParserOutput()->pageImages;
 		$scores = array();
 		$counter = 0;
 		foreach ( $images as $image ) {
@@ -150,6 +158,7 @@ class PageImages {
 			}
 			$scores[$fileName] = max( $scores[$fileName], self::getScore( $image, $counter++ ) );
 		}
+
 		$image = false;
 		foreach ( $scores as $name => $score ) {
 			if ( $score > 0 && ( !$image || $score > $scores[$image] ) ) {
@@ -157,7 +166,7 @@ class PageImages {
 			}
 		}
 		if ( $image ) {
-			$lu->mProperties[self::PROP_NAME] = $image;
+			$linksUpdate->mProperties[self::PROP_NAME] = $image;
 		}
 
 		return true;
@@ -165,9 +174,11 @@ class PageImages {
 
 	/**
 	 * InfoAction hook handler, adds the page image to the info=action page
+	 *
 	 * @see https://www.mediawiki.org/wiki/Manual:Hooks/InfoAction
+	 *
 	 * @param IContextSource $context
-	 * @param array $pageInfo
+	 * @param array[] &$pageInfo
 	 * @return bool
 	 */
 	public static function onInfoAction( IContextSource $context, &$pageInfo ) {
@@ -206,7 +217,8 @@ class PageImages {
 
 	/**
 	 * ApiOpenSearchSuggest hook handler, enhances ApiOpenSearch results with this extension's data
-	 * @param array $results
+	 *
+	 * @param array[] &$results
 	 * @return bool
 	 */
 	public static function onApiOpenSearchSuggest( &$results ) {
@@ -215,6 +227,7 @@ class PageImages {
 		if ( !$wgPageImagesExpandOpenSearchXml || !count( $results ) ) {
 			return true;
 		}
+
 		$pageIds = array_keys( $results );
 		$data = self::getImages( $pageIds, 50 );
 		foreach ( $pageIds as $id ) {
@@ -232,8 +245,8 @@ class PageImages {
 	 * SpecialMobileEditWatchlist::images hook handler, adds images to mobile watchlist A-Z view
 	 *
 	 * @param IContextSource $context
-	 * @param $watchlist
-	 * @param $images
+	 * @param array[] $watchlist
+	 * @param array[] &$images
 	 * @return true
 	 */
 	public static function onSpecialMobileEditWatchlist_images( IContextSource $context, $watchlist,
@@ -251,21 +264,23 @@ class PageImages {
 				}
 			}
 		}
+
 		$data = self::getImages( array_keys( $ids ) );
 		foreach ( $data as $id => $page ) {
 			if ( isset( $page['pageimage'] ) ) {
 				$images[ $page['ns'] ][ $ids[$id] ] = $page['pageimage'];
 			}
 		}
+
 		return true;
 	}
 
 	/**
 	 * Returns image information for pages with given ids
 	 *
-	 * @param array $pageIds
-	 * @param $size
-	 * @return array
+	 * @param int[] $pageIds
+	 * @param int $size
+	 * @return array[]
 	 */
 	private static function getImages( array $pageIds, $size = 0 ) {
 		$request = array(
@@ -296,6 +311,7 @@ class PageImages {
 	/**
 	 * Returns score for image, the more the better, if it is less than zero,
 	 * the image shouldn't be used for anything
+	 *
 	 * @param array $image: Associative array describing an image
 	 * @param int $position: Image order on page
 	 * @return int
@@ -322,6 +338,7 @@ class PageImages {
 		if ( isset( $blacklist[$image['filename']] ) ) {
 			$score = -1000;
 		}
+
 		return $score;
 	}
 
@@ -329,7 +346,7 @@ class PageImages {
 	 * Returns width/height ratio of an image as displayed or 0 is not available
 	 *
 	 * @param array $image
-	 * @return int
+	 * @return float
 	 */
 	private static function getRatio( array $image ) {
 		$width = $image['fullwidth'];
@@ -343,8 +360,8 @@ class PageImages {
 	/**
 	 * Returns score based on table of ranges
 	 *
-	 * @param int|float $value
-	 * @param array $scores
+	 * @param int $value
+	 * @param int[] $scores
 	 * @return int
 	 */
 	private static function scoreFromTable( $value, array $scores ) {
@@ -360,7 +377,9 @@ class PageImages {
 
 	/**
 	 * Returns a list of images blacklisted from influencing this extension's output
-	 * @return array: Flipped associative array in format "image BDB key" => int
+	 *
+	 * @throws Exception
+	 * @return int[] Flipped associative array in format "image BDB key" => int
 	 */
 	private static function getBlacklist() {
 		global $wgPageImagesBlacklist, $wgPageImagesBlacklistExpiry, $wgMemc;
@@ -396,9 +415,10 @@ class PageImages {
 
 	/**
 	 * Returns list of images linked by the given blacklist page
-	 * @param string|int $dbName: Database name or false for current database
+	 *
+	 * @param string|bool $dbName Database name or false for current database
 	 * @param string $page
-	 * @return array
+	 * @return string[]
 	 */
 	private static function getDbBlacklist( $dbName, $page ) {
 		$dbr = wfGetDB( DB_SLAVE, array(), $dbName );
@@ -427,8 +447,9 @@ class PageImages {
 	 * Returns list of images on given remote blacklist page.
 	 * Not quite 100% bulletproof due to localised namespaces and so on.
 	 * Though if you beat people if they add bad entries to the list... :)
+	 *
 	 * @param string $url
-	 * @return array
+	 * @return string[]
 	 */
 	private static function getUrlBlacklist( $url ) {
 		global $wgFileExtensions;
