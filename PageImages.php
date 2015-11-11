@@ -14,8 +14,8 @@ $wgExtensionCredits['api'][] = array(
 	'url'            => 'https://www.mediawiki.org/wiki/Extension:PageImages'
 );
 
-$wgAutoloadClasses['ApiQueryPageImages'] = __DIR__ . "/ApiQueryPageImages.php";
-$wgAutoloadClasses['PageImages'] = __DIR__ . "/PageImages.body.php";
+$wgAutoloadClasses['ApiQueryPageImages'] = __DIR__ . '/includes/ApiQueryPageImages.php';
+$wgAutoloadClasses['PageImages'] = __DIR__ . '/includes/PageImages.php';
 
 $wgMessagesDirs['PageImages'] = __DIR__ . '/i18n';
 $wgExtensionMessagesFiles['PageImages'] = __DIR__ . "/PageImages.i18n.php";
