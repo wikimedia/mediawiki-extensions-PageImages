@@ -6,6 +6,10 @@ if ( $IP === false ) {
 }
 require_once( "$IP/maintenance/Maintenance.php" );
 
+/**
+ * @license WTFPL 2.0
+ * @author MaxSem
+ */
 class InitImageData extends Maintenance {
 	const BATCH_SIZE = 100;
 

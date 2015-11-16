@@ -1,6 +1,13 @@
 <?php
 
+/**
+ * @license WTFPL 2.0
+ * @author MaxSem
+ * @author Brad Jorsch
+ * @author Thiemo Mättig
+ */
 class PageImages {
+
 	/**
 	 * Page property used to store the page image information
 	 */
@@ -20,10 +27,13 @@ class PageImages {
 			array( 'pp_page' => $title->getArticleID(), 'pp_propname' => self::PROP_NAME ),
 			__METHOD__
 		);
+
 		$file = false;
+
 		if ( $name ) {
 			$file = wfFindFile( $name );
 		}
+
 		return $file;
 	}
 
@@ -280,6 +290,7 @@ class PageImages {
 	 *
 	 * @param int[] $pageIds
 	 * @param int $size
+	 *
 	 * @return array[]
 	 */
 	private static function getImages( array $pageIds, $size = 0 ) {
@@ -290,12 +301,15 @@ class PageImages {
 			'pageids' => implode( '|', $pageIds ),
 			'pilimit' => 'max',
 		);
+
 		if ( $size ) {
 			$request['piprop'] = 'thumbnail';
 			$request['pithumbsize'] = $size;
 		}
+
 		$api = new ApiMain( new FauxRequest( $request ) );
 		$api->execute();
+
 		if ( defined( 'ApiResult::META_CONTENT' ) ) {
 			return (array)$api->getResult()->getResultData( array( 'query', 'pages' ),
 				array( 'Strip' => 'base' ) );

@@ -13,7 +13,7 @@ use Title;
  * @group PageImages
  * @group Database
  *
- * @licence GNU GPL v2+
+ * @license WTFPL 2.0
  * @author Thiemo Mättig
  */
 class PageImagesTest extends MediaWikiTestCase {

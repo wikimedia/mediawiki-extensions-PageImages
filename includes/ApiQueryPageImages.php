@@ -1,9 +1,18 @@
 <?php
+
 /**
  * Expose image information for a page via a new prop=pageimages API.
- * See https://www.mediawiki.org/wiki/Extension:PageImages#API
+ *
+ * @see https://www.mediawiki.org/wiki/Extension:PageImages#API
+ *
+ * @license WTFPL 2.0
+ * @author MaxSem
+ * @author Ryan Kaldari
+ * @author Yuvi Panda
+ * @author Sam Smith
  */
 class ApiQueryPageImages extends ApiQueryBase {
+
 	public function __construct( $query, $moduleName ) {
 		parent::__construct( $query, $moduleName, 'pi' );
 	}
