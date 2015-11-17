@@ -6,7 +6,7 @@
  * @see https://www.mediawiki.org/wiki/Extension:PageImages#API
  *
  * @license WTFPL 2.0
- * @author MaxSem
+ * @author Max Semenik
  * @author Ryan Kaldari
  * @author Yuvi Panda
  * @author Sam Smith

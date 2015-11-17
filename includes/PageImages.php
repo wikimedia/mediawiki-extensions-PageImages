@@ -2,7 +2,7 @@
 
 /**
  * @license WTFPL 2.0
- * @author MaxSem
+ * @author Max Semenik
  * @author Brad Jorsch
  * @author Thiemo Mättig
  */

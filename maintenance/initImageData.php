@@ -8,7 +8,7 @@ require_once( "$IP/maintenance/Maintenance.php" );
 
 /**
  * @license WTFPL 2.0
- * @author MaxSem
+ * @author Max Semenik
  */
 class InitImageData extends Maintenance {
 	const BATCH_SIZE = 100;
