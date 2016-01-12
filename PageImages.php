@@ -11,7 +11,8 @@ $wgExtensionCredits['api'][] = array(
 	'name'           => 'PageImages',
 	'descriptionmsg' => 'pageimages-desc',
 	'author'         => 'Max Semenik',
-	'url'            => 'https://www.mediawiki.org/wiki/Extension:PageImages'
+	'url'            => 'https://www.mediawiki.org/wiki/Extension:PageImages',
+	'license-name'   => 'WTFPL',
 );
 
 $wgAutoloadClasses['ApiQueryPageImages'] = __DIR__ . '/includes/ApiQueryPageImages.php';
