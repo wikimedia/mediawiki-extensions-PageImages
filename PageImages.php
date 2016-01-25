@@ -17,12 +17,14 @@ $wgExtensionCredits['api'][] = array(
 
 $wgAutoloadClasses['ApiQueryPageImages'] = __DIR__ . '/includes/ApiQueryPageImages.php';
 $wgAutoloadClasses['PageImages'] = __DIR__ . '/includes/PageImages.php';
+$wgAutoloadClasses['PageImages\Hooks\LinksUpdateHookHandler']
+	= __DIR__ . '/includes/LinksUpdateHookHandler.php';
 
 $wgMessagesDirs['PageImages'] = __DIR__ . '/i18n';
 $wgExtensionMessagesFiles['PageImages'] = __DIR__ . "/PageImages.i18n.php";
 
 $wgHooks['ParserMakeImageParams'][] = 'PageImages::onParserMakeImageParams';
-$wgHooks['LinksUpdate'][] = 'PageImages::onLinksUpdate';
+$wgHooks['LinksUpdate'][] = 'PageImages\Hooks\LinksUpdateHookHandler::onLinksUpdate';
 $wgHooks['OpenSearchXml'][] = 'PageImages::onApiOpenSearchSuggest';
 $wgHooks['ApiOpenSearchSuggest'][] = 'PageImages::onApiOpenSearchSuggest';
 $wgHooks['InfoAction'][] = 'PageImages::onInfoAction';
