@@ -69,6 +69,9 @@ $wgPageImagesScores = array(
 		30 => 0,
 		31 => -100,
 	),
+	'rights' => array(
+		'nonfree' => -100, // don't show nonfree images
+	),
 );
 
 $wgPageImagesBlacklist = array(

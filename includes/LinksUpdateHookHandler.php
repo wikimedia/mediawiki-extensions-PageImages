@@ -83,6 +83,11 @@ class LinksUpdateHookHandler {
 	private function getScore( array $image, $position ) {
 		global $wgPageImagesScores;
 
+		$file = wfFindFile( $image['filename'] );
+		if ( $file ) {
+			$image += self::getMetadata( $file );
+		}
+
 		if ( isset( $image['handler'] ) ) {
 			// Standalone image
 			$score = $this->scoreFromTable( $image['handler']['width'], $wgPageImagesScores['width'] );
@@ -97,6 +102,10 @@ class LinksUpdateHookHandler {
 
 		$ratio = intval( $this->getRatio( $image ) * 10 );
 		$score += $this->scoreFromTable( $ratio, $wgPageImagesScores['ratio'] );
+
+		if ( isset( $image['rights'] ) && isset( $wgPageImagesScores['rights'][$image['rights']] ) ) {
+			$score += $wgPageImagesScores['rights'][$image['rights']];
+		}
 
 		$blacklist = $this->getBlacklist();
 		if ( isset( $blacklist[$image['filename']] ) ) {
@@ -126,6 +135,28 @@ class LinksUpdateHookHandler {
 		}
 
 		return $lastScore;
+	}
+
+	/**
+	 * Return some file metadata (only what's relevant to page image scores).
+	 * @param File $file
+	 * @return array
+	 */
+	private static function getMetadata( File $file ) {
+		$format = new FormatMetadata;
+		$context = new DerivativeContext( $format->getContext() );
+		$format->setSingleLanguage( true ); // we don't care and it's slightly faster
+		$context->setLanguage( 'en' ); // we don't care so avoid splitting the cache
+		$format->setContext( $context );
+		$extmetadata = $format->fetchExtendedMetadata( $file );
+		$processedMetadata = array();
+
+		// process copyright metadata from CommonsMetadata, if present
+		if ( !empty( $extmetadata['NonFree']['value'] ) ) { // not '0' or unset
+			$processedMetadata['rights'] = 'nonfree';
+		}
+
+		return $processedMetadata;
 	}
 
 	/**
