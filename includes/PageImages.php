@@ -155,7 +155,7 @@ class PageImages {
 	 * @return bool
 	 */
 	public static function onInfoAction( IContextSource $context, &$pageInfo ) {
-		global $wgDefaultUserOptions, $wgThumbLimits;
+		global $wgThumbLimits;
 
 		$imageFile = self::getPageImage( $context->getTitle() );
 		if ( !$imageFile ) {
@@ -163,10 +163,7 @@ class PageImages {
 			return true;
 		}
 
-		$thumbSetting = $context->getUser()->getOption(
-			'thumbsize',
-			$wgDefaultUserOptions['thumbsize']
-		);
+		$thumbSetting = $context->getUser()->getOption( 'thumbsize' );
 		$thumbSize = $wgThumbLimits[$thumbSetting];
 
 		$thumb = $imageFile->transform( array( 'width' => $thumbSize ) );
