@@ -19,20 +19,20 @@ $wgAutoloadClasses['ApiQueryPageImages'] = __DIR__ . '/includes/ApiQueryPageImag
 $wgAutoloadClasses['PageImages'] = __DIR__ . '/includes/PageImages.php';
 $wgAutoloadClasses['PageImages\Hooks\LinksUpdateHookHandler']
 	= __DIR__ . '/includes/LinksUpdateHookHandler.php';
-$wgAutoloadClasses['PageImages\Hooks\ParserFileProcessingHookHandler']
-	= __DIR__ . '/includes/ParserFileProcessingHookHandler.php';
+$wgAutoloadClasses['PageImages\Hooks\ParserFileProcessingHookHandlers']
+	= __DIR__ . '/includes/ParserFileProcessingHookHandlers.php';
 
 $wgMessagesDirs['PageImages'] = __DIR__ . '/i18n';
 $wgExtensionMessagesFiles['PageImages'] = __DIR__ . "/PageImages.i18n.php";
 
 $wgHooks['ParserMakeImageParams'][]
-	= 'PageImages\Hooks\ParserFileProcessingHookHandler::onParserMakeImageParams';
+	= 'PageImages\Hooks\ParserFileProcessingHookHandlers::onParserMakeImageParams';
 $wgHooks['LinksUpdate'][] = 'PageImages\Hooks\LinksUpdateHookHandler::onLinksUpdate';
 $wgHooks['OpenSearchXml'][] = 'PageImages::onApiOpenSearchSuggest';
 $wgHooks['ApiOpenSearchSuggest'][] = 'PageImages::onApiOpenSearchSuggest';
 $wgHooks['InfoAction'][] = 'PageImages::onInfoAction';
 $wgHooks['AfterParserFetchFileAndTitle'][]
-	= 'PageImages\Hooks\ParserFileProcessingHookHandler::onAfterParserFetchFileAndTitle';
+	= 'PageImages\Hooks\ParserFileProcessingHookHandlers::onAfterParserFetchFileAndTitle';
 $wgHooks['SpecialMobileEditWatchlist::images'][] = 'PageImages::onSpecialMobileEditWatchlist_images';
 
 $wgHooks['UnitTestsList'][] = function( array &$paths ) {

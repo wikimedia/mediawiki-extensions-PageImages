@@ -14,7 +14,7 @@ use Title;
  * @author Max Semenik
  * @author Thiemo Mättig
  */
-class ParserFileProcessingHookHandler {
+class ParserFileProcessingHookHandlers {
 
 	/**
 	 * ParserMakeImageParams hook handler, saves extended information about images used on page
