@@ -146,13 +146,14 @@ class ApiQueryPageImages extends ApiQueryBase {
 				if ( $file ) {
 					$thumb = $file->transform( array( 'width' => $size, 'height' => $size ) );
 					if ( $thumb && $thumb->getUrl() ) {
+						// You can request a thumb 1000x larger than the original
+						// which (in case of bitmap original) will return a Thumb object
+						// that will lie about its size but have the original as an image.
+						$reportedSize = $thumb->fileIsSource() ? $file : $thumb;
 						$vals['thumbnail'] = array(
 							'source' => wfExpandUrl( $thumb->getUrl(), PROTO_CURRENT ),
-							// You can request a thumb 1000x larger than the original which will return a Thumb
-							// object that will lie about its size but have the original as an image.
-							// Therefore, sanitize image size.
-							'width' => min( $thumb->getWidth(), $file->getWidth() ),
-							'height' => min( $thumb->getHeight(), $file->getHeight() ),
+							'width' => $reportedSize->getWidth(),
+							'height' => $reportedSize->getHeight(),
 						);
 					}
 				}
