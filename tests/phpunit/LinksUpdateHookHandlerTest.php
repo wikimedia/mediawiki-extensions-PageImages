@@ -30,7 +30,7 @@ class LinksUpdateHookHandlerTest extends PHPUnit_Framework_TestCase {
 			->method( 'getParserOutput' )
 			->will( $this->returnValue( $parserOutput ) );
 
-		$this->assertTrue( LinksUpdateHookHandler::onLinksUpdate( $linksUpdate ) );
+		LinksUpdateHookHandler::onLinksUpdate( $linksUpdate );
 		$this->assertTrue( property_exists( $linksUpdate, 'mProperties' ), 'precondition' );
 		$this->assertSame( 'A.jpg', $linksUpdate->mProperties[PageImages::PROP_NAME] );
 	}

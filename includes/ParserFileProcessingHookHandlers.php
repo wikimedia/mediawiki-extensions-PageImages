@@ -23,10 +23,8 @@ class ParserFileProcessingHookHandlers {
 	 *
 	 * @param Title $title
 	 * @param File|bool $file
-	 * @param array &$params
+	 * @param array[] &$params
 	 * @param Parser $parser
-	 *
-	 * @return bool
 	 */
 	public static function onParserMakeImageParams(
 		Title $title,
@@ -35,7 +33,7 @@ class ParserFileProcessingHookHandlers {
 		Parser $parser
 	) {
 		$handler = new self();
-		return $handler->doParserMakeImageParams( $title, $file, $params, $parser );
+		$handler->doParserMakeImageParams( $title, $file, $params, $parser );
 	}
 
 	/**
@@ -43,21 +41,17 @@ class ParserFileProcessingHookHandlers {
 	 *
 	 * @param Parser $parser
 	 * @param ImageGalleryBase $gallery
-	 *
-	 * @return bool
 	 */
 	public static function onAfterParserFetchFileAndTitle( Parser $parser, ImageGalleryBase $gallery ) {
 		$handler = new self();
-		return $handler->doAfterParserFetchFileAndTitle( $parser, $gallery );
+		$handler->doAfterParserFetchFileAndTitle( $parser, $gallery );
 	}
 
 	/**
 	 * @param Title $title
 	 * @param File|bool $file
-	 * @param array &$params
+	 * @param array[] &$params
 	 * @param Parser $parser
-	 *
-	 * @return bool Always true.
 	 */
 	public function doParserMakeImageParams(
 		Title $title,
@@ -66,27 +60,22 @@ class ParserFileProcessingHookHandlers {
 		Parser $parser
 	) {
 		$this->processFile( $parser, $file, $params );
-		return true;
 	}
 
 	/**
 	 * @param Parser $parser
 	 * @param ImageGalleryBase $gallery
-	 *
-	 * @return bool Always true.
 	 */
 	public function doAfterParserFetchFileAndTitle( Parser $parser, ImageGalleryBase $gallery ) {
 		foreach ( $gallery->getImages() as $image ) {
 			$this->processFile( $parser, $image[0], null );
 		}
-
-		return true;
 	}
 
 	/**
 	 * @param Parser $parser
 	 * @param File|Title|null $file
-	 * @param array|null $handlerParams
+	 * @param array[]|null $handlerParams
 	 */
 	private function processFile( Parser $parser, $file, $handlerParams ) {
 		if ( !$file || !$this->processThisTitle( $parser->getTitle() ) ) {
@@ -140,7 +129,7 @@ class ParserFileProcessingHookHandlers {
 	 * calculation algorithm precisely because it's not required and editor's intentions are more
 	 * important than the precise number.
 	 *
-	 * @param array &$params
+	 * @param array[] &$params
 	 * @param File $file
 	 */
 	private function calcWidth( array &$params, File $file ) {

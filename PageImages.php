@@ -37,8 +37,6 @@ $wgHooks['SpecialMobileEditWatchlist::images'][] = 'PageImages::onSpecialMobileE
 
 $wgHooks['UnitTestsList'][] = function( array &$paths ) {
 	$paths[] = __DIR__ . '/tests/phpunit';
-
-	return true;
 };
 
 $wgAPIPropModules['pageimages'] = 'ApiQueryPageImages';

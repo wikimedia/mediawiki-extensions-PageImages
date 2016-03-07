@@ -2,7 +2,10 @@
 
 namespace PageImages\Hooks;
 
+use DerivativeContext;
 use Exception;
+use File;
+use FormatMetadata;
 use Http;
 use LinksUpdate;
 use PageImages;
@@ -23,24 +26,20 @@ class LinksUpdateHookHandler {
 	 * @see https://www.mediawiki.org/wiki/Manual:Hooks/LinksUpdate
 	 *
 	 * @param LinksUpdate $linksUpdate
-	 *
-	 * @return bool
 	 */
 	public static function onLinksUpdate( LinksUpdate $linksUpdate ) {
 		$handler = new self();
-		return $handler->doLinksUpdate( $linksUpdate );
+		$handler->doLinksUpdate( $linksUpdate );
 	}
 
 	/**
 	 * @param LinksUpdate $linksUpdate
-	 *
-	 * @return bool Always true.
 	 */
 	public function doLinksUpdate( LinksUpdate $linksUpdate ) {
 		$images = $linksUpdate->getParserOutput()->getExtensionData( 'pageImages' );
 
 		if ( $images === null ) {
-			return true;
+			return;
 		}
 
 		$scores = array();
@@ -67,8 +66,6 @@ class LinksUpdateHookHandler {
 		if ( $image ) {
 			$linksUpdate->mProperties[PageImages::PROP_NAME] = $image;
 		}
-
-		return true;
 	}
 
 	/**
@@ -85,7 +82,7 @@ class LinksUpdateHookHandler {
 
 		$file = wfFindFile( $image['filename'] );
 		if ( $file ) {
-			$image += self::getMetadata( $file );
+			$image += $this->getMetadata( $file );
 		}
 
 		if ( isset( $image['handler'] ) ) {
@@ -139,10 +136,12 @@ class LinksUpdateHookHandler {
 
 	/**
 	 * Return some file metadata (only what's relevant to page image scores).
+	 *
 	 * @param File $file
-	 * @return array
+	 *
+	 * @return string[]
 	 */
-	private static function getMetadata( File $file ) {
+	private function getMetadata( File $file ) {
 		$format = new FormatMetadata;
 		$context = new DerivativeContext( $format->getContext() );
 		$format->setSingleLanguage( true ); // we don't care and it's slightly faster

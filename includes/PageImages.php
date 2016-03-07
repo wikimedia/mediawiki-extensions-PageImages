@@ -44,7 +44,6 @@ class PageImages {
 	 *
 	 * @param IContextSource $context
 	 * @param array[] &$pageInfo
-	 * @return bool
 	 */
 	public static function onInfoAction( IContextSource $context, &$pageInfo ) {
 		global $wgThumbLimits;
@@ -52,7 +51,7 @@ class PageImages {
 		$imageFile = self::getPageImage( $context->getTitle() );
 		if ( !$imageFile ) {
 			// The page has no image
-			return true;
+			return;
 		}
 
 		$thumbSetting = $context->getUser()->getOption( 'thumbsize' );
@@ -60,7 +59,7 @@ class PageImages {
 
 		$thumb = $imageFile->transform( array( 'width' => $thumbSize ) );
 		if ( !$thumb ) {
-			return true;
+			return;
 		}
 		$imageHtml = $thumb->toHtml(
 			array(
@@ -73,21 +72,18 @@ class PageImages {
 			$context->msg( 'pageimages-info-label' ),
 			$imageHtml
 		);
-
-		return true;
 	}
 
 	/**
 	 * ApiOpenSearchSuggest hook handler, enhances ApiOpenSearch results with this extension's data
 	 *
 	 * @param array[] &$results
-	 * @return bool
 	 */
 	public static function onApiOpenSearchSuggest( array &$results ) {
 		global $wgPageImagesExpandOpenSearchXml;
 
 		if ( !$wgPageImagesExpandOpenSearchXml || !count( $results ) ) {
-			return true;
+			return;
 		}
 
 		$pageIds = array_keys( $results );
@@ -99,8 +95,6 @@ class PageImages {
 				$results[$id]['image'] = null;
 			}
 		}
-
-		return true;
 	}
 
 	/**
@@ -109,7 +103,6 @@ class PageImages {
 	 * @param IContextSource $context
 	 * @param array[] $watchlist
 	 * @param array[] &$images
-	 * @return bool Always true
 	 */
 	public static function onSpecialMobileEditWatchlist_images( IContextSource $context, array $watchlist,
 		array &$images
@@ -133,8 +126,6 @@ class PageImages {
 				$images[ $page['ns'] ][ $ids[$id] ] = $page['pageimage'];
 			}
 		}
-
-		return true;
 	}
 
 	/**
