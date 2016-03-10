@@ -2,6 +2,7 @@
 
 namespace PageImages\Tests\Hooks;
 
+use LinksUpdate;
 use PageImages\Hooks\LinksUpdateHookHandler;
 use PageImages;
 use ParserOutput;
@@ -24,7 +25,10 @@ class LinksUpdateHookHandlerTest extends PHPUnit_Framework_TestCase {
 		parent::tearDown();
 	}
 
-	public function testOnLinksUpdate() {
+	/**
+	 * @return LinksUpdate
+	 */
+	private function getLinksUpdate() {
 		$parserOutput = new ParserOutput();
 		$parserOutput->setExtensionData( 'pageImages', array(
 			array( 'filename' => 'A.jpg', 'fullwidth' => 100, 'fullheight' => 50 ),
@@ -37,12 +41,13 @@ class LinksUpdateHookHandlerTest extends PHPUnit_Framework_TestCase {
 			->method( 'getParserOutput' )
 			->will( $this->returnValue( $parserOutput ) );
 
-		LinksUpdateHookHandler::onLinksUpdate( $linksUpdate );
-		$this->assertTrue( property_exists( $linksUpdate, 'mProperties' ), 'precondition' );
-		$this->assertSame( 'A.jpg', $linksUpdate->mProperties[PageImages::PROP_NAME] );
+		return $linksUpdate;
 	}
 
-	public function testGetMetadata() {
+	/**
+	 * @return RepoGroup
+	 */
+	private function getRepoGroup() {
 		$file = $this->getMockBuilder( 'File' )
 			->disableOriginalConstructor()
 			->getMock();
@@ -51,27 +56,33 @@ class LinksUpdateHookHandlerTest extends PHPUnit_Framework_TestCase {
 			->method( 'isDeleted' )
 			->will( $this->returnValue( true ) );
 
-		$mockRepoGroup = $this->getMockBuilder( 'RepoGroup' )
+		$repoGroup = $this->getMockBuilder( 'RepoGroup' )
 			->disableOriginalConstructor()
 			->getMock();
-		$mockRepoGroup->expects( $this->any() )
+		$repoGroup->expects( $this->any() )
 			->method( 'findFile' )
 			->will( $this->returnValue( $file ) );
-		RepoGroup::setSingleton( $mockRepoGroup );
 
-		$parserOutput = new ParserOutput();
-		$parserOutput->setExtensionData( 'pageImages', array(
-			array( 'filename' => 'A.jpg', 'fullwidth' => 100, 'fullheight' => 50 ),
-		) );
+		return $repoGroup;
+	}
 
-		$linksUpdate = $this->getMockBuilder( 'LinksUpdate' )
-			->disableOriginalConstructor()
-			->getMock();
-		$linksUpdate->expects( $this->any() )
-			->method( 'getParserOutput' )
-			->will( $this->returnValue( $parserOutput ) );
+	public function testOnLinksUpdate() {
+		$linksUpdate = $this->getLinksUpdate();
 
 		LinksUpdateHookHandler::onLinksUpdate( $linksUpdate );
+
+		$this->assertTrue( property_exists( $linksUpdate, 'mProperties' ), 'precondition' );
+		$this->assertSame( 'A.jpg', $linksUpdate->mProperties[PageImages::PROP_NAME] );
+	}
+
+	public function testFetchingExtendedMetadataFromFile() {
+		// Required to make wfFindFile in LinksUpdateHookHandler::getScore return something.
+		RepoGroup::setSingleton( $this->getRepoGroup() );
+		$linksUpdate = $this->getLinksUpdate();
+
+		LinksUpdateHookHandler::onLinksUpdate( $linksUpdate );
+
 		$this->assertTrue( true, 'no errors in getMetadata' );
 	}
+
 }
