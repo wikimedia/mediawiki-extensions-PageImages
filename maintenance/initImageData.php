@@ -37,6 +37,7 @@ class InitImageData extends Maintenance {
 				'LEFT JOIN', 'page_id = il_from',
 			) );
 
+			$dbr = wfGetDB( DB_SLAVE );
 			if ( $this->hasOption( 'namespaces' ) ) {
 				$ns = explode( ',', $this->getOption( 'namespaces' ) );
 				$conds['page_namespace'] = $ns;
@@ -44,9 +45,9 @@ class InitImageData extends Maintenance {
 				$conds['page_namespace'] = $wgPageImagesNamespaces;
 			}
 			if ( $this->hasOption( 'earlier-than' ) ) {
-				$conds[] = "page_touched < '{$this->getOption( 'earlier-than' )}'";
+				$conds[] = 'page_touched < '
+					. $dbr->addQuotes( $this->getOption( 'earlier-than' ) );
 			}
-			$dbr = wfGetDB( DB_SLAVE );
 			$res = $dbr->select( $tables, $fields, $conds, __METHOD__,
 				array( 'LIMIT' => self::BATCH_SIZE, 'ORDER_BY' => 'page_id', 'GROUP BY' => 'page_id' ),
 				$joinConds
