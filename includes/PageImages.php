@@ -165,4 +165,7 @@ class PageImages {
 		}
 	}
 
+	public static function onRegistration() {
+		define( 'PAGE_IMAGES_INSTALLED', true );
+	}
 }
