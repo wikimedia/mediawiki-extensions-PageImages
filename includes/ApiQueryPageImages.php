@@ -74,7 +74,13 @@ class ApiQueryPageImages extends ApiQueryBase {
 		$params = $this->extractRequestParams();
 		$prop = array_flip( $params['prop'] );
 		if ( !count( $prop ) ) {
-			$this->dieUsage( 'No properties selected', '_noprop' );
+			if ( is_callable( array( $this, 'dieWithError' ) ) ) {
+				$this->dieWithError(
+					array( 'apierror-paramempty', $this->encodeParamName( 'prop' ) ), 'noprop'
+				);
+			} else {
+				$this->dieUsage( 'No properties selected', '_noprop' );
+			}
 		}
 
 		$allTitles = $this->getTitles();
@@ -91,12 +97,7 @@ class ApiQueryPageImages extends ApiQueryBase {
 			$pageIds = array_keys( $allTitles );
 			$offset = array_search( intval( $params['continue'] ), $pageIds );
 			// If the 'continue' page wasn't found, die with error
-			if ( !$offset ) {
-				$this->dieUsage(
-					'Invalid continue param. You should pass the original value returned by the previous query',
-					'_badcontinue'
-				);
-			}
+			$this->dieContinueUsageIf( !$offset );
 		}
 
 		$limit = $params['limit'];
