@@ -31,61 +31,47 @@
 	},
 	"config": {
 		"PageImagesScores": {
-			"value": {
-				"position": [
-					8,
-					6,
-					4,
-					3
-				],
-				"width": {
-					"@doc119": "Very small images are usually from maintenace or stub templates",
-					"119": -100,
-					"400": 10,
-					"@doc600@": "Larger images are panoramas, less suitable",
-					"600": 5,
-					"601": 0
-				},
-				"galleryImageWidth": {
-					"99": -100,
-					"100": 0
-				},
-				"ratio": {
-					"3": -100,
-					"5": 0,
-					"20": 5,
-					"30": 0,
-					"31": -100
-				},
-				"rights": {
-					"@doc": "don't show nonfree images",
-					"nonfree": -100
-				}
+			"position": [
+				8,
+				6,
+				4,
+				3
+			],
+			"width": {
+				"@doc119": "Very small images are usually from maintenace or stub templates",
+				"119": -100,
+				"400": 10,
+				"@doc600@": "Larger images are panoramas, less suitable",
+				"600": 5,
+				"601": 0
+			},
+			"galleryImageWidth": {
+				"99": -100,
+				"100": 0
+			},
+			"ratio": {
+				"3": -100,
+				"5": 0,
+				"20": 5,
+				"30": 0,
+				"31": -100
+			},
+			"rights": {
+				"@doc": "don't show nonfree images",
+				"nonfree": -100
 			}
 		},
-		"PageImagesBlacklist": {
-			"value": [
-				{
-					"type": "db",
-					"page": "MediaWiki:Pageimages-blacklist",
-					"db": false
-				}
-			]
-		},
-		"PageImagesBlacklistExpiry": {
-			"value": 900
-		},
-		"PageImagesExpandOpenSearchXml": {
-			"value": false
-		},
-		"PageImagesNamespaces": {
-			"value": [
-				0
-			]
-		},
-		"PageImagesUseGalleries": {
-			"value": false
-		}
+		"PageImagesBlacklist": [
+			{
+				"type": "db",
+				"page": "MediaWiki:Pageimages-blacklist",
+				"db": false
+			}
+		],
+		"PageImagesBlacklistExpiry": 90,
+		"PageImagesExpandOpenSearchXml": false,
+		"PageImagesNamespaces": 0,
+		"PageImagesUseGalleries": false
 	},
-	"manifest_version": 2
+	"manifest_version": 1
 }
