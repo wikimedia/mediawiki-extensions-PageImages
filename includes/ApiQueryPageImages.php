@@ -145,9 +145,8 @@ class ApiQueryPageImages extends ApiQueryBase {
 		$vals = array();
 		if ( isset( $prop['thumbnail'] ) || isset( $prop['original'] ) ) {
 			$file = wfFindFile( $fileName );
-
-			if ( isset( $prop['thumbnail'] ) ) {
-				if ( $file ) {
+			if ( $file ) {
+				if ( isset( $prop['thumbnail'] ) ) {
 					$thumb = $file->transform( array( 'width' => $size, 'height' => $size ) );
 					if ( $thumb && $thumb->getUrl() ) {
 						// You can request a thumb 1000x larger than the original
@@ -161,16 +160,16 @@ class ApiQueryPageImages extends ApiQueryBase {
 						);
 					}
 				}
-			}
 
-			if ( isset( $prop['original'] ) ) {
-				$original_url = wfExpandUrl( $file->getUrl(), PROTO_CURRENT );
-				if ( isset( $vals['thumbnail'] ) ) {
-					$vals['thumbnail']['original'] = $original_url;
-				} else {
-					$vals['thumbnail'] = array(
-						'original' => $original_url,
-					);
+				if ( isset( $prop['original'] ) ) {
+					$original_url = wfExpandUrl( $file->getUrl(), PROTO_CURRENT );
+					if ( isset( $vals['thumbnail'] ) ) {
+						$vals['thumbnail']['original'] = $original_url;
+					} else {
+						$vals['thumbnail'] = array(
+							'original' => $original_url,
+						);
+					}
 				}
 			}
 		}
