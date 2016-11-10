@@ -17,8 +17,9 @@ use Title;
  */
 class PageImagesTest extends MediaWikiTestCase {
 
-	public function testPagePropertyName() {
+	public function testPagePropertyNames() {
 		$this->assertSame( 'page_image', PageImages::PROP_NAME );
+		$this->assertSame( 'page_image_free', PageImages::PROP_NAME_FREE );
 	}
 
 	public function testConstructor() {
@@ -33,4 +34,8 @@ class PageImagesTest extends MediaWikiTestCase {
 		$this->assertFalse( PageImages::getPageImage( $title ) );
 	}
 
+	public function testGetPropName() {
+		$this->assertSame( 'page_image', PageImages::getPropName( false ) );
+		$this->assertSame( 'page_image_free', PageImages::getPropName( true ) );
+	}
 }

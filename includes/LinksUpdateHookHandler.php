@@ -56,15 +56,26 @@ class LinksUpdateHookHandler {
 		}
 
 		$image = false;
+		$free_image = false;
 
 		foreach ( $scores as $name => $score ) {
-			if ( $score > 0 && ( !$image || $score > $scores[$image] ) ) {
-				$image = $name;
+			if ( $score > 0 ) {
+				if ( !$image || $score > $scores[$image] ) {
+					$image = $name;
+				}
+				if ( ( !$free_image || $score > $scores[$free_image] ) && $this->isImageFree( $name ) ) {
+					$free_image = $name;
+				}
 			}
 		}
 
-		if ( $image ) {
-			$linksUpdate->mProperties[PageImages::PROP_NAME] = $image;
+		if ( $free_image ) {
+			$linksUpdate->mProperties[PageImages::getPropName( true )] = $free_image;
+		}
+
+		// Only store the image if it's not free. Free image (if any) has already been stored above.
+		if ( $image && $image !== $free_image ) {
+			$linksUpdate->mProperties[PageImages::getPropName( false )] = $image;
 		}
 	}
 
@@ -80,11 +91,6 @@ class LinksUpdateHookHandler {
 	protected function getScore( array $image, $position ) {
 		global $wgPageImagesScores;
 
-		$file = wfFindFile( $image['filename'] );
-		if ( $file ) {
-			$image += $this->getMetadata( $file );
-		}
-
 		if ( isset( $image['handler'] ) ) {
 			// Standalone image
 			$score = $this->scoreFromTable( $image['handler']['width'], $wgPageImagesScores['width'] );
@@ -99,10 +105,6 @@ class LinksUpdateHookHandler {
 
 		$ratio = intval( $this->getRatio( $image ) * 10 );
 		$score += $this->scoreFromTable( $ratio, $wgPageImagesScores['ratio'] );
-
-		if ( isset( $image['rights'] ) && isset( $wgPageImagesScores['rights'][$image['rights']] ) ) {
-			$score += $wgPageImagesScores['rights'][$image['rights']];
-		}
 
 		$blacklist = $this->getBlacklist();
 		if ( isset( $blacklist[$image['filename']] ) ) {
@@ -135,27 +137,34 @@ class LinksUpdateHookHandler {
 	}
 
 	/**
-	 * Return some file metadata (only what's relevant to page image scores).
+	 * Check whether image's copyright allows it to be used freely.
+	 *
+	 * @param string $fileName Name of the image file
+	 * @return bool
+	 */
+	protected function isImageFree( $fileName ) {
+		$file = wfFindFile( $fileName );
+		if ( $file ) {
+			// Process copyright metadata from CommonsMetadata, if present.
+			// Image is considered free if the value is '0' or unset.
+			return empty( $this->fetchFileMetadata( $file )['NonFree']['value'] );
+		}
+		return true;
+	}
+
+	/**
+	 * Fetch file metadata
 	 *
 	 * @param File $file
-	 *
-	 * @return string[]
+	 * @return array
 	 */
-	protected function getMetadata( File $file ) {
+	protected function fetchFileMetadata( $file ) {
 		$format = new FormatMetadata;
 		$context = new DerivativeContext( $format->getContext() );
 		$format->setSingleLanguage( true ); // we don't care and it's slightly faster
 		$context->setLanguage( 'en' ); // we don't care so avoid splitting the cache
 		$format->setContext( $context );
-		$extmetadata = $format->fetchExtendedMetadata( $file );
-		$processedMetadata = array();
-
-		// process copyright metadata from CommonsMetadata, if present
-		if ( !empty( $extmetadata['NonFree']['value'] ) ) { // not '0' or unset
-			$processedMetadata['rights'] = 'nonfree';
-		}
-
-		return $processedMetadata;
+		return $format->fetchExtendedMetadata( $file );
 	}
 
 	/**

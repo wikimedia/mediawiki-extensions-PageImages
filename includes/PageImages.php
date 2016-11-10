@@ -9,9 +9,26 @@
 class PageImages {
 
 	/**
-	 * Page property used to store the page image information
+	 * Page property used to store the best page image information.
+	 * If the best image is the same as the best image with free license,
+	 * then nothing is stored under this property.
+	 * @see PageImages::PROP_NAME_FREE
 	 */
 	const PROP_NAME = 'page_image';
+	/**
+	 * Page property used to store the best free page image information
+	 */
+	const PROP_NAME_FREE = 'page_image_free';
+
+	/**
+	 * Get property name used in page_props table
+	 *
+	 * @param bool $isFree Whether the image is a free-license image
+	 * @return string
+	 */
+	public static function getPropName( $isFree ) {
+		return $isFree ? self::PROP_NAME_FREE : self::PROP_NAME;
+	}
 
 	/**
 	 * Returns page image for a given title

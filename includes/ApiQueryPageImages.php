@@ -14,6 +14,16 @@
 class ApiQueryPageImages extends ApiQueryBase {
 
 	/**
+	 * @const API parameter value for free images
+	 */
+	const PARAM_LICENSE_FREE = 'free';
+
+	/**
+	 * @const API parameter value for images with any type of license
+	 */
+	const PARAM_LICENSE_ANY = 'any';
+
+	/**
 	 * @param ApiQuery $query
 	 * @param string $moduleName
 	 */
@@ -66,8 +76,6 @@ class ApiQueryPageImages extends ApiQueryBase {
 		if ( !count( $prop ) ) {
 			$this->dieUsage( 'No properties selected', '_noprop' );
 		}
-		$size = $params['thumbsize'];
-		$limit = $params['limit'];
 
 		$allTitles = $this->getTitles();
 
@@ -88,6 +96,7 @@ class ApiQueryPageImages extends ApiQueryBase {
 			}
 		}
 
+		$limit = $params['limit'];
 		// Slice the part of the array we want to find images for
 		$titles = array_slice( $allTitles, $offset, $limit, true );
 
@@ -106,19 +115,30 @@ class ApiQueryPageImages extends ApiQueryBase {
 			}
 		}
 
+		$size = $params['thumbsize'];
 		// Extract page images from the page_props table
 		if ( count( $titles ) > 0 ) {
 			$this->addTables( 'page_props' );
 			$this->addFields( array( 'pp_page', 'pp_propname', 'pp_value' ) );
-			$this->addWhere( array( 'pp_page' => array_keys( $titles ), 'pp_propname' => PageImages::PROP_NAME ) );
+			$this->addWhere( array( 'pp_page' => array_keys( $titles ),
+				'pp_propname' => self::getPropNames( $params['license'] ) ) );
 
 			$res = $this->select( __METHOD__ );
 
+			$buffer = [];
+			$propNameAny = PageImages::getPropName( false );
 			foreach ( $res as $row ) {
 				$pageId = $row->pp_page;
+				if ( !array_key_exists( $pageId, $buffer ) || $row->pp_propname === $propNameAny ) {
+					$buffer[$pageId] = $row;
+				}
+			}
+
+			foreach ( $buffer as $pageId => $row ) {
 				$fileName = $row->pp_value;
 				$this->setResultValues( $prop, $pageId, $fileName, $size );
 			}
+
 		} // End page props image extraction
 
 		// Extract images from file namespace pages. In this case we just use
@@ -127,6 +147,23 @@ class ApiQueryPageImages extends ApiQueryBase {
 			$fileName = $title->getDBkey();
 			$this->setResultValues( $prop, $pageId, $fileName, $size );
 		}
+	}
+
+	/**
+	 * Get property names used in page_props table
+	 *
+	 * If the license is free, then only the free property name will be returned,
+	 * otherwise both free and non-free property names will be returned. That's
+	 * because we save the image name only once if it's free and the best image.
+	 *
+	 * @param string $license
+	 * @return string|array
+	 */
+	protected static function getPropNames( $license ) {
+		if ( $license === self::PARAM_LICENSE_FREE ) {
+			return PageImages::getPropName( true );
+		}
+		return [ PageImages::getPropName( true ), PageImages::getPropName( false ) ];
 	}
 
 	public function getCacheMode( $params ) {
@@ -197,7 +234,7 @@ class ApiQueryPageImages extends ApiQueryBase {
 			),
 			'thumbsize' => array(
 				ApiBase::PARAM_TYPE => 'integer',
-				APiBase::PARAM_DFLT => 50,
+				ApiBase::PARAM_DFLT => 50,
 			),
 			'limit' => array(
 				ApiBase::PARAM_DFLT => 1,
@@ -206,6 +243,11 @@ class ApiQueryPageImages extends ApiQueryBase {
 				ApiBase::PARAM_MAX => 50,
 				ApiBase::PARAM_MAX2 => 100,
 			),
+			'license' => [
+				ApiBase::PARAM_TYPE => [ self::PARAM_LICENSE_FREE, self::PARAM_LICENSE_ANY ],
+				ApiBase::PARAM_ISMULTI => false,
+				ApiBase::PARAM_DFLT => self::PARAM_LICENSE_FREE,
+			],
 			'continue' => array(
 				ApiBase::PARAM_TYPE => 'integer',
 				/** @todo Once support for MediaWiki < 1.25 is dropped, just use ApiBase::PARAM_HELP_MSG directly */

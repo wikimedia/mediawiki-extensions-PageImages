@@ -3,31 +3,13 @@
 namespace PageImages\Tests\Hooks;
 
 use LinksUpdate;
-use PageImages\Hooks\LinksUpdateHookHandler;
 use PageImages;
+use PageImages\Hooks\LinksUpdateHookHandler;
 use ParserOutput;
 use PHPUnit_Framework_TestCase;
 use RepoGroup;
+use TestingAccessWrapper;
 
-
-class LinksUpdateHookHandlerProxy extends PageImages\Hooks\LinksUpdateHookHandler {
-
-	public function getScore( array $image, $position ) {
-		return parent::getScore( $image, $position );
-	}
-
-	public function scoreFromTable( $value, array $scores ) {
-		return parent::scoreFromTable( $value, $scores );
-	}
-
-	public function getRatio( array $image ) {
-		return parent::getRatio( $image );
-	}
-
-	public function getBlacklist() {
-		return parent::getBlacklist();
-	}
-}
 
 /**
  * @covers PageImages\Hooks\LinksUpdateHookHandler
@@ -46,13 +28,12 @@ class LinksUpdateHookHandlerTest extends PHPUnit_Framework_TestCase {
 	}
 
 	/**
+	 * @param array $images
 	 * @return LinksUpdate
 	 */
-	private function getLinksUpdate() {
+	private function getLinksUpdate( array $images ) {
 		$parserOutput = new ParserOutput();
-		$parserOutput->setExtensionData( 'pageImages', array(
-			array( 'filename' => 'A.jpg', 'fullwidth' => 100, 'fullheight' => 50 ),
-		) );
+		$parserOutput->setExtensionData( 'pageImages', $images );
 
 		$linksUpdate = $this->getMockBuilder( 'LinksUpdate' )
 			->disableOriginalConstructor()
@@ -65,6 +46,7 @@ class LinksUpdateHookHandlerTest extends PHPUnit_Framework_TestCase {
 	}
 
 	/**
+	 * Required to make wfFindFile in LinksUpdateHookHandler::getScore return something.
 	 * @return RepoGroup
 	 */
 	private function getRepoGroup() {
@@ -86,28 +68,104 @@ class LinksUpdateHookHandlerTest extends PHPUnit_Framework_TestCase {
 		return $repoGroup;
 	}
 
-	public function testOnLinksUpdate() {
-		$linksUpdate = $this->getLinksUpdate();
+	/**
+	 * @dataProvider provideDoLinksUpdate
+	 * @param $images
+	 * @param $expectedFreeFileName
+	 * @param $expectedNonFreeFileName
+	 */
+	public function testDoLinksUpdate( $images, $expectedFreeFileName, $expectedNonFreeFileName ) {
+		$linksUpdate = $this->getLinksUpdate( $images );
+		$mock = TestingAccessWrapper::newFromObject(
+				$this->getMockBuilder( LinksUpdateHookHandler::class )
+				->setMethods( ['getScore', 'isImageFree'] )
+				->getMock()
+		);
 
-		LinksUpdateHookHandler::onLinksUpdate( $linksUpdate );
+		$scoreMap = [];
+		$isFreeMap = [];
+		$counter = 0;
+		foreach ( $images as $image ) {
+			array_push( $scoreMap, [$image, $counter++, $image['score']] );
+			array_push( $isFreeMap, [$image['filename'], $image['isFree']] );
+		}
+
+		$mock->expects( $this->any() )
+			->method( 'getScore' )
+			->will( $this->returnValueMap( $scoreMap ) );
+
+		$mock->expects( $this->any() )
+			->method( 'isImageFree' )
+			->will( $this->returnValueMap( $isFreeMap ) );
+
+		$mock->doLinksUpdate( $linksUpdate );
 
 		$this->assertTrue( property_exists( $linksUpdate, 'mProperties' ), 'precondition' );
-		$this->assertSame( 'A.jpg', $linksUpdate->mProperties[PageImages::PROP_NAME] );
+		if ( is_null( $expectedFreeFileName ) ) {
+			$this->assertFalse( isset( $linksUpdate->mProperties[PageImages::PROP_NAME_FREE] ) );
+		} else {
+			$this->assertSame( $expectedFreeFileName, $linksUpdate->mProperties[PageImages::PROP_NAME_FREE] );
+		}
+		if ( is_null( $expectedNonFreeFileName ) ) {
+			$this->assertFalse( isset( $linksUpdate->mProperties[PageImages::PROP_NAME] ) );
+		} else {
+			$this->assertSame( $expectedNonFreeFileName, $linksUpdate->mProperties[PageImages::PROP_NAME] );
+		}
+	}
+
+	public function provideDoLinksUpdate() {
+		return [
+			// both images are non-free
+			[
+				[
+					[ 'filename' => 'A.jpg', 'score' => 100, 'isFree' => false ],
+					[ 'filename' => 'B.jpg', 'score' => 90, 'isFree' => false ],
+				],
+				null,
+				'A.jpg'
+			],
+			// both images are free
+			[
+				[
+					[ 'filename' => 'A.jpg', 'score' => 100, 'isFree' => true ],
+					[ 'filename' => 'B.jpg', 'score' => 90, 'isFree' => true ],
+				],
+				'A.jpg',
+				null
+			],
+			// one free (with a higher score), one non-free image
+			[
+				[
+					[ 'filename' => 'A.jpg', 'score' => 100, 'isFree' => true ],
+					[ 'filename' => 'B.jpg', 'score' => 90, 'isFree' => false ],
+				],
+				'A.jpg',
+				null
+			],
+			// one non-free (with a higher score), one free image
+			[
+				[
+					[ 'filename' => 'A.jpg', 'score' => 100, 'isFree' => false ],
+					[ 'filename' => 'B.jpg', 'score' => 90, 'isFree' => true ],
+				],
+				'B.jpg',
+				'A.jpg'
+			]
+		];
 	}
 
 	/**
 	 * @dataProvider provideGetScore
 	 */
-	public function testGetScore( $image, $scoreFromTable, $position, $metadata, $expected ) {
-		$mock = $this->getMockBuilder( LinksUpdateHookHandlerProxy::class )
-			->setMethods( ['scoreFromTable', 'getMetadata', 'getRatio', 'getBlacklist'] )
-			->getMock();
+	public function testGetScore( $image, $scoreFromTable, $position, $expected ) {
+		$mock = TestingAccessWrapper::newFromObject(
+			$this->getMockBuilder( LinksUpdateHookHandler::class )
+				->setMethods( ['scoreFromTable', 'getMetadata', 'getRatio', 'getBlacklist'] )
+				->getMock()
+		);
         $mock->expects( $this->any() )
             ->method( 'scoreFromTable' )
 	        ->will( $this->returnValue( $scoreFromTable ) );
-		$mock->expects( $this->any() )
-			->method( 'getMetadata' )
-			->will( $this->returnValue( $metadata ) );
 		$mock->expects( $this->any() )
 			->method( 'getRatio' )
 			->will( $this->returnValue( 0 ) );
@@ -125,7 +183,6 @@ class LinksUpdateHookHandlerTest extends PHPUnit_Framework_TestCase {
 				['filename' => 'A.jpg', 'handler' => ['width' => 100]],
 				100,
 				0,
-				[],
 				// width score + ratio score + position score
 				100 + 100 + 8
 			],
@@ -133,7 +190,6 @@ class LinksUpdateHookHandlerTest extends PHPUnit_Framework_TestCase {
 				['filename' => 'A.jpg', 'fullwidth' => 100],
 				50,
 				1,
-				[],
 				// width score + ratio score + position score
 				106
 			],
@@ -141,7 +197,6 @@ class LinksUpdateHookHandlerTest extends PHPUnit_Framework_TestCase {
 				['filename' => 'A.jpg', 'fullwidth' => 100],
 				50,
 				2,
-				[],
 				// width score + ratio score + position score
 				104
 			],
@@ -149,7 +204,6 @@ class LinksUpdateHookHandlerTest extends PHPUnit_Framework_TestCase {
 				['filename' => 'A.jpg', 'fullwidth' => 100],
 				50,
 				3,
-				[],
 				// width score + ratio score + position score
 				103
 			],
@@ -157,7 +211,6 @@ class LinksUpdateHookHandlerTest extends PHPUnit_Framework_TestCase {
 				['filename' => 'blacklisted.jpg', 'fullwidth' => 100],
 				50,
 				3,
-				[],
 				// blacklist score
 				-1000
 			],
@@ -170,9 +223,9 @@ class LinksUpdateHookHandlerTest extends PHPUnit_Framework_TestCase {
 	public function testScoreFromTable( $type, $value, $expected ) {
 		global $wgPageImagesScores;
 
-		$proxy = new LinksUpdateHookHandlerProxy;
+		$handlerWrapper = TestingAccessWrapper::newFromObject( new LinksUpdateHookHandler );
 
-		$score = $proxy->scoreFromTable( $value, $wgPageImagesScores[$type] );
+		$score = $handlerWrapper->scoreFromTable( $value, $wgPageImagesScores[$type] );
 		$this->assertEquals( $expected, $score );
 	}
 
@@ -202,14 +255,32 @@ class LinksUpdateHookHandlerTest extends PHPUnit_Framework_TestCase {
 		];
 	}
 
-	public function testFetchingExtendedMetadataFromFile() {
-		// Required to make wfFindFile in LinksUpdateHookHandler::getScore return something.
+	/**
+	 * @dataProvider provideIsFreeImage
+	 * @param $fileName
+	 * @param $metadata
+	 */
+	public function testIsFreeImage( $fileName, $metadata, $expected ) {
 		RepoGroup::setSingleton( $this->getRepoGroup() );
-		$linksUpdate = $this->getLinksUpdate();
-
-		LinksUpdateHookHandler::onLinksUpdate( $linksUpdate );
-
-		$this->assertTrue( true, 'no errors in getMetadata' );
+		$mock = TestingAccessWrapper::newFromObject(
+			$this->getMockBuilder( LinksUpdateHookHandler::class )
+				->setMethods( ['fetchFileMetadata'] )
+				->getMock()
+		);
+		$mock->expects( $this->any() )
+			->method( 'fetchFileMetadata' )
+			->will( $this->returnValue( $metadata ) );
+		$this->assertEquals( $expected, $mock->isImageFree( $fileName ));
 	}
 
+	public function provideIsFreeImage() {
+		return [
+			['A.jpg', [], true],
+			['A.jpg', ['NonFree' => ['value' => '0']], true],
+			['A.jpg', ['NonFree' => ['value' => 0]], true],
+			['A.jpg', ['NonFree' => ['value' => false]], true],
+			['A.jpg', ['NonFree' => ['value' => 'something']], false],
+			['A.jpg', ['something' => ['value' => 'something']], true],
+		];
+	}
 }

@@ -56,10 +56,6 @@
 					"20": 5,
 					"30": 0,
 					"31": -100
-				},
-				"rights": {
-					"@doc": "don't show nonfree images",
-					"nonfree": -100
 				}
 			}
 		},
