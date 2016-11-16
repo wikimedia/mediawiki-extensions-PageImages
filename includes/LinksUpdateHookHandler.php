@@ -77,7 +77,7 @@ class LinksUpdateHookHandler {
 	 *
 	 * @return int
 	 */
-	private function getScore( array $image, $position ) {
+	protected function getScore( array $image, $position ) {
 		global $wgPageImagesScores;
 
 		$file = wfFindFile( $image['filename'] );
@@ -120,7 +120,7 @@ class LinksUpdateHookHandler {
 	 *
 	 * @return int
 	 */
-	private function scoreFromTable( $value, array $scores ) {
+	protected function scoreFromTable( $value, array $scores ) {
 		$lastScore = 0;
 
 		foreach ( $scores as $boundary => $score ) {
@@ -141,7 +141,7 @@ class LinksUpdateHookHandler {
 	 *
 	 * @return string[]
 	 */
-	private function getMetadata( File $file ) {
+	protected function getMetadata( File $file ) {
 		$format = new FormatMetadata;
 		$context = new DerivativeContext( $format->getContext() );
 		$format->setSingleLanguage( true ); // we don't care and it's slightly faster
@@ -165,7 +165,7 @@ class LinksUpdateHookHandler {
 	 *
 	 * @return float|int
 	 */
-	private function getRatio( array $image ) {
+	protected function getRatio( array $image ) {
 		$width = $image['fullwidth'];
 		$height = $image['fullheight'];
 
@@ -182,7 +182,7 @@ class LinksUpdateHookHandler {
 	 * @throws Exception
 	 * @return int[] Flipped associative array in format "image BDB key" => int
 	 */
-	private function getBlacklist() {
+	protected function getBlacklist() {
 		global $wgPageImagesBlacklist, $wgPageImagesBlacklistExpiry, $wgMemc;
 		static $list = false;
 
