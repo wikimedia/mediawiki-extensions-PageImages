@@ -4,6 +4,8 @@ namespace PageImages\Tests;
 
 use ApiPageSet;
 use ApiQueryPageImages;
+use FakeResultWrapper;
+use PageImages;
 use PHPUnit_Framework_TestCase;
 use Title;
 
@@ -146,4 +148,74 @@ class ApiQueryPageImagesTest extends PHPUnit_Framework_TestCase {
 		);
 	}
 
+	/**
+	 * @dataProvider provideExecute
+	 * @param array $requestParams Request parameters to the API
+	 * @param array $titles Page titles passed to the API
+	 * @param array $queryPageIds Page IDs that will be used for querying the DB.
+	 * @param array $queryResults Results of the DB select query
+	 * @param int $setResultValueCount The number results the API returned
+	 */
+	public function testExecute( $requestParams, $titles, $queryPageIds, $queryResults, $setResultValueCount ) {
+		$mock = $this->getMockBuilder( ApiQueryPageImages::class )
+			->disableOriginalConstructor()
+			-> setMethods( ['extractRequestParams', 'getTitles', 'setContinueParameter', 'dieUsage',
+				'addTables', 'addFields', 'addWhere', 'select', 'setResultValues'] )
+			->getMock();
+		$mock->expects( $this->any() )
+			->method( 'extractRequestParams' )
+			->willReturn( $requestParams );
+		$mock->expects( $this->any() )
+			->method( 'getTitles' )
+			->willReturn( $titles );
+		$mock->expects( $this->any() )
+			->method( 'select' )
+			->willReturn( new FakeResultWrapper( $queryResults ) );
+
+		// continue page ID is not found
+		if ( isset( $requestParams['continue'] ) && $requestParams['continue'] > count( $titles ) ) {
+				$mock->expects( $this->exactly( 1 ) )
+				->method( 'dieUsage' );
+		}
+
+		$mock->expects( $this->exactly( count ( $queryPageIds ) > 0 ? 1 : 0 ) )
+			->method( 'addWhere' )
+			->with( ['pp_page' => $queryPageIds, 'pp_propname' => PageImages::PROP_NAME] );
+
+		$mock->expects( $this->exactly( $setResultValueCount ) )
+			->method( 'setResultValues' );
+
+		$mock->execute();
+	}
+
+	public function provideExecute() {
+		return [
+			[
+				['prop' => ['thumbnail'], 'thumbsize' => 100, 'limit' => 10],
+				[Title::newFromText( 'Page 1' ), Title::newFromText( 'Page 2' )],
+				[0, 1],
+				[
+					(object) ['pp_page' => 0, 'pp_value' => 'A.jpg'],
+					(object) ['pp_page' => 1, 'pp_value' => 'B.jpg'],
+				],
+				2
+			],
+			[
+				['prop' => ['thumbnail'], 'thumbsize' => 200, 'limit' => 10],
+				[],
+				[],
+				[],
+				0
+			],
+			[
+				['prop' => ['thumbnail'], 'continue' => 1, 'thumbsize' => 400, 'limit' => 10],
+				[Title::newFromText( 'Page 1' ), Title::newFromText( 'Page 2' )],
+				[1],
+				[
+					(object) ['pp_page' => 1, 'pp_value' => 'B.jpg'],
+				],
+				1
+			],
+		];
+	}
 }
