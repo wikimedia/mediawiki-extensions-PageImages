@@ -41,7 +41,7 @@ class PageImages {
 		$dbr = wfGetDB( DB_SLAVE );
 		$name = $dbr->selectField( 'page_props',
 			'pp_value',
-			array( 'pp_page' => $title->getArticleID(), 'pp_propname' => self::PROP_NAME ),
+			[ 'pp_page' => $title->getArticleID(), 'pp_propname' => self::PROP_NAME ],
 			__METHOD__
 		);
 
@@ -74,21 +74,21 @@ class PageImages {
 		$thumbSetting = $context->getUser()->getOption( 'thumbsize' );
 		$thumbSize = $wgThumbLimits[$thumbSetting];
 
-		$thumb = $imageFile->transform( array( 'width' => $thumbSize ) );
+		$thumb = $imageFile->transform( [ 'width' => $thumbSize ] );
 		if ( !$thumb ) {
 			return;
 		}
 		$imageHtml = $thumb->toHtml(
-			array(
+			[
 				'alt' => $imageFile->getTitle()->getText(),
 				'desc-link' => true,
-			)
+			]
 		);
 
-		$pageInfo['header-basic'][] = array(
+		$pageInfo['header-basic'][] = [
 			$context->msg( 'pageimages-info-label' ),
 			$imageHtml
-		);
+		];
 	}
 
 	/**
@@ -121,10 +121,10 @@ class PageImages {
 	 * @param array[] $watchlist
 	 * @param array[] &$images
 	 */
-	public static function onSpecialMobileEditWatchlist_images( IContextSource $context, array $watchlist,
-		array &$images
+	public static function onSpecialMobileEditWatchlist_images(
+		IContextSource $context, array $watchlist, array &$images
 	) {
-		$ids = array();
+		$ids = [];
 		foreach ( $watchlist as $ns => $pages ) {
 			foreach ( array_keys( $pages ) as $dbKey ) {
 				$title = Title::makeTitle( $ns, $dbKey );
@@ -154,13 +154,13 @@ class PageImages {
 	 * @return array[]
 	 */
 	private static function getImages( array $pageIds, $size = 0 ) {
-		$request = array(
+		$request = [
 			'action' => 'query',
 			'prop' => 'pageimages',
 			'piprop' => 'name',
 			'pageids' => implode( '|', $pageIds ),
 			'pilimit' => 'max',
-		);
+		];
 
 		if ( $size ) {
 			$request['piprop'] = 'thumbnail';
@@ -171,14 +171,14 @@ class PageImages {
 		$api->execute();
 
 		if ( defined( 'ApiResult::META_CONTENT' ) ) {
-			return (array)$api->getResult()->getResultData( array( 'query', 'pages' ),
-				array( 'Strip' => 'base' ) );
+			return (array)$api->getResult()->getResultData( [ 'query', 'pages' ],
+				[ 'Strip' => 'base' ] );
 		} else {
 			$data = $api->getResultData();
 			if ( isset( $data['query']['pages'] ) ) {
 				return $data['query']['pages'];
 			}
-			return array();
+			return [];
 		}
 	}
 

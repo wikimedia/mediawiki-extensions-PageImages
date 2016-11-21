@@ -53,7 +53,7 @@ class ApiQueryPageImages extends ApiQueryBase {
 		$missingTitles = $pageSet->getMissingTitlesByNamespace();
 		$missingFileTitles = isset( $missingTitles[NS_FILE] )
 			? $missingTitles[NS_FILE]
-			: array();
+			: [];
 
 		// $titles is a map of ID to title object, which is ideal,
 		// whereas $missingFileTitles is a map of title text to ID.
@@ -92,7 +92,10 @@ class ApiQueryPageImages extends ApiQueryBase {
 			$offset = array_search( intval( $params['continue'] ), $pageIds );
 			// If the 'continue' page wasn't found, die with error
 			if ( !$offset ) {
-				$this->dieUsage( 'Invalid continue param. You should pass the original value returned by the previous query' , '_badcontinue' );
+				$this->dieUsage(
+					'Invalid continue param. You should pass the original value returned by the previous query',
+					'_badcontinue'
+				);
 			}
 		}
 
@@ -107,7 +110,7 @@ class ApiQueryPageImages extends ApiQueryBase {
 		}
 
 		// Find any titles in the file namespace so we can handle those separately
-		$filePageTitles = array();
+		$filePageTitles = [];
 		foreach ( $titles as $id => $title ) {
 			if ( $title->inNamespace( NS_FILE ) ) {
 				$filePageTitles[$id] = $title;
@@ -119,9 +122,9 @@ class ApiQueryPageImages extends ApiQueryBase {
 		// Extract page images from the page_props table
 		if ( count( $titles ) > 0 ) {
 			$this->addTables( 'page_props' );
-			$this->addFields( array( 'pp_page', 'pp_propname', 'pp_value' ) );
-			$this->addWhere( array( 'pp_page' => array_keys( $titles ),
-				'pp_propname' => self::getPropNames( $params['license'] ) ) );
+			$this->addFields( [ 'pp_page', 'pp_propname', 'pp_value' ] );
+			$this->addWhere( [ 'pp_page' => array_keys( $titles ),
+				'pp_propname' => self::getPropNames( $params['license'] ) ] );
 
 			$res = $this->select( __METHOD__ );
 
@@ -179,22 +182,22 @@ class ApiQueryPageImages extends ApiQueryBase {
 	 * @param int $size The thumbsize value from the API request
 	 */
 	protected function setResultValues( array $prop, $pageId, $fileName, $size ) {
-		$vals = array();
+		$vals = [];
 		if ( isset( $prop['thumbnail'] ) || isset( $prop['original'] ) ) {
 			$file = wfFindFile( $fileName );
 			if ( $file ) {
 				if ( isset( $prop['thumbnail'] ) ) {
-					$thumb = $file->transform( array( 'width' => $size, 'height' => $size ) );
+					$thumb = $file->transform( [ 'width' => $size, 'height' => $size ] );
 					if ( $thumb && $thumb->getUrl() ) {
 						// You can request a thumb 1000x larger than the original
 						// which (in case of bitmap original) will return a Thumb object
 						// that will lie about its size but have the original as an image.
 						$reportedSize = $thumb->fileIsSource() ? $file : $thumb;
-						$vals['thumbnail'] = array(
+						$vals['thumbnail'] = [
 							'source' => wfExpandUrl( $thumb->getUrl(), PROTO_CURRENT ),
 							'width' => $reportedSize->getWidth(),
 							'height' => $reportedSize->getHeight(),
-						);
+						];
 					}
 				}
 
@@ -203,9 +206,9 @@ class ApiQueryPageImages extends ApiQueryBase {
 					if ( isset( $vals['thumbnail'] ) ) {
 						$vals['thumbnail']['original'] = $original_url;
 					} else {
-						$vals['thumbnail'] = array(
+						$vals['thumbnail'] = [
 							'original' => $original_url,
-						);
+						];
 					}
 				}
 			}
@@ -215,7 +218,7 @@ class ApiQueryPageImages extends ApiQueryBase {
 			$vals['pageimage'] = $fileName;
 		}
 
-		$this->getResult()->addValue( array( 'query', 'pages' ), $pageId, $vals );
+		$this->getResult()->addValue( [ 'query', 'pages' ], $pageId, $vals );
 	}
 
 	/**
@@ -226,60 +229,65 @@ class ApiQueryPageImages extends ApiQueryBase {
 	}
 
 	public function getAllowedParams() {
-		return array(
-			'prop' => array(
-				ApiBase::PARAM_TYPE => array( 'thumbnail', 'name', 'original' ),
+		return [
+			'prop' => [
+				ApiBase::PARAM_TYPE => [ 'thumbnail', 'name', 'original' ],
 				ApiBase::PARAM_ISMULTI => true,
 				ApiBase::PARAM_DFLT => 'thumbnail|name',
-			),
-			'thumbsize' => array(
+			],
+			'thumbsize' => [
 				ApiBase::PARAM_TYPE => 'integer',
 				ApiBase::PARAM_DFLT => 50,
-			),
-			'limit' => array(
+			],
+			'limit' => [
 				ApiBase::PARAM_DFLT => 1,
 				ApiBase::PARAM_TYPE => 'limit',
 				ApiBase::PARAM_MIN => 1,
 				ApiBase::PARAM_MAX => 50,
 				ApiBase::PARAM_MAX2 => 100,
-			),
+			],
 			'license' => [
 				ApiBase::PARAM_TYPE => [ self::PARAM_LICENSE_FREE, self::PARAM_LICENSE_ANY ],
 				ApiBase::PARAM_ISMULTI => false,
 				ApiBase::PARAM_DFLT => self::PARAM_LICENSE_FREE,
 			],
-			'continue' => array(
+			'continue' => [
 				ApiBase::PARAM_TYPE => 'integer',
-				/** @todo Once support for MediaWiki < 1.25 is dropped, just use ApiBase::PARAM_HELP_MSG directly */
-				defined( 'ApiBase::PARAM_HELP_MSG' ) ? ApiBase::PARAM_HELP_MSG : '' => 'api-help-param-continue',
-			),
-		);
+				/**
+				 * @todo
+				 * Once support for MediaWiki < 1.25 is dropped, just use
+				 * ApiBase::PARAM_HELP_MSG directly
+				 */
+				defined( 'ApiBase::PARAM_HELP_MSG' )
+					? ApiBase::PARAM_HELP_MSG : '' => 'api-help-param-continue',
+			],
+		];
 	}
 
 	/**
 	 * @deprecated since MediaWiki core 1.25
 	 */
 	public function getParamDescription() {
-		return array(
-			'prop' => array( 'What information to return',
+		return [
+			'prop' => [ 'What information to return',
 				' thumbnail - URL and dimensions of image associated with page, if any',
 				' name - image title',
 				' original - URL to the image original',
-			),
+			],
 			'thumbsize' => 'Maximum thumbnail dimension',
 			'limit' => 'Properties of how many pages to return',
 			'continue' => 'When more results are available, use this to continue',
-		);
+		];
 	}
 
 	/**
 	 * @see ApiBase::getExamplesMessages()
 	 */
 	protected function getExamplesMessages() {
-		return array(
+		return [
 			'action=query&prop=pageimages&titles=Albert%20Einstein&pithumbsize=100' =>
 				'apihelp-query+pageimages-example-1',
-		);
+		];
 	}
 
 }

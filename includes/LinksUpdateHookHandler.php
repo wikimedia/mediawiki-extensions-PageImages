@@ -42,7 +42,7 @@ class LinksUpdateHookHandler {
 			return;
 		}
 
-		$scores = array();
+		$scores = [];
 		$counter = 0;
 
 		foreach ( $images as $image ) {
@@ -206,7 +206,7 @@ class LinksUpdateHookHandler {
 		}
 
 		wfDebug( __METHOD__ . "(): cache miss\n" );
-		$list = array();
+		$list = [];
 
 		foreach ( $wgPageImagesBlacklist as $source ) {
 			switch ( $source['type'] ) {
@@ -217,7 +217,8 @@ class LinksUpdateHookHandler {
 					$list = array_merge( $list, $this->getUrlBlacklist( $source['url'] ) );
 					break;
 				default:
-					throw new Exception( __METHOD__ . "(): unrecognized image blacklist type '{$source['type']}'" );
+					throw new Exception(
+						__METHOD__ . "(): unrecognized image blacklist type '{$source['type']}'" );
 			}
 		}
 
@@ -235,21 +236,21 @@ class LinksUpdateHookHandler {
 	 * @return string[]
 	 */
 	private function getDbBlacklist( $dbName, $page ) {
-		$dbr = wfGetDB( DB_SLAVE, array(), $dbName );
+		$dbr = wfGetDB( DB_SLAVE, [], $dbName );
 		$title = Title::newFromText( $page );
-		$list = array();
+		$list = [];
 
 		$id = $dbr->selectField(
 			'page',
 			'page_id',
-			array( 'page_namespace' => $title->getNamespace(), 'page_title' => $title->getDBkey() ),
+			[ 'page_namespace' => $title->getNamespace(), 'page_title' => $title->getDBkey() ],
 			__METHOD__
 		);
 
 		if ( $id ) {
 			$res = $dbr->select( 'pagelinks',
 				'pl_title',
-				array( 'pl_from' => $id, 'pl_namespace' => NS_FILE ),
+				[ 'pl_from' => $id, 'pl_namespace' => NS_FILE ],
 				__METHOD__
 			);
 			foreach ( $res as $row ) {
@@ -272,7 +273,7 @@ class LinksUpdateHookHandler {
 	private function getUrlBlacklist( $url ) {
 		global $wgFileExtensions;
 
-		$list = array();
+		$list = [];
 		$text = Http::get( $url, 3 );
 		$regex = '/\[\[:([^|\#]*?\.(?:' . implode( '|', $wgFileExtensions ) . '))/i';
 

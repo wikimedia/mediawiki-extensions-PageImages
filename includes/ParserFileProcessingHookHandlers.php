@@ -42,7 +42,9 @@ class ParserFileProcessingHookHandlers {
 	 * @param Parser $parser
 	 * @param ImageGalleryBase $gallery
 	 */
-	public static function onAfterParserFetchFileAndTitle( Parser $parser, ImageGalleryBase $gallery ) {
+	public static function onAfterParserFetchFileAndTitle(
+		Parser $parser, ImageGalleryBase $gallery
+	) {
 		$handler = new self();
 		$handler->doAfterParserFetchFileAndTitle( $parser, $gallery );
 	}
@@ -93,7 +95,7 @@ class ParserFileProcessingHookHandlers {
 			$myParams = $handlerParams;
 			$this->calcWidth( $myParams, $file );
 		} else {
-			$myParams = array();
+			$myParams = [];
 		}
 
 		$myParams['filename'] = $file->getTitle()->getDBkey();
@@ -101,7 +103,7 @@ class ParserFileProcessingHookHandlers {
 		$myParams['fullheight'] = $file->getHeight();
 
 		$out = $parser->getOutput();
-		$pageImages = $out->getExtensionData( 'pageImages' ) ?: array();
+		$pageImages = $out->getExtensionData( 'pageImages' ) ?: [];
 		$pageImages[] = $myParams;
 		$out->setExtensionData( 'pageImages', $pageImages );
 	}
