@@ -11,5 +11,8 @@
 	"apihelp-query+pageimages-example-1": "获取<kbd>Albert Einstein</kbd>页面中一张图片的名称及其<kbd>100</kbd>像素大小的缩略图。",
 	"apihelp-query+pageimages-param-prop": "返回哪些信息：\n;thumbnail:URL和页面中的图像尺寸，如有。\n;name:图像标题。",
 	"apihelp-query+pageimages-param-thumbsize": "最大缩略图尺寸。",
-	"apihelp-query+pageimages-param-limit": "返回的页面数的属性。"
+	"apihelp-query+pageimages-param-limit": "返回的页面数的属性。",
+	"apihelp-query+pageimages-param-license": "限制页面图片至特定的许可协议类型",
+	"apihelp-query+pageimages-paramvalue-license-free": "仅限自由图片",
+	"apihelp-query+pageimages-paramvalue-license-any": "最佳图片，无论自由与否。"
 }
