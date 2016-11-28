@@ -33,10 +33,40 @@ class LinksUpdateHookHandler {
 	}
 
 	/**
+	 * Returns a list of page image candidates for consideration
+	 * for scoring algorithm.
+	 * @param LinksUpdate $linksUpdate
+	 * @return array $image Associative array describing an image
+	 */
+	public function getPageImageCandidates( LinksUpdate $linksUpdate ) {
+		global $wgPageImagesLeadSectionOnly;
+		$po = false;
+
+		if ( $wgPageImagesLeadSectionOnly ) {
+			$rev = $linksUpdate->getRevision();
+			if ( $rev ) {
+				$content = $rev->getContent();
+				if ( $content ) {
+					$section = $content->getSection( 0 );
+
+					// Certain content types e.g. AbstractContent return null if sections do not apply
+					if ( $section ) {
+						$po = $section->getParserOutput( $linksUpdate->getTitle() );
+					}
+				}
+			}
+		} else {
+			$po = $linksUpdate->getParserOutput();
+		}
+
+		return $po ? $po->getExtensionData( 'pageImages' ) : [];
+	}
+
+	/**
 	 * @param LinksUpdate $linksUpdate
 	 */
 	public function doLinksUpdate( LinksUpdate $linksUpdate ) {
-		$images = $linksUpdate->getParserOutput()->getExtensionData( 'pageImages' );
+		$images = $this->getPageImageCandidates( $linksUpdate );
 
 		if ( $images === null ) {
 			return;
