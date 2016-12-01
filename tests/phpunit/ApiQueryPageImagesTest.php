@@ -105,7 +105,7 @@ class ApiQueryPageImagesTest extends PHPUnit_Framework_TestCase {
 		$this->assertContainsOnly( 'array', $params );
 		$this->assertArrayHasKey( 'license', $params );
 		$this->assertEquals( $params['license'][\ApiBase::PARAM_TYPE], ['free', 'any'] );
-		$this->assertEquals( $params['license'][\ApiBase::PARAM_DFLT], 'free' );
+		$this->assertEquals( $params['license'][\ApiBase::PARAM_DFLT], 'any' );
 		$this->assertEquals( $params['license'][\ApiBase::PARAM_ISMULTI], false );
 	}
 

@@ -250,7 +250,7 @@ class ApiQueryPageImages extends ApiQueryBase {
 			'license' => [
 				ApiBase::PARAM_TYPE => [ self::PARAM_LICENSE_FREE, self::PARAM_LICENSE_ANY ],
 				ApiBase::PARAM_ISMULTI => false,
-				ApiBase::PARAM_DFLT => self::PARAM_LICENSE_FREE,
+				ApiBase::PARAM_DFLT => self::PARAM_LICENSE_ANY,
 			],
 			'continue' => [
 				ApiBase::PARAM_TYPE => 'integer',
