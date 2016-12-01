@@ -70,7 +70,7 @@
 		],
 		"PageImagesBlacklistExpiry": 90,
 		"PageImagesExpandOpenSearchXml": false,
-		"PageImagesNamespaces": 0,
+		"PageImagesNamespaces": [ 0 ],
 		"PageImagesUseGalleries": false
 	},
 	"manifest_version": 1
