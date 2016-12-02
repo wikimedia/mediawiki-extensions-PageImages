@@ -187,6 +187,8 @@ class ApiQueryPageImages extends ApiQueryBase {
 		if ( isset( $prop['thumbnail'] ) || isset( $prop['original'] ) ) {
 			$file = wfFindFile( $fileName );
 			if ( $file ) {
+				$vals['thumbnail'] = [];
+
 				if ( isset( $prop['thumbnail'] ) ) {
 					$thumb = $file->transform( [ 'width' => $size, 'height' => $size ] );
 					if ( $thumb && $thumb->getUrl() ) {
@@ -204,13 +206,25 @@ class ApiQueryPageImages extends ApiQueryBase {
 
 				if ( isset( $prop['original'] ) ) {
 					$original_url = wfExpandUrl( $file->getUrl(), PROTO_CURRENT );
-					if ( isset( $vals['thumbnail'] ) ) {
-						$vals['thumbnail']['original'] = $original_url;
+
+					$vals['original'] = [
+						'source' => $original_url,
+						'width' => $file->getWidth(),
+						'height' => $file->getHeight()
+					];
+
+					// DEPRECATED: The original image URL was originally provided as a property of
+					// the "thumbnail" object, but we now provide the original image info in its own
+					// object on the same level as the thumbnail.
+					//
+					// Remove this functionality, and the warning, after a reasonable amount of time
+					// has passed since December 2016.
+					if ( is_callable( [ $this, 'addWarning' ] ) ) {
+						$this->addWarning( 'apiwarn-query+pageimages-original-in-thumbnail-deprecated' );
 					} else {
-						$vals['thumbnail'] = [
-							'original' => $original_url,
-						];
+						$this->setWarning( "The original image's source URL is now provided with its dimensions in its own property for the page object. It will be removed from the 'thumbnail' property in a future release." );
 					}
+					$vals['thumbnail']['original'] = $original_url;
 				}
 			}
 		}
@@ -273,7 +287,7 @@ class ApiQueryPageImages extends ApiQueryBase {
 			'prop' => [ 'What information to return',
 				' thumbnail - URL and dimensions of image associated with page, if any',
 				' name - image title',
-				' original - URL to the image original',
+				' original - URL and dimensions of the original image',
 			],
 			'thumbsize' => 'Maximum thumbnail dimension',
 			'limit' => 'Properties of how many pages to return',

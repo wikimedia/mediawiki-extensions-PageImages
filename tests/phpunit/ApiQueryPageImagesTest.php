@@ -169,7 +169,7 @@ class ApiQueryPageImagesTest extends PHPUnit_Framework_TestCase {
 		$mock = TestingAccessWrapper::newFromObject(
 			$this->getMockBuilder( ApiQueryPageImages::class )
 				->disableOriginalConstructor()
-				-> setMethods( [ 'extractRequestParams', 'getTitles', 'setContinueParameter', 'dieUsage',
+				->setMethods( [ 'extractRequestParams', 'getTitles', 'setContinueParameter', 'dieUsage',
 					'addTables', 'addFields', 'addWhere', 'select', 'setResultValues' ] )
 				->getMock()
 		);
@@ -188,6 +188,9 @@ class ApiQueryPageImagesTest extends PHPUnit_Framework_TestCase {
 				$mock->expects( $this->exactly( 1 ) )
 				->method( 'dieUsage' );
 		}
+
+		$originalRequested = in_array( 'original', $requestParams['prop'] );
+		$this->assertTrue( $this->hasExpectedProperties( $queryResults, $originalRequested ) );
 
 		$license = isset( $requestParams['license'] ) ? $requestParams['license'] : 'free';
 		if ( $license == ApiQueryPageImages::PARAM_LICENSE_ANY ) {
@@ -270,6 +273,16 @@ class ApiQueryPageImagesTest extends PHPUnit_Framework_TestCase {
 				],
 				2
 			],
+			[
+				['prop' => ['thumbnail', 'original'], 'thumbsize' => 510, 'limit' => 10, 'license' => 'free'],
+				[Title::newFromText( 'Page 1' ), Title::newFromText( 'Page 2' )],
+				[0, 1],
+				[
+					(object) ['pp_page' => 0, 'pp_value' => 'A_Free.jpg', 'pp_value_original' => 'A_Free_original.jpg', 'pp_original_width' => 80, 'pp_original_height' => 80, 'pp_propname' => PageImages::PROP_NAME_FREE],
+					(object) ['pp_page' => 1, 'pp_value' => 'B_Free.jpg', 'pp_value_original' => 'B_Free_original.jpg', 'pp_original_width' => 80, 'pp_original_height' => 80, 'pp_propname' => PageImages::PROP_NAME_FREE],
+				],
+				2
+			],
 		];
 	}
 
@@ -288,5 +301,35 @@ class ApiQueryPageImagesTest extends PHPUnit_Framework_TestCase {
 			[ 'free', \PageImages::PROP_NAME_FREE ],
 			[ 'any', [ \PageImages::PROP_NAME_FREE, \PageImages::PROP_NAME ] ]
 		];
+	}
+
+	private function hasExpectedProperties( $queryResults, $originalRequested ) {
+		if ( $originalRequested ) {
+			return $this->allResultsHaveProperty( $queryResults, 'pp_value_original' )
+				&& $this->allResultsHaveProperty( $queryResults, 'pp_original_width' )
+				&& $this->allResultsHaveProperty( $queryResults, 'pp_original_height' );
+		} else {
+			return $this->noResultsHaveProperty( $queryResults, 'pp_value_original' )
+				&& $this->noResultsHaveProperty( $queryResults, 'pp_original_width' )
+				&& $this->noResultsHaveProperty( $queryResults, 'pp_original_height' );
+		}
+	}
+
+	private function noResultsHaveProperty( $queryResults, $propName ) {
+		foreach( $queryResults as $result ) {
+			if ( property_exists( $result, $propName ) ) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+	private function allResultsHaveProperty( $queryResults, $propName ) {
+		foreach( $queryResults as $result ) {
+			if ( !property_exists( $result, $propName ) ) {
+				return false;
+			}
+		}
+		return true;
 	}
 }
