@@ -6,24 +6,29 @@ if ( $IP === false ) {
 }
 require_once( "$IP/maintenance/Maintenance.php" );
 
+use MediaWiki\MediaWikiServices;
+
 /**
  * @license WTFPL 2.0
  * @author Max Semenik
  */
 class InitImageData extends Maintenance {
-	const BATCH_SIZE = 100;
-
 	public function __construct() {
 		parent::__construct();
 		$this->mDescription = 'Initializes PageImages data';
-		$this->addOption( 'namespaces', 'Comma-separated list of namespace(s) to refresh', false, true );
-		$this->addOption( 'earlier-than', 'Run only on pages earlier than this timestamp', false, true );
+		$this->addOption( 'namespaces',
+			'Comma-separated list of namespace(s) to refresh', false, true );
+		$this->addOption( 'earlier-than',
+			'Run only on pages earlier than this timestamp', false, true );
+		$this->addOption( 'start', 'Starting page ID', false, true );
+		$this->setBatchSize( 100 );
 	}
 
 	public function execute() {
 		global $wgPageImagesNamespaces;
 
-		$id = 0;
+		$id = $this->getOption( 'start', 0 );
+		$lbFactory = MediaWikiServices::getInstance()->getDBLoadBalancerFactory();
 
 		do {
 			$tables = array( 'page', 'imagelinks' );
@@ -49,13 +54,13 @@ class InitImageData extends Maintenance {
 					. $dbr->addQuotes( $this->getOption( 'earlier-than' ) );
 			}
 			$res = $dbr->select( $tables, $fields, $conds, __METHOD__,
-				array( 'LIMIT' => self::BATCH_SIZE, 'ORDER_BY' => 'page_id', 'GROUP BY' => 'page_id' ),
+				[ 'LIMIT' => $this->mBatchSize, 'ORDER_BY' => 'page_id', 'GROUP BY' => 'page_id' ],
 				$joinConds
 			);
 			foreach ( $res as $row ) {
 				$id = $row->page_id;
 				RefreshLinks::fixLinksFromArticle( $id );
-				wfWaitForSlaves();
+				$lbFactory->waitForReplication();
 			}
 			$this->output( "$id\n" );
 		} while ( $res->numRows() );
