@@ -4,7 +4,7 @@ $IP = getenv( 'MW_INSTALL_PATH' );
 if ( $IP === false ) {
 	$IP = __DIR__ . '/../../..';
 }
-require_once( "$IP/maintenance/Maintenance.php" );
+require_once ( "$IP/maintenance/Maintenance.php" );
 
 use MediaWiki\MediaWikiServices;
 
@@ -31,16 +31,16 @@ class InitImageData extends Maintenance {
 		$lbFactory = MediaWikiServices::getInstance()->getDBLoadBalancerFactory();
 
 		do {
-			$tables = array( 'page', 'imagelinks' );
-			$conds = array(
+			$tables = [ 'page', 'imagelinks' ];
+			$conds = [
 				'page_id > ' . (int) $id,
 				'il_from IS NOT NULL',
 				'page_is_redirect' => 0,
-			);
-			$fields = array( 'page_id' );
-			$joinConds = array( 'imagelinks' => array(
+			];
+			$fields = [ 'page_id' ];
+			$joinConds = [ 'imagelinks' => [
 				'LEFT JOIN', 'page_id = il_from',
-			) );
+			] ];
 
 			$dbr = wfGetDB( DB_SLAVE );
 			if ( $this->hasOption( 'namespaces' ) ) {
@@ -69,4 +69,4 @@ class InitImageData extends Maintenance {
 }
 
 $maintClass = 'InitImageData';
-require_once( DO_MAINTENANCE );
+require_once ( DO_MAINTENANCE );

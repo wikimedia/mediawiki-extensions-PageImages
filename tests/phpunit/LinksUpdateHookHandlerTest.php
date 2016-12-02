@@ -10,7 +10,6 @@ use PHPUnit_Framework_TestCase;
 use RepoGroup;
 use TestingAccessWrapper;
 
-
 /**
  * @covers PageImages\Hooks\LinksUpdateHookHandler
  *
@@ -78,7 +77,7 @@ class LinksUpdateHookHandlerTest extends PHPUnit_Framework_TestCase {
 		$linksUpdate = $this->getLinksUpdate( $images );
 		$mock = TestingAccessWrapper::newFromObject(
 				$this->getMockBuilder( LinksUpdateHookHandler::class )
-				->setMethods( ['getScore', 'isImageFree'] )
+				->setMethods( [ 'getScore', 'isImageFree' ] )
 				->getMock()
 		);
 
@@ -86,8 +85,8 @@ class LinksUpdateHookHandlerTest extends PHPUnit_Framework_TestCase {
 		$isFreeMap = [];
 		$counter = 0;
 		foreach ( $images as $image ) {
-			array_push( $scoreMap, [$image, $counter++, $image['score']] );
-			array_push( $isFreeMap, [$image['filename'], $image['isFree']] );
+			array_push( $scoreMap, [ $image, $counter++, $image['score'] ] );
+			array_push( $isFreeMap, [ $image['filename'], $image['isFree'] ] );
 		}
 
 		$mock->expects( $this->any() )
@@ -160,18 +159,18 @@ class LinksUpdateHookHandlerTest extends PHPUnit_Framework_TestCase {
 	public function testGetScore( $image, $scoreFromTable, $position, $expected ) {
 		$mock = TestingAccessWrapper::newFromObject(
 			$this->getMockBuilder( LinksUpdateHookHandler::class )
-				->setMethods( ['scoreFromTable', 'getMetadata', 'getRatio', 'getBlacklist'] )
+				->setMethods( [ 'scoreFromTable', 'getMetadata', 'getRatio', 'getBlacklist' ] )
 				->getMock()
 		);
-        $mock->expects( $this->any() )
-            ->method( 'scoreFromTable' )
+		$mock->expects( $this->any() )
+			->method( 'scoreFromTable' )
 	        ->will( $this->returnValue( $scoreFromTable ) );
 		$mock->expects( $this->any() )
 			->method( 'getRatio' )
 			->will( $this->returnValue( 0 ) );
 		$mock->expects( $this->any() )
 			->method( 'getBlacklist' )
-			->will( $this->returnValue( ['blacklisted.jpg' => 1] ) );
+			->will( $this->returnValue( [ 'blacklisted.jpg' => 1 ] ) );
 
 		$score = $mock->getScore( $image, $position );
 		$this->assertEquals( $expected, $score );
@@ -180,35 +179,35 @@ class LinksUpdateHookHandlerTest extends PHPUnit_Framework_TestCase {
 	public function provideGetScore() {
 		return [
 			[
-				['filename' => 'A.jpg', 'handler' => ['width' => 100]],
+				[ 'filename' => 'A.jpg', 'handler' => [ 'width' => 100 ] ],
 				100,
 				0,
 				// width score + ratio score + position score
 				100 + 100 + 8
 			],
 			[
-				['filename' => 'A.jpg', 'fullwidth' => 100],
+				[ 'filename' => 'A.jpg', 'fullwidth' => 100 ],
 				50,
 				1,
 				// width score + ratio score + position score
 				106
 			],
 			[
-				['filename' => 'A.jpg', 'fullwidth' => 100],
+				[ 'filename' => 'A.jpg', 'fullwidth' => 100 ],
 				50,
 				2,
 				// width score + ratio score + position score
 				104
 			],
 			[
-				['filename' => 'A.jpg', 'fullwidth' => 100],
+				[ 'filename' => 'A.jpg', 'fullwidth' => 100 ],
 				50,
 				3,
 				// width score + ratio score + position score
 				103
 			],
 			[
-				['filename' => 'blacklisted.jpg', 'fullwidth' => 100],
+				[ 'filename' => 'blacklisted.jpg', 'fullwidth' => 100 ],
 				50,
 				3,
 				// blacklist score
@@ -231,27 +230,27 @@ class LinksUpdateHookHandlerTest extends PHPUnit_Framework_TestCase {
 
 	public function provideScoreFromTable() {
 		return [
-			['width', 100, -100],
-			['width', 119, -100],
-			['width', 300, 10],
-			['width', 400, 10],
-			['width', 500, 5],
-			['width', 600, 5],
-			['width', 601, 0],
-			['width', 999, 0],
-			['galleryImageWidth', 99, -100],
-			['galleryImageWidth', 100, 0],
-			['galleryImageWidth', 500, 0],
-			['ratio', 1, -100],
-			['ratio', 3, -100],
-			['ratio', 4, 0],
-			['ratio', 5, 0],
-			['ratio', 10, 5],
-			['ratio', 20, 5],
-			['ratio', 25, 0],
-			['ratio', 30, 0],
-			['ratio', 31, -100],
-			['ratio', 40, -100],
+			[ 'width', 100, -100 ],
+			[ 'width', 119, -100 ],
+			[ 'width', 300, 10 ],
+			[ 'width', 400, 10 ],
+			[ 'width', 500, 5 ],
+			[ 'width', 600, 5 ],
+			[ 'width', 601, 0 ],
+			[ 'width', 999, 0 ],
+			[ 'galleryImageWidth', 99, -100 ],
+			[ 'galleryImageWidth', 100, 0 ],
+			[ 'galleryImageWidth', 500, 0 ],
+			[ 'ratio', 1, -100 ],
+			[ 'ratio', 3, -100 ],
+			[ 'ratio', 4, 0 ],
+			[ 'ratio', 5, 0 ],
+			[ 'ratio', 10, 5 ],
+			[ 'ratio', 20, 5 ],
+			[ 'ratio', 25, 0 ],
+			[ 'ratio', 30, 0 ],
+			[ 'ratio', 31, -100 ],
+			[ 'ratio', 40, -100 ],
 		];
 	}
 
@@ -264,23 +263,23 @@ class LinksUpdateHookHandlerTest extends PHPUnit_Framework_TestCase {
 		RepoGroup::setSingleton( $this->getRepoGroup() );
 		$mock = TestingAccessWrapper::newFromObject(
 			$this->getMockBuilder( LinksUpdateHookHandler::class )
-				->setMethods( ['fetchFileMetadata'] )
+				->setMethods( [ 'fetchFileMetadata' ] )
 				->getMock()
 		);
 		$mock->expects( $this->any() )
 			->method( 'fetchFileMetadata' )
 			->will( $this->returnValue( $metadata ) );
-		$this->assertEquals( $expected, $mock->isImageFree( $fileName ));
+		$this->assertEquals( $expected, $mock->isImageFree( $fileName ) );
 	}
 
 	public function provideIsFreeImage() {
 		return [
-			['A.jpg', [], true],
-			['A.jpg', ['NonFree' => ['value' => '0']], true],
-			['A.jpg', ['NonFree' => ['value' => 0]], true],
-			['A.jpg', ['NonFree' => ['value' => false]], true],
-			['A.jpg', ['NonFree' => ['value' => 'something']], false],
-			['A.jpg', ['something' => ['value' => 'something']], true],
+			[ 'A.jpg', [], true ],
+			[ 'A.jpg', [ 'NonFree' => [ 'value' => '0' ] ], true ],
+			[ 'A.jpg', [ 'NonFree' => [ 'value' => 0 ] ], true ],
+			[ 'A.jpg', [ 'NonFree' => [ 'value' => false ] ], true ],
+			[ 'A.jpg', [ 'NonFree' => [ 'value' => 'something' ] ], false ],
+			[ 'A.jpg', [ 'something' => [ 'value' => 'something' ] ], true ],
 		];
 	}
 }

@@ -94,7 +94,7 @@ class ApiQueryPageImagesTest extends PHPUnit_Framework_TestCase {
 
 	public function testGetCacheMode() {
 		$instance = $this->newInstance();
-		$this->assertSame( 'public', $instance->getCacheMode( array() ) );
+		$this->assertSame( 'public', $instance->getCacheMode( [] ) );
 	}
 
 	public function testGetAllowedParams() {
@@ -104,7 +104,7 @@ class ApiQueryPageImagesTest extends PHPUnit_Framework_TestCase {
 		$this->assertNotEmpty( $params );
 		$this->assertContainsOnly( 'array', $params );
 		$this->assertArrayHasKey( 'license', $params );
-		$this->assertEquals( $params['license'][\ApiBase::PARAM_TYPE], ['free', 'any'] );
+		$this->assertEquals( $params['license'][\ApiBase::PARAM_TYPE], [ 'free', 'any' ] );
 		$this->assertEquals( $params['license'][\ApiBase::PARAM_DFLT], 'any' );
 		$this->assertEquals( $params['license'][\ApiBase::PARAM_ISMULTI], false );
 	}
@@ -127,34 +127,34 @@ class ApiQueryPageImagesTest extends PHPUnit_Framework_TestCase {
 	}
 
 	public function provideGetTitles() {
-		return array(
-			array(
-				array( Title::newFromText( 'Foo' ) ),
-				array(),
-				array( Title::newFromText( 'Foo' ) ),
-			),
-			array(
-				array( Title::newFromText( 'Foo' ) ),
-				array(
-					NS_TALK => array(
+		return [
+			[
+				[ Title::newFromText( 'Foo' ) ],
+				[],
+				[ Title::newFromText( 'Foo' ) ],
+			],
+			[
+				[ Title::newFromText( 'Foo' ) ],
+				[
+					NS_TALK => [
 						'Bar' => -1,
-					),
-				),
-				array( Title::newFromText( 'Foo' ) ),
-			),
-			array(
-				array( Title::newFromText( 'Foo' ) ),
-				array(
-					NS_FILE => array(
+					],
+				],
+				[ Title::newFromText( 'Foo' ) ],
+			],
+			[
+				[ Title::newFromText( 'Foo' ) ],
+				[
+					NS_FILE => [
 						'Bar' => -1,
-					),
-				),
-				array(
+					],
+				],
+				[
 					0 => Title::newFromText( 'Foo' ),
 					-1 => Title::newFromText( 'Bar', NS_FILE ),
-				),
-			),
-		);
+				],
+			],
+		];
 	}
 
 	/**
@@ -169,8 +169,8 @@ class ApiQueryPageImagesTest extends PHPUnit_Framework_TestCase {
 		$mock = TestingAccessWrapper::newFromObject(
 			$this->getMockBuilder( ApiQueryPageImages::class )
 				->disableOriginalConstructor()
-				-> setMethods( ['extractRequestParams', 'getTitles', 'setContinueParameter', 'dieUsage',
-					'addTables', 'addFields', 'addWhere', 'select', 'setResultValues'] )
+				-> setMethods( [ 'extractRequestParams', 'getTitles', 'setContinueParameter', 'dieUsage',
+					'addTables', 'addFields', 'addWhere', 'select', 'setResultValues' ] )
 				->getMock()
 		);
 		$mock->expects( $this->any() )
@@ -191,13 +191,13 @@ class ApiQueryPageImagesTest extends PHPUnit_Framework_TestCase {
 
 		$license = isset( $requestParams['license'] ) ? $requestParams['license'] : 'free';
 		if ( $license == ApiQueryPageImages::PARAM_LICENSE_ANY ) {
-			$propName = [PageImages::getPropName( true ), PageImages::getPropName( false )];
+			$propName = [ PageImages::getPropName( true ), PageImages::getPropName( false ) ];
 		} else {
 			$propName = PageImages::getPropName( true );
 		}
-		$mock->expects( $this->exactly( count ( $queryPageIds ) > 0 ? 1 : 0 ) )
+		$mock->expects( $this->exactly( count( $queryPageIds ) > 0 ? 1 : 0 ) )
 			->method( 'addWhere' )
-			->with( ['pp_page' => $queryPageIds, 'pp_propname' => $propName] );
+			->with( [ 'pp_page' => $queryPageIds, 'pp_propname' => $propName ] );
 
 		$mock->expects( $this->exactly( $setResultValueCount ) )
 			->method( 'setResultValues' );
@@ -208,65 +208,65 @@ class ApiQueryPageImagesTest extends PHPUnit_Framework_TestCase {
 	public function provideExecute() {
 		return [
 			[
-				['prop' => ['thumbnail'], 'thumbsize' => 100, 'limit' => 10, 'license' => 'any'],
-				[Title::newFromText( 'Page 1' ), Title::newFromText( 'Page 2' )],
-				[0, 1],
+				[ 'prop' => [ 'thumbnail' ], 'thumbsize' => 100, 'limit' => 10, 'license' => 'any' ],
+				[ Title::newFromText( 'Page 1' ), Title::newFromText( 'Page 2' ) ],
+				[ 0, 1 ],
 				[
-					(object) ['pp_page' => 0, 'pp_value' => 'A_Free.jpg', 'pp_propname' => PageImages::PROP_NAME_FREE],
-					(object) ['pp_page' => 0, 'pp_value' => 'A.jpg', 'pp_propname' => PageImages::PROP_NAME],
-					(object) ['pp_page' => 1, 'pp_value' => 'B.jpg', 'pp_propname' => PageImages::PROP_NAME],
+					(object) [ 'pp_page' => 0, 'pp_value' => 'A_Free.jpg', 'pp_propname' => PageImages::PROP_NAME_FREE ],
+					(object) [ 'pp_page' => 0, 'pp_value' => 'A.jpg', 'pp_propname' => PageImages::PROP_NAME ],
+					(object) [ 'pp_page' => 1, 'pp_value' => 'B.jpg', 'pp_propname' => PageImages::PROP_NAME ],
 				],
 				2
 			],
 			[
-				['prop' => ['thumbnail'], 'thumbsize' => 200, 'limit' => 10],
+				[ 'prop' => [ 'thumbnail' ], 'thumbsize' => 200, 'limit' => 10 ],
 				[],
 				[],
 				[],
 				0
 			],
 			[
-				['prop' => ['thumbnail'], 'continue' => 1, 'thumbsize' => 400, 'limit' => 10, 'license' => 'any'],
-				[Title::newFromText( 'Page 1' ), Title::newFromText( 'Page 2' )],
-				[1],
+				[ 'prop' => [ 'thumbnail' ], 'continue' => 1, 'thumbsize' => 400, 'limit' => 10, 'license' => 'any' ],
+				[ Title::newFromText( 'Page 1' ), Title::newFromText( 'Page 2' ) ],
+				[ 1 ],
 				[
-					(object) ['pp_page' => 1, 'pp_value' => 'B_Free.jpg', 'pp_propname' => PageImages::PROP_NAME_FREE],
-					(object) ['pp_page' => 1, 'pp_value' => 'B.jpg', 'pp_propname' => PageImages::PROP_NAME],
+					(object) [ 'pp_page' => 1, 'pp_value' => 'B_Free.jpg', 'pp_propname' => PageImages::PROP_NAME_FREE ],
+					(object) [ 'pp_page' => 1, 'pp_value' => 'B.jpg', 'pp_propname' => PageImages::PROP_NAME ],
 				],
 				1
 			],
 			[
-				['prop' => ['thumbnail'], 'thumbsize' => 500, 'limit' => 10, 'license' => 'any'],
-				[Title::newFromText( 'Page 1' ), Title::newFromText( 'Page 2' )],
-				[0, 1],
+				[ 'prop' => [ 'thumbnail' ], 'thumbsize' => 500, 'limit' => 10, 'license' => 'any' ],
+				[ Title::newFromText( 'Page 1' ), Title::newFromText( 'Page 2' ) ],
+				[ 0, 1 ],
 				[
-					(object) ['pp_page' => 1, 'pp_value' => 'B_Free.jpg', 'pp_propname' => PageImages::PROP_NAME],
+					(object) [ 'pp_page' => 1, 'pp_value' => 'B_Free.jpg', 'pp_propname' => PageImages::PROP_NAME ],
 				],
 				1
 			],
 			[
-				['prop' => ['thumbnail'], 'continue' => 1, 'thumbsize' => 500, 'limit' => 10, 'license' => 'any'],
-				[Title::newFromText( 'Page 1' ), Title::newFromText( 'Page 2' )],
-				[1],
+				[ 'prop' => [ 'thumbnail' ], 'continue' => 1, 'thumbsize' => 500, 'limit' => 10, 'license' => 'any' ],
+				[ Title::newFromText( 'Page 1' ), Title::newFromText( 'Page 2' ) ],
+				[ 1 ],
 				[
-					(object) ['pp_page' => 1, 'pp_value' => 'B_Free.jpg', 'pp_propname' => PageImages::PROP_NAME_FREE],
+					(object) [ 'pp_page' => 1, 'pp_value' => 'B_Free.jpg', 'pp_propname' => PageImages::PROP_NAME_FREE ],
 				],
 				1
 			],
 			[
-				['prop' => ['thumbnail'], 'thumbsize' => 510, 'limit' => 10, 'license' => 'free'],
-				[Title::newFromText( 'Page 1' ), Title::newFromText( 'Page 2' )],
-				[0, 1],
+				[ 'prop' => [ 'thumbnail' ], 'thumbsize' => 510, 'limit' => 10, 'license' => 'free' ],
+				[ Title::newFromText( 'Page 1' ), Title::newFromText( 'Page 2' ) ],
+				[ 0, 1 ],
 				[],
 				0
 			],
 			[
-				['prop' => ['thumbnail'], 'thumbsize' => 510, 'limit' => 10, 'license' => 'free'],
-				[Title::newFromText( 'Page 1' ), Title::newFromText( 'Page 2' )],
-				[0, 1],
+				[ 'prop' => [ 'thumbnail' ], 'thumbsize' => 510, 'limit' => 10, 'license' => 'free' ],
+				[ Title::newFromText( 'Page 1' ), Title::newFromText( 'Page 2' ) ],
+				[ 0, 1 ],
 				[
-					(object) ['pp_page' => 0, 'pp_value' => 'A_Free.jpg', 'pp_propname' => PageImages::PROP_NAME_FREE],
-					(object) ['pp_page' => 1, 'pp_value' => 'B_Free.jpg', 'pp_propname' => PageImages::PROP_NAME_FREE],
+					(object) [ 'pp_page' => 0, 'pp_value' => 'A_Free.jpg', 'pp_propname' => PageImages::PROP_NAME_FREE ],
+					(object) [ 'pp_page' => 1, 'pp_value' => 'B_Free.jpg', 'pp_propname' => PageImages::PROP_NAME_FREE ],
 				],
 				2
 			],
@@ -282,8 +282,8 @@ class ApiQueryPageImagesTest extends PHPUnit_Framework_TestCase {
 		$this->assertEquals( $expected, ApiQueryPageImagesProxy::getPropNames( $license ) );
 	}
 
-	public function provideGetPropName()
-	{
+	public function provideGetPropName() {
+
 		return [
 			[ 'free', \PageImages::PROP_NAME_FREE ],
 			[ 'any', [ \PageImages::PROP_NAME_FREE, \PageImages::PROP_NAME ] ]
