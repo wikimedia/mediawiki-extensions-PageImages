@@ -291,4 +291,8 @@ class ApiQueryPageImages extends ApiQueryBase {
 		];
 	}
 
+	public function getHelpUrls() {
+		return "https://www.mediawiki.org/wiki/Special:MyLanguage/Extension:PageImages#API";
+	}
+
 }
