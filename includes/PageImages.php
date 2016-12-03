@@ -39,16 +39,16 @@ class PageImages {
 	 */
 	public static function getPageImage( Title $title ) {
 		$dbr = wfGetDB( DB_SLAVE );
-		$name = $dbr->selectFieldValues( 'page_props',
-			'pp_value',
+		$fileName = $dbr->selectField( 'page_props',
+			[ 'pp_value' ],
 			[ 'pp_page' => $title->getArticleID(), 'pp_propname' => [ self::PROP_NAME, self::PROP_NAME_FREE ] ],
-			__METHOD__
+			__METHOD__,
+			[ 'ORDER BY' => 'pp_propname' ]
 		);
 
 		$file = false;
-
-		if ( $name ) {
-			$file = wfFindFile( $name[0] );
+		if ( $fileName ) {
+			$file = wfFindFile( $fileName );
 		}
 
 		return $file;
