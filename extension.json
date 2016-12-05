@@ -18,7 +18,8 @@
 		"ApiQueryPageImages": "includes/ApiQueryPageImages.php",
 		"PageImages": "includes/PageImages.php",
 		"PageImages\\Hooks\\LinksUpdateHookHandler": "includes/LinksUpdateHookHandler.php",
-		"PageImages\\Hooks\\ParserFileProcessingHookHandlers": "includes/ParserFileProcessingHookHandlers.php"
+		"PageImages\\Hooks\\ParserFileProcessingHookHandlers": "includes/ParserFileProcessingHookHandlers.php",
+		"PageImages\\Job\\InitImageDataJob": "includes/Job/InitImageDataJob.php"
 	},
 	"Hooks": {
 		"ParserMakeImageParams": "PageImages\\Hooks\\ParserFileProcessingHookHandlers::onParserMakeImageParams",
@@ -28,6 +29,9 @@
 		"InfoAction": "PageImages::onInfoAction",
 		"AfterParserFetchFileAndTitle": "PageImages\\Hooks\\ParserFileProcessingHookHandlers::onAfterParserFetchFileAndTitle",
 		"SpecialMobileEditWatchlist::images": "PageImages::onSpecialMobileEditWatchlist_images"
+	},
+	"JobClasses": {
+		"InitImageDataJob": "PageImages\\Job\\InitImageDataJob"
 	},
 	"config": {
 		"PageImagesScores": {
