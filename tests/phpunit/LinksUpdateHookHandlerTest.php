@@ -6,9 +6,10 @@ use LinksUpdate;
 use PageImages;
 use PageImages\Hooks\LinksUpdateHookHandler;
 use ParserOutput;
-use PHPUnit_Framework_TestCase;
+use MediaWikiTestCase;
 use RepoGroup;
 use TestingAccessWrapper;
+use Title;
 
 /**
  * @covers PageImages\Hooks\LinksUpdateHookHandler
@@ -18,7 +19,7 @@ use TestingAccessWrapper;
  * @license WTFPL 2.0
  * @author Thiemo Mättig
  */
-class LinksUpdateHookHandlerTest extends PHPUnit_Framework_TestCase {
+class LinksUpdateHookHandlerTest extends MediaWikiTestCase {
 
 	public function tearDown() {
 		// remove mock added in testGetMetadata()
@@ -28,18 +29,54 @@ class LinksUpdateHookHandlerTest extends PHPUnit_Framework_TestCase {
 
 	/**
 	 * @param array $images
+	 * @param [false|array] $images in lead section. (optional)
 	 * @return LinksUpdate
 	 */
-	private function getLinksUpdate( array $images ) {
+	private function getLinksUpdate( array $images, $leadImages = false ) {
 		$parserOutput = new ParserOutput();
 		$parserOutput->setExtensionData( 'pageImages', $images );
+		$parserOutputLead = new ParserOutput();
+		$parserOutputLead->setExtensionData( 'pageImages', $leadImages || $images );
+
+		$rev = $this->getMockBuilder( 'Revision' )
+			->disableOriginalConstructor()
+			->getMock();
+
+		$content = $this->getMockBuilder( 'AbstractContent' )
+			->disableOriginalConstructor()
+			->getMock();
+
+		$sectionContent = $this->getMockBuilder( 'AbstractContent' )
+			->disableOriginalConstructor()
+			->getMock();
 
 		$linksUpdate = $this->getMockBuilder( 'LinksUpdate' )
 			->disableOriginalConstructor()
 			->getMock();
+
+		$linksUpdate->expects( $this->any() )
+			->method( 'getTitle' )
+			->will( $this->returnValue( new Title( 'LinksUpdateHandlerTest' ) ) );
+
 		$linksUpdate->expects( $this->any() )
 			->method( 'getParserOutput' )
 			->will( $this->returnValue( $parserOutput ) );
+
+		$linksUpdate->expects( $this->any() )
+			->method( 'getRevision' )
+			->will( $this->returnValue( $rev ) );
+
+		$rev->expects( $this->any() )
+			->method( 'getContent' )
+			->will( $this->returnValue( $content ) );
+
+		$content->expects( $this->any() )
+			->method( 'getSection' )
+			->will( $this->returnValue( $sectionContent ) );
+
+		$sectionContent->expects( $this->any() )
+			->method( 'getParserOutput' )
+			->will( $this->returnValue( $parserOutputLead ) );
 
 		return $linksUpdate;
 	}
@@ -69,6 +106,7 @@ class LinksUpdateHookHandlerTest extends PHPUnit_Framework_TestCase {
 
 	/**
 	 * @dataProvider provideDoLinksUpdate
+	 * @covers LinksUpdateHookHandler::doLinksUpdate
 	 * @param $images
 	 * @param $expectedFreeFileName
 	 * @param $expectedNonFreeFileName
@@ -154,6 +192,27 @@ class LinksUpdateHookHandlerTest extends PHPUnit_Framework_TestCase {
 	}
 
 	/**
+	 * @covers LinksUpdateHookHandler::getPageImageCandidates
+	 */
+	public function testGetPageImageCandidates() {
+		$candidates = [
+				[ 'filename' => 'A.jpg', 'score' => 100, 'isFree' => false ],
+				[ 'filename' => 'B.jpg', 'score' => 90, 'isFree' => false ],
+		];
+		$linksUpdate = $this->getLinksUpdate( $candidates, array_slice( $candidates, 0, 1 ) );
+
+		// should get without lead.
+		$handler = new LinksUpdateHookHandler();
+		$this->setMwGlobals( 'wgPageImagesLeadSectionOnly', false );
+		$images = $handler->getPageImageCandidates( $linksUpdate );
+		$this->assertTrue( count( $images ) === 2, 'All images are returned.' );
+
+		$this->setMwGlobals( 'wgPageImagesLeadSectionOnly', true );
+		$images = $handler->getPageImageCandidates( $linksUpdate );
+		$this->assertTrue( count( $images ) === 1, 'Only lead images are returned.' );
+	}
+
+	/**
 	 * @dataProvider provideGetScore
 	 */
 	public function testGetScore( $image, $scoreFromTable, $position, $expected ) {
@@ -218,6 +277,7 @@ class LinksUpdateHookHandlerTest extends PHPUnit_Framework_TestCase {
 
 	/**
 	 * @dataProvider provideScoreFromTable
+	 * @covers LinksUpdateHookHandler::scoreFromTable
 	 */
 	public function testScoreFromTable( $type, $value, $expected ) {
 		global $wgPageImagesScores;
@@ -258,6 +318,7 @@ class LinksUpdateHookHandlerTest extends PHPUnit_Framework_TestCase {
 	 * @dataProvider provideIsFreeImage
 	 * @param $fileName
 	 * @param $metadata
+	 * @covers LinksUpdateHookHandler::isImageFree
 	 */
 	public function testIsFreeImage( $fileName, $metadata, $expected ) {
 		RepoGroup::setSingleton( $this->getRepoGroup() );
