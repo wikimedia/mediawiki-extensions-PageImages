@@ -19,12 +19,12 @@ class InitImageDataJob extends Job {
 		foreach ( $this->params['page_ids'] as $id ) {
 			try {
 				RefreshLinks::fixLinksFromArticle( $id );
+				$lbFactory->waitForReplication();
 			} catch (\Exception $e) {
 				// There are some broken pages out there that just don't parse.
 				// Log it and keep on trucking.
 				MWExceptionHandler::logException( $e );
 			}
-			$lbFactory->waitForReplication();
 		}
 	}
 }
