@@ -95,11 +95,13 @@ class InitImageData extends Maintenance {
 			sleep( 1 );
 			$queued = $group->getSize();
 			$running = $group->getAcquiredCount();
+			$abandoned = $group->getAbandonedCount();
+
 			if ( !$isQuiet && ++$i % 10 === 0 ) {
 				$now = date( 'Y-m-d H:i:s T');
-				$this->output( "[$now] Queued: $queued Running: $running Max: $maxPressure\n" );
+				$this->output( "[$now] Queued: $queued Running: $running Abandoned: $abandoned Max: $maxPressure\n" );
 			}
-		} while ( $queued + $running >= $maxPressure );
+		} while ( $queued + $running - $abandoned >= $maxPressure );
 	}
 }
 
