@@ -65,7 +65,7 @@ class InitImageData extends Maintenance {
 				[ 'LIMIT' => $this->mBatchSize, 'ORDER_BY' => 'page_id', 'GROUP BY' => 'page_id' ],
 				$joinConds
 			);
-			$page_ids = [];
+			$pageIds = [];
 			foreach ( $res as $row ) {
 				$pageIds[] = $row->page_id;
 			}
