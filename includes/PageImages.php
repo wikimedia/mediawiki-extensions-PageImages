@@ -12,16 +12,24 @@ class PageImages {
 	 * Page property used to store the best page image information.
 	 * If the best image is the same as the best image with free license,
 	 * then nothing is stored under this property.
+	 * Note changing this value is not advised as it will invalidate all
+	 * existing page property names on a production instance
+	 * and cause them to be regenerated.
 	 * @see PageImages::PROP_NAME_FREE
 	 */
 	const PROP_NAME = 'page_image';
 	/**
 	 * Page property used to store the best free page image information
+	 * Note changing this value is not advised as it will invalidate all
+	 * existing page property names on a production instance
+	 * and cause them to be regenerated.
 	 */
 	const PROP_NAME_FREE = 'page_image_free';
 
 	/**
-	 * Get property name used in page_props table
+	 * Get property name used in page_props table. When a page image
+	 * is stored it will be stored under this property name on the corresponding
+	 * article.
 	 *
 	 * @param bool $isFree Whether the image is a free-license image
 	 * @return string
