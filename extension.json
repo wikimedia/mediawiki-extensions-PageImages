@@ -28,7 +28,8 @@
 		"ApiOpenSearchSuggest": "PageImages::onApiOpenSearchSuggest",
 		"InfoAction": "PageImages::onInfoAction",
 		"AfterParserFetchFileAndTitle": "PageImages\\Hooks\\ParserFileProcessingHookHandlers::onAfterParserFetchFileAndTitle",
-		"SpecialMobileEditWatchlist::images": "PageImages::onSpecialMobileEditWatchlist_images"
+		"SpecialMobileEditWatchlist::images": "PageImages::onSpecialMobileEditWatchlist_images",
+		"BeforePageDisplay": "PageImages::onBeforePageDisplay"
 	},
 	"JobClasses": {
 		"InitImageDataJob": "PageImages\\Job\\InitImageDataJob"

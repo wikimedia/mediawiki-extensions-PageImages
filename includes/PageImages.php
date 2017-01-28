@@ -193,4 +193,21 @@ class PageImages {
 	public static function onRegistration() {
 		define( 'PAGE_IMAGES_INSTALLED', true );
 	}
+
+	public static function onBeforePageDisplay( OutputPage &$out, Skin &$skin ) {
+
+		$imageFile = self::getPageImage( $out->getContext()->getTitle() );
+		if ( !$imageFile ) {
+			return;
+		}
+
+		// See https://developers.facebook.com/docs/sharing/best-practices?locale=en_US#tags
+		$thumb = $imageFile->transform( [ 'width' => 1920 ] );
+		if ( !$thumb ) {
+			return;
+		}
+
+		$out->addMeta( 'og:image', wfExpandUrl( $thumb->getUrl(), PROTO_CANONICAL ) );
+	}
+
 }
