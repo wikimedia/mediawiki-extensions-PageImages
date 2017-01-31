@@ -18,6 +18,7 @@ class PageImages {
 	 * @see PageImages::PROP_NAME_FREE
 	 */
 	const PROP_NAME = 'page_image';
+
 	/**
 	 * Page property used to store the best free page image information
 	 * Note changing this value is not advised as it will invalidate all
@@ -194,8 +195,11 @@ class PageImages {
 		define( 'PAGE_IMAGES_INSTALLED', true );
 	}
 
+	/**
+	 * @param OutputPage &$out
+	 * @param Skin &$skin
+	 */
 	public static function onBeforePageDisplay( OutputPage &$out, Skin &$skin ) {
-
 		$imageFile = self::getPageImage( $out->getContext()->getTitle() );
 		if ( !$imageFile ) {
 			return;
