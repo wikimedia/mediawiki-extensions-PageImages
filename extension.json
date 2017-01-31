@@ -22,14 +22,14 @@
 		"PageImages\\Job\\InitImageDataJob": "includes/Job/InitImageDataJob.php"
 	},
 	"Hooks": {
-		"ParserMakeImageParams": "PageImages\\Hooks\\ParserFileProcessingHookHandlers::onParserMakeImageParams",
+		"AfterParserFetchFileAndTitle": "PageImages\\Hooks\\ParserFileProcessingHookHandlers::onAfterParserFetchFileAndTitle",
+		"ApiOpenSearchSuggest": "PageImages::onApiOpenSearchSuggest",
+		"BeforePageDisplay": "PageImages::onBeforePageDisplay",
+		"InfoAction": "PageImages::onInfoAction",
 		"LinksUpdate": "PageImages\\Hooks\\LinksUpdateHookHandler::onLinksUpdate",
 		"OpenSearchXml": "PageImages::onApiOpenSearchSuggest",
-		"ApiOpenSearchSuggest": "PageImages::onApiOpenSearchSuggest",
-		"InfoAction": "PageImages::onInfoAction",
-		"AfterParserFetchFileAndTitle": "PageImages\\Hooks\\ParserFileProcessingHookHandlers::onAfterParserFetchFileAndTitle",
-		"SpecialMobileEditWatchlist::images": "PageImages::onSpecialMobileEditWatchlist_images",
-		"BeforePageDisplay": "PageImages::onBeforePageDisplay"
+		"ParserMakeImageParams": "PageImages\\Hooks\\ParserFileProcessingHookHandlers::onParserMakeImageParams",
+		"SpecialMobileEditWatchlist::images": "PageImages::onSpecialMobileEditWatchlist_images"
 	},
 	"JobClasses": {
 		"InitImageDataJob": "PageImages\\Job\\InitImageDataJob"
