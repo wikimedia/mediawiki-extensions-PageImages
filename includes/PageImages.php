@@ -206,7 +206,7 @@ class PageImages {
 		}
 
 		// See https://developers.facebook.com/docs/sharing/best-practices?locale=en_US#tags
-		$thumb = $imageFile->transform( [ 'width' => 1280 ] );
+		$thumb = $imageFile->transform( [ 'width' => 1200 ] );
 		if ( !$thumb ) {
 			return;
 		}
