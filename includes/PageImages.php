@@ -212,6 +212,8 @@ class PageImages {
 		}
 
 		$out->addMeta( 'og:image', wfExpandUrl( $thumb->getUrl(), PROTO_CANONICAL ) );
+		// Make twitter understand: T157145
+		$out->addMeta( 'twitter:card', 'summary_large_image' );
 	}
 
 }
