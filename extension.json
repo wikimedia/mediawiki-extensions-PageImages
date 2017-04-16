@@ -87,7 +87,7 @@
 		"PageImagesLeadSectionOnly": {
 			"@doc": "Temporary feature flag - Whether page images should be restricted to those in section id 0.",
 			"@fixme": "Please remove a month after it has defaulted to true on the cluster (T152115)",
-			"value": false
+			"value": true
 		}
 	},
 	"manifest_version": 2
