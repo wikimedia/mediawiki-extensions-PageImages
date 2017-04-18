@@ -27,6 +27,14 @@ class LinksUpdateHookHandlerTest extends MediaWikiTestCase {
 		parent::tearDown();
 	}
 
+	public function setUp() {
+		parent::setUp();
+
+		// Force LinksUpdateHookHandler::getPageImageCanditates to look at all
+		// sections.
+		$this->setMwGlobals( 'wgPageImagesLeadSectionOnly', false );
+	}
+
 	/**
 	 * @param array $images
 	 * @param [false|array] $images in lead section. (optional)
