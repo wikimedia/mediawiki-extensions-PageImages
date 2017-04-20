@@ -8,8 +8,8 @@ use PageImages\Hooks\LinksUpdateHookHandler;
 use ParserOutput;
 use MediaWikiTestCase;
 use RepoGroup;
-use TestingAccessWrapper;
 use Title;
+use Wikimedia\TestingAccessWrapper;
 
 /**
  * @covers PageImages\Hooks\LinksUpdateHookHandler
