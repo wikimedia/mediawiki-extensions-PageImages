@@ -7,8 +7,8 @@ use ApiQueryPageImages;
 use FakeResultWrapper;
 use PageImages;
 use PHPUnit_Framework_TestCase;
-use TestingAccessWrapper;
 use Title;
+use Wikimedia\TestingAccessWrapper;
 
 class ApiPageSetStub extends ApiPageSet {
 
