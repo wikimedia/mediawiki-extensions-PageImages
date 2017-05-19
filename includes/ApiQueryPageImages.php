@@ -255,7 +255,7 @@ class ApiQueryPageImages extends ApiQueryBase {
 				ApiBase::PARAM_DFLT => 50,
 			],
 			'limit' => [
-				ApiBase::PARAM_DFLT => 1,
+				ApiBase::PARAM_DFLT => 50,
 				ApiBase::PARAM_TYPE => 'limit',
 				ApiBase::PARAM_MIN => 1,
 				ApiBase::PARAM_MAX => 50,

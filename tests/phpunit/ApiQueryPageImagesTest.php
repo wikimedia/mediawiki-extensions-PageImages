@@ -103,6 +103,12 @@ class ApiQueryPageImagesTest extends PHPUnit_Framework_TestCase {
 		$this->assertInternalType( 'array', $params );
 		$this->assertNotEmpty( $params );
 		$this->assertContainsOnly( 'array', $params );
+		$this->assertArrayHasKey( 'limit', $params );
+		$this->assertEquals( $params['limit'][\ApiBase::PARAM_DFLT], 50 );
+		$this->assertEquals( $params['limit'][\ApiBase::PARAM_TYPE], 'limit' );
+		$this->assertEquals( $params['limit'][\ApiBase::PARAM_MIN], 1 );
+		$this->assertEquals( $params['limit'][\ApiBase::PARAM_MAX], 50 );
+		$this->assertEquals( $params['limit'][\ApiBase::PARAM_MAX2], 100 );
 		$this->assertArrayHasKey( 'license', $params );
 		$this->assertEquals( $params['license'][\ApiBase::PARAM_TYPE], [ 'free', 'any' ] );
 		$this->assertEquals( $params['license'][\ApiBase::PARAM_DFLT], 'free' );
