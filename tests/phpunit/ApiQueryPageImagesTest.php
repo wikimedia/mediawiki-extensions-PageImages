@@ -59,9 +59,17 @@ class ApiQueryPageImagesProxy extends ApiQueryPageImages {
 class ApiQueryPageImagesTest extends PHPUnit_Framework_TestCase {
 
 	private function newInstance() {
+		$config = new \HashConfig( [
+			'PageImagesAPIDefaultLicense' => 'free'
+		]);
+
 		$context = $this->getMockBuilder( 'IContextSource' )
 			->disableOriginalConstructor()
 			->getMock();
+
+		$context->expects( $this->any() )
+			->method( 'getConfig' )
+			->willReturn( $config );
 
 		$main = $this->getMockBuilder( 'ApiMain' )
 			->disableOriginalConstructor()
