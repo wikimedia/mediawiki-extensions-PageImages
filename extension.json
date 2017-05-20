@@ -88,6 +88,10 @@
 			"@doc": "Temporary feature flag - Whether page images should be restricted to those in section id 0.",
 			"@fixme": "Please remove a month after it has defaulted to true on the cluster (T152115)",
 			"value": true
+		},
+		"PageImagesAPIDefaultLicense": {
+			"@doc": "Get images with either a 'free' license or 'any' (including free and non-free) license by default, via 'pilicense' option, in pageprops query api. The value of this setting should be either 'free' or 'any'.",
+			"value": "free"
 		}
 	},
 	"manifest_version": 2
