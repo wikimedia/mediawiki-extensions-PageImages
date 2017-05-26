@@ -163,32 +163,35 @@ class PageImages {
 	 * @return array[]
 	 */
 	private static function getImages( array $pageIds, $size = 0 ) {
-		$request = [
-			'action' => 'query',
-			'prop' => 'pageimages',
-			'piprop' => 'name',
-			'pageids' => implode( '|', $pageIds ),
-			'pilimit' => 'max',
-		];
+		$ret = [];
+		foreach ( array_chunk( $pageIds, ApiBase::LIMIT_SML1 ) as $chunk ) {
+			$request = [
+				'action' => 'query',
+				'prop' => 'pageimages',
+				'piprop' => 'name',
+				'pageids' => implode( '|', $chunk ),
+				'pilimit' => 'max',
+			];
 
-		if ( $size ) {
-			$request['piprop'] = 'thumbnail';
-			$request['pithumbsize'] = $size;
-		}
-
-		$api = new ApiMain( new FauxRequest( $request ) );
-		$api->execute();
-
-		if ( defined( 'ApiResult::META_CONTENT' ) ) {
-			return (array)$api->getResult()->getResultData( [ 'query', 'pages' ],
-				[ 'Strip' => 'base' ] );
-		} else {
-			$data = $api->getResultData();
-			if ( isset( $data['query']['pages'] ) ) {
-				return $data['query']['pages'];
+			if ( $size ) {
+				$request['piprop'] = 'thumbnail';
+				$request['pithumbsize'] = $size;
 			}
-			return [];
+
+			$api = new ApiMain( new FauxRequest( $request ) );
+			$api->execute();
+
+			if ( defined( 'ApiResult::META_CONTENT' ) ) {
+				$ret += (array)$api->getResult()->getResultData( [ 'query', 'pages' ],
+					[ 'Strip' => 'base' ] );
+			} else {
+				$data = $api->getResultData();
+				if ( isset( $data['query']['pages'] ) ) {
+					$ret += $data['query']['pages'];
+				}
+			}
 		}
+		return $ret;
 	}
 
 	public static function onRegistration() {
