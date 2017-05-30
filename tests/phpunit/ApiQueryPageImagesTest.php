@@ -61,7 +61,7 @@ class ApiQueryPageImagesTest extends PHPUnit_Framework_TestCase {
 	private function newInstance() {
 		$config = new \HashConfig( [
 			'PageImagesAPIDefaultLicense' => 'free'
-		]);
+		] );
 
 		$context = $this->getMockBuilder( 'IContextSource' )
 			->disableOriginalConstructor()
@@ -179,7 +179,9 @@ class ApiQueryPageImagesTest extends PHPUnit_Framework_TestCase {
 	 * @param array $queryResults Results of the DB select query
 	 * @param int $setResultValueCount The number results the API returned
 	 */
-	public function testExecute( $requestParams, $titles, $queryPageIds, $queryResults, $setResultValueCount ) {
+	public function testExecute( $requestParams, $titles, $queryPageIds,
+		$queryResults, $setResultValueCount
+	) {
 		$mock = TestingAccessWrapper::newFromObject(
 			$this->getMockBuilder( ApiQueryPageImages::class )
 				->disableOriginalConstructor()
@@ -198,8 +200,10 @@ class ApiQueryPageImagesTest extends PHPUnit_Framework_TestCase {
 			->willReturn( new FakeResultWrapper( $queryResults ) );
 
 		// continue page ID is not found
-		if ( isset( $requestParams['continue'] ) && $requestParams['continue'] > count( $titles ) ) {
-				$mock->expects( $this->exactly( 1 ) )
+		if ( isset( $requestParams['continue'] )
+			&& $requestParams['continue'] > count( $titles )
+		) {
+			$mock->expects( $this->exactly( 1 ) )
 				->method( 'dieUsage' );
 		}
 
@@ -229,9 +233,12 @@ class ApiQueryPageImagesTest extends PHPUnit_Framework_TestCase {
 				[ Title::newFromText( 'Page 1' ), Title::newFromText( 'Page 2' ) ],
 				[ 0, 1 ],
 				[
-					(object) [ 'pp_page' => 0, 'pp_value' => 'A_Free.jpg', 'pp_propname' => PageImages::PROP_NAME_FREE ],
-					(object) [ 'pp_page' => 0, 'pp_value' => 'A.jpg', 'pp_propname' => PageImages::PROP_NAME ],
-					(object) [ 'pp_page' => 1, 'pp_value' => 'B.jpg', 'pp_propname' => PageImages::PROP_NAME ],
+					(object) [ 'pp_page' => 0, 'pp_value' => 'A_Free.jpg',
+						'pp_propname' => PageImages::PROP_NAME_FREE ],
+					(object) [ 'pp_page' => 0, 'pp_value' => 'A.jpg',
+						'pp_propname' => PageImages::PROP_NAME ],
+					(object) [ 'pp_page' => 1, 'pp_value' => 'B.jpg',
+						'pp_propname' => PageImages::PROP_NAME ],
 				],
 				2
 			],
@@ -243,12 +250,15 @@ class ApiQueryPageImagesTest extends PHPUnit_Framework_TestCase {
 				0
 			],
 			[
-				[ 'prop' => [ 'thumbnail' ], 'continue' => 1, 'thumbsize' => 400, 'limit' => 10, 'license' => 'any' ],
+				[ 'prop' => [ 'thumbnail' ], 'continue' => 1, 'thumbsize' => 400,
+					'limit' => 10, 'license' => 'any' ],
 				[ Title::newFromText( 'Page 1' ), Title::newFromText( 'Page 2' ) ],
 				[ 1 ],
 				[
-					(object) [ 'pp_page' => 1, 'pp_value' => 'B_Free.jpg', 'pp_propname' => PageImages::PROP_NAME_FREE ],
-					(object) [ 'pp_page' => 1, 'pp_value' => 'B.jpg', 'pp_propname' => PageImages::PROP_NAME ],
+					(object) [ 'pp_page' => 1, 'pp_value' => 'B_Free.jpg',
+						'pp_propname' => PageImages::PROP_NAME_FREE ],
+					(object) [ 'pp_page' => 1, 'pp_value' => 'B.jpg',
+						'pp_propname' => PageImages::PROP_NAME ],
 				],
 				1
 			],
@@ -257,16 +267,19 @@ class ApiQueryPageImagesTest extends PHPUnit_Framework_TestCase {
 				[ Title::newFromText( 'Page 1' ), Title::newFromText( 'Page 2' ) ],
 				[ 0, 1 ],
 				[
-					(object) [ 'pp_page' => 1, 'pp_value' => 'B_Free.jpg', 'pp_propname' => PageImages::PROP_NAME ],
+					(object) [ 'pp_page' => 1, 'pp_value' => 'B_Free.jpg',
+						'pp_propname' => PageImages::PROP_NAME ],
 				],
 				1
 			],
 			[
-				[ 'prop' => [ 'thumbnail' ], 'continue' => 1, 'thumbsize' => 500, 'limit' => 10, 'license' => 'any' ],
+				[ 'prop' => [ 'thumbnail' ], 'continue' => 1, 'thumbsize' => 500,
+					'limit' => 10, 'license' => 'any' ],
 				[ Title::newFromText( 'Page 1' ), Title::newFromText( 'Page 2' ) ],
 				[ 1 ],
 				[
-					(object) [ 'pp_page' => 1, 'pp_value' => 'B_Free.jpg', 'pp_propname' => PageImages::PROP_NAME_FREE ],
+					(object) [ 'pp_page' => 1, 'pp_value' => 'B_Free.jpg',
+						'pp_propname' => PageImages::PROP_NAME_FREE ],
 				],
 				1
 			],
@@ -282,18 +295,29 @@ class ApiQueryPageImagesTest extends PHPUnit_Framework_TestCase {
 				[ Title::newFromText( 'Page 1' ), Title::newFromText( 'Page 2' ) ],
 				[ 0, 1 ],
 				[
-					(object) [ 'pp_page' => 0, 'pp_value' => 'A_Free.jpg', 'pp_propname' => PageImages::PROP_NAME_FREE ],
-					(object) [ 'pp_page' => 1, 'pp_value' => 'B_Free.jpg', 'pp_propname' => PageImages::PROP_NAME_FREE ],
+					(object) [ 'pp_page' => 0, 'pp_value' => 'A_Free.jpg',
+						'pp_propname' => PageImages::PROP_NAME_FREE ],
+					(object) [ 'pp_page' => 1, 'pp_value' => 'B_Free.jpg',
+						'pp_propname' => PageImages::PROP_NAME_FREE ],
 				],
 				2
 			],
 			[
-				['prop' => ['thumbnail', 'original'], 'thumbsize' => 510, 'limit' => 10, 'license' => 'free'],
-				[Title::newFromText( 'Page 1' ), Title::newFromText( 'Page 2' )],
-				[0, 1],
+				[ 'prop' => [ 'thumbnail', 'original' ], 'thumbsize' => 510,
+					'limit' => 10, 'license' => 'free' ],
+				[ Title::newFromText( 'Page 1' ), Title::newFromText( 'Page 2' ) ],
+				[ 0, 1 ],
 				[
-					(object) ['pp_page' => 0, 'pp_value' => 'A_Free.jpg', 'pp_value_original' => 'A_Free_original.jpg', 'pp_original_width' => 80, 'pp_original_height' => 80, 'pp_propname' => PageImages::PROP_NAME_FREE],
-					(object) ['pp_page' => 1, 'pp_value' => 'B_Free.jpg', 'pp_value_original' => 'B_Free_original.jpg', 'pp_original_width' => 80, 'pp_original_height' => 80, 'pp_propname' => PageImages::PROP_NAME_FREE],
+					(object) [
+						'pp_page' => 0, 'pp_value' => 'A_Free.jpg',
+						'pp_value_original' => 'A_Free_original.jpg', 'pp_original_width' => 80,
+						'pp_original_height' => 80, 'pp_propname' => PageImages::PROP_NAME_FREE
+					],
+					(object) [
+						'pp_page' => 1, 'pp_value' => 'B_Free.jpg',
+						'pp_value_original' => 'B_Free_original.jpg', 'pp_original_width' => 80,
+						'pp_original_height' => 80, 'pp_propname' => PageImages::PROP_NAME_FREE
+					],
 				],
 				2
 			],
@@ -330,7 +354,7 @@ class ApiQueryPageImagesTest extends PHPUnit_Framework_TestCase {
 	}
 
 	private function noResultsHaveProperty( $queryResults, $propName ) {
-		foreach( $queryResults as $result ) {
+		foreach ( $queryResults as $result ) {
 			if ( property_exists( $result, $propName ) ) {
 				return false;
 			}
@@ -339,7 +363,7 @@ class ApiQueryPageImagesTest extends PHPUnit_Framework_TestCase {
 	}
 
 	private function allResultsHaveProperty( $queryResults, $propName ) {
-		foreach( $queryResults as $result ) {
+		foreach ( $queryResults as $result ) {
 			if ( !property_exists( $result, $propName ) ) {
 				return false;
 			}

@@ -149,7 +149,8 @@ class LinksUpdateHookHandlerTest extends MediaWikiTestCase {
 		if ( is_null( $expectedFreeFileName ) ) {
 			$this->assertFalse( isset( $linksUpdate->mProperties[PageImages::PROP_NAME_FREE] ) );
 		} else {
-			$this->assertSame( $expectedFreeFileName, $linksUpdate->mProperties[PageImages::PROP_NAME_FREE] );
+			$this->assertSame( $expectedFreeFileName,
+				$linksUpdate->mProperties[PageImages::PROP_NAME_FREE] );
 		}
 		if ( is_null( $expectedNonFreeFileName ) ) {
 			$this->assertFalse( isset( $linksUpdate->mProperties[PageImages::PROP_NAME] ) );

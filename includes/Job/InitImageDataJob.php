@@ -20,7 +20,7 @@ class InitImageDataJob extends Job {
 			try {
 				RefreshLinks::fixLinksFromArticle( $id );
 				$lbFactory->waitForReplication();
-			} catch (\Exception $e) {
+			} catch ( \Exception $e ) {
 				// There are some broken pages out there that just don't parse.
 				// Log it and keep on trucking.
 				MWExceptionHandler::logException( $e );

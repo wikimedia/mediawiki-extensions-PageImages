@@ -50,7 +50,10 @@ class PageImages {
 		$dbr = wfGetDB( DB_SLAVE );
 		$fileName = $dbr->selectField( 'page_props',
 			[ 'pp_value' ],
-			[ 'pp_page' => $title->getArticleID(), 'pp_propname' => [ self::PROP_NAME, self::PROP_NAME_FREE ] ],
+			[
+				'pp_page' => $title->getArticleID(),
+				'pp_propname' => [ self::PROP_NAME, self::PROP_NAME_FREE ]
+			],
 			__METHOD__,
 			[ 'ORDER BY' => 'pp_propname' ]
 		);
