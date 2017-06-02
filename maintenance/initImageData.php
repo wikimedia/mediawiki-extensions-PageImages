@@ -4,7 +4,7 @@ $IP = getenv( 'MW_INSTALL_PATH' );
 if ( $IP === false ) {
 	$IP = __DIR__ . '/../../..';
 }
-require_once ( "$IP/maintenance/Maintenance.php" );
+require_once "$IP/maintenance/Maintenance.php";
 
 use MediaWiki\MediaWikiServices;
 use PageImages\Job\InitImageDataJob;
@@ -22,7 +22,8 @@ class InitImageData extends Maintenance {
 		$this->addOption( 'earlier-than',
 			'Run only on pages earlier than this timestamp', false, true );
 		$this->addOption( 'start', 'Starting page ID', false, true );
-		$this->addOption( 'queue-pressure', 'Maximum number of jobs to enqueue at a time. If not provided or 0 will be run in-process.', false, true );
+		$this->addOption( 'queue-pressure', 'Maximum number of jobs to enqueue at a time. ' .
+			'If not provided or 0 will be run in-process.', false, true );
 		$this->addOption( 'quiet', "Don't report on job queue pressure" );
 		$this->setBatchSize( 100 );
 	}
@@ -98,12 +99,13 @@ class InitImageData extends Maintenance {
 			$abandoned = $group->getAbandonedCount();
 
 			if ( !$isQuiet && ++$i % 10 === 0 ) {
-				$now = date( 'Y-m-d H:i:s T');
-				$this->output( "[$now] Queued: $queued Running: $running Abandoned: $abandoned Max: $maxPressure\n" );
+				$now = date( 'Y-m-d H:i:s T' );
+				$this->output( "[$now] Queued: $queued Running: $running " .
+					"Abandoned: $abandoned Max: $maxPressure\n" );
 			}
 		} while ( $queued + $running - $abandoned >= $maxPressure );
 	}
 }
 
 $maintClass = 'InitImageData';
-require_once ( DO_MAINTENANCE );
+require_once DO_MAINTENANCE;

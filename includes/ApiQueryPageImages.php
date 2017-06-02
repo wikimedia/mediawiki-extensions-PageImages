@@ -216,13 +216,14 @@ class ApiQueryPageImages extends ApiQueryBase {
 					// DEPRECATED: The original image URL was originally provided as a property of
 					// the "thumbnail" object, but we now provide the original image info in its own
 					// object on the same level as the thumbnail.
-					//
 					// Remove this functionality, and the warning, after a reasonable amount of time
 					// has passed since December 2016.
 					if ( is_callable( [ $this, 'addWarning' ] ) ) {
 						$this->addWarning( 'apiwarn-query+pageimages-original-in-thumbnail-deprecated' );
 					} else {
-						$this->setWarning( "The original image's source URL is now provided with its dimensions in its own property for the page object. It will be removed from the 'thumbnail' property in a future release." );
+						$this->setWarning( "The original image's source URL is now provided with " .
+							"its dimensions in its own property for the page object. It will be " .
+							"removed from the 'thumbnail' property in a future release." );
 					}
 					$vals['thumbnail']['original'] = $original_url;
 				}
