@@ -146,8 +146,8 @@ class ParserFileProcessingHookHandlers {
 				$file->getWidth() * ( $params['handler']['height'] / $file->getHeight() );
 		} elseif ( isset( $params['frame']['thumbnail'] )
 			|| isset( $params['frame']['thumb'] )
-			|| isset( $params['frame']['frameless'] ) )
-		{
+			|| isset( $params['frame']['frameless'] )
+		) {
 			$params['handler']['width'] = isset( $wgThumbLimits[$wgDefaultUserOptions['thumbsize']] )
 				? $wgThumbLimits[$wgDefaultUserOptions['thumbsize']]
 				: 250;

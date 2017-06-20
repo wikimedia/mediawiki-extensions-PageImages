@@ -233,7 +233,7 @@ class LinksUpdateHookHandlerTest extends MediaWikiTestCase {
 		);
 		$mock->expects( $this->any() )
 			->method( 'scoreFromTable' )
-	        ->will( $this->returnValue( $scoreFromTable ) );
+			->will( $this->returnValue( $scoreFromTable ) );
 		$mock->expects( $this->any() )
 			->method( 'getRatio' )
 			->will( $this->returnValue( 0 ) );
