@@ -7,5 +7,6 @@
 	},
 	"pageimages-desc": "Coleta informações sobre as imagens usadas na página",
 	"pageimages-info-label": "Imagem da página",
-	"apihelp-query+pageimages-param-limit": "Quantas propriedades de página a serem retornadas."
+	"apihelp-query+pageimages-param-limit": "Quantas propriedades de página a serem retornadas.",
+	"apihelp-query+pageimages-paramvalue-license-free": "apenas imagens gratuitas"
 }
