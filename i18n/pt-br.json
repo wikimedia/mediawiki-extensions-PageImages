@@ -7,6 +7,10 @@
 	},
 	"pageimages-desc": "Coleta informações sobre as imagens usadas na página",
 	"pageimages-info-label": "Imagem da página",
+	"apihelp-query+pageimages-description": "Retorna informações sobre imagens na página, como miniaturas e presença de fotos.",
+	"apihelp-query+pageimages-summary": "Retorna informações sobre imagens na página, como miniaturas e presença de fotos.",
+	"apihelp-query+pageimages-example-1": "Obtenha o nome e <kbd>100</kbd>-pixeis de uma imagem na página <kbd>Albert Einstein</kbd>.",
+	"apihelp-query+pageimages-param-thumbsize": "Dimensão máxima da miniatura.",
 	"apihelp-query+pageimages-param-limit": "Quantas propriedades de página a serem retornadas.",
 	"apihelp-query+pageimages-paramvalue-license-free": "apenas imagens gratuitas"
 }
