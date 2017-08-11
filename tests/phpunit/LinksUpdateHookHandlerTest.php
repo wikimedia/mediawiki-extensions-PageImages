@@ -280,7 +280,7 @@ class LinksUpdateHookHandlerTest extends MediaWikiTestCase {
 				50,
 				3,
 				// blacklist score
-				-1000
+				- 1000
 			],
 		];
 	}
