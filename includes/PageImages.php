@@ -42,7 +42,7 @@ class PageImages {
 	/**
 	 * Returns page image for a given title
 	 *
-	 * @param Title $title: Title to get page image for
+	 * @param Title $title Title to get page image for
 	 *
 	 * @return File|bool
 	 */
