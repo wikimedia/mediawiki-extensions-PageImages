@@ -266,7 +266,7 @@ class LinksUpdateHookHandler {
 	 * @return string[]
 	 */
 	private function getDbBlacklist( $dbName, $page ) {
-		$dbr = wfGetDB( DB_SLAVE, [], $dbName );
+		$dbr = wfGetDB( DB_REPLICA, [], $dbName );
 		$title = Title::newFromText( $page );
 		$list = [];
 

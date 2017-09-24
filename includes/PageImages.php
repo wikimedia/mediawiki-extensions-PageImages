@@ -47,7 +47,7 @@ class PageImages {
 	 * @return File|bool
 	 */
 	public static function getPageImage( Title $title ) {
-		$dbr = wfGetDB( DB_SLAVE );
+		$dbr = wfGetDB( DB_REPLICA );
 		$fileName = $dbr->selectField( 'page_props',
 			[ 'pp_value' ],
 			[
