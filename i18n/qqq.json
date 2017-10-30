@@ -16,6 +16,5 @@
 	"apihelp-query+pageimages-param-limit": "{{doc-apihelp-param|query+pageimages|limit}}",
 	"apihelp-query+pageimages-param-license": "{{doc-apihelp-param|query+pageimages|license}}",
 	"apihelp-query+pageimages-paramvalue-license-free": "{{doc-apihelp-paramvalue|query+pageimages|license|free}}",
-	"apihelp-query+pageimages-paramvalue-license-any": "{{doc-apihelp-paramvalue|query+pageimages|license|any}}",
-	"apiwarn-query+pageimages-original-in-thumbnail-deprecated": "{{doc-apierror}}\nA message explaining that the API response format has changed and the 'original' property will be removed from the 'thumbnail' object in a future release."
+	"apihelp-query+pageimages-paramvalue-license-any": "{{doc-apihelp-paramvalue|query+pageimages|license|any}}"
 }
