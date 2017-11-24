@@ -36,8 +36,9 @@ class LinksUpdateHookHandlerTest extends MediaWikiTestCase {
 	}
 
 	/**
-	 * @param array $images
-	 * @param [false|array] $images in lead section. (optional)
+	 * @param array[] $images
+	 * @param array[]|bool $leadImages
+	 *
 	 * @return LinksUpdate
 	 */
 	private function getLinksUpdate( array $images, $leadImages = false ) {
