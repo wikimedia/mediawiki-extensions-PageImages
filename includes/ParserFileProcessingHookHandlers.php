@@ -12,7 +12,7 @@ use Title;
  *
  * @license WTFPL 2.0
  * @author Max Semenik
- * @author Thiemo Mättig
+ * @author Thiemo Kreuz
  */
 class ParserFileProcessingHookHandlers {
 

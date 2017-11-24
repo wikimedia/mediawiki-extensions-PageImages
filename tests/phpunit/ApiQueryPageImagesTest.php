@@ -54,7 +54,7 @@ class ApiQueryPageImagesProxy extends ApiQueryPageImages {
  *
  * @license WTFPL 2.0
  * @author Sam Smith
- * @author Thiemo Mättig
+ * @author Thiemo Kreuz
  */
 class ApiQueryPageImagesTest extends PHPUnit_Framework_TestCase {
 
