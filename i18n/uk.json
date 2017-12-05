@@ -16,6 +16,5 @@
 	"apihelp-query+pageimages-param-limit": "Властивості скількох сторінок видавати.",
 	"apihelp-query+pageimages-param-license": "Обмежити зображення на сторінці до певного типу ліцензії",
 	"apihelp-query+pageimages-paramvalue-license-free": "лише вільні зображення",
-	"apihelp-query+pageimages-paramvalue-license-any": "найкраще зображення, незалежно від того, вільне чи ні.",
-	"apiwarn-query+pageimages-original-in-thumbnail-deprecated": "Оригінальна URL-адреса джерела зображення тепер надається разом з його розмірами в окремій властивості для об'єкта сторінки. Їх буде вилучено з властивості «thumbnail» у майбутньому випуску."
+	"apihelp-query+pageimages-paramvalue-license-any": "найкраще зображення, незалежно від того, вільне чи ні."
 }

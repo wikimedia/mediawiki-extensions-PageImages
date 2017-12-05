@@ -14,6 +14,5 @@
 	"apihelp-query+pageimages-param-limit": "Својства на тоа колку страници да се дадат.",
 	"apihelp-query+pageimages-param-license": "Ги ограничува сликите на една страница според извесни видови лиценци",
 	"apihelp-query+pageimages-paramvalue-license-free": "само слободни слики",
-	"apihelp-query+pageimages-paramvalue-license-any": "најдобра слика, било слободна или не",
-	"apiwarn-query+pageimages-original-in-thumbnail-deprecated": "URL-то на изворната слика сега има свое својство за изворни димензии во објектот за страницата. Во идните изданија, ќе биде отстрането од  својството „минијатура“."
+	"apihelp-query+pageimages-paramvalue-license-any": "најдобра слика, било слободна или не"
 }

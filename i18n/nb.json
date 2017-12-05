@@ -14,6 +14,5 @@
 	"apihelp-query+pageimages-param-limit": "Egenskaper for hvor mange sider som skal returneres.",
 	"apihelp-query+pageimages-param-license": "Begrens sidebilder til en bestemt lisenstype",
 	"apihelp-query+pageimages-paramvalue-license-free": "bare frie bilder",
-	"apihelp-query+pageimages-paramvalue-license-any": "beste bilde, enten fritt eller ufritt.",
-	"apiwarn-query+pageimages-original-in-thumbnail-deprecated": "Originalbildets kilde-URL og dimensjoner gis nå i en egen egenskap for sideobjektet. Det vil fjernes fra «thumbnail»-egenskapen i en framtidig utgivelse."
+	"apihelp-query+pageimages-paramvalue-license-any": "beste bilde, enten fritt eller ufritt."
 }

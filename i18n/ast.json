@@ -14,6 +14,5 @@
 	"apihelp-query+pageimages-param-limit": "Propiedaes de cuántes páxines devolver.",
 	"apihelp-query+pageimages-param-license": "Llendar les imáxenes de la páxina a les que tengan un determináu tipu de llicencia",
 	"apihelp-query+pageimages-paramvalue-license-free": "sólo imáxenes llibres",
-	"apihelp-query+pageimages-paramvalue-license-any": "la meyor imaxe, seya llibre o non.",
-	"apiwarn-query+pageimages-original-in-thumbnail-deprecated": "La URL fonte de la imaxe orixinal úfrese agora coles dimensiones nuna propiedá propia pal oxetu de páxina. Desaniciaráse de la propiedá 'miniatura' n'una versión futura."
+	"apihelp-query+pageimages-paramvalue-license-any": "la meyor imaxe, seya llibre o non."
 }

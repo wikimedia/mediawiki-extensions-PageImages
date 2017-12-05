@@ -14,6 +14,5 @@
 	"apihelp-query+pageimages-param-limit": "Gibt Eigenschaften von dieser Anzahl an Seiten zurück.",
 	"apihelp-query+pageimages-param-license": "Beschränkt Seitenbilder auf einen bestimmten Lizenztyp",
 	"apihelp-query+pageimages-paramvalue-license-free": "Nur freie Bilder",
-	"apihelp-query+pageimages-paramvalue-license-any": "Bestes Bild, egal ob frei oder nicht-frei.",
-	"apiwarn-query+pageimages-original-in-thumbnail-deprecated": "Die Original-Bildquellen-URL wird jetzt mit den Abmessungen in ihrer eigenen Eigenschaft für das Seitenobjekt angegeben. In einer späteren Veröffentlichung wird sie von der Eigenschaft „thumbnail“ entfernt."
+	"apihelp-query+pageimages-paramvalue-license-any": "Bestes Bild, egal ob frei oder nicht-frei."
 }

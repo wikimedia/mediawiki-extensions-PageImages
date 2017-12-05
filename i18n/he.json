@@ -13,6 +13,5 @@
 	"apihelp-query+pageimages-param-limit": "מאפיינים של כמה דפים להחזיר.",
 	"apihelp-query+pageimages-param-license": "להגביל את תמונות הדף לסוג רישיון מסוים",
 	"apihelp-query+pageimages-paramvalue-license-free": "רק תמונות חופשיות",
-	"apihelp-query+pageimages-paramvalue-license-any": "התמונה הטובה ביותר, חופשית או לא.",
-	"apiwarn-query+pageimages-original-in-thumbnail-deprecated": "ה־URL של התמונה המקורית מסופק עכשיו עם הממדים שלה במאפיין משלה בעצם הדף. הוא יוסר מהמאפיין \"thumbnail\" בגרסה עתידית."
+	"apihelp-query+pageimages-paramvalue-license-any": "התמונה הטובה ביותר, חופשית או לא."
 }

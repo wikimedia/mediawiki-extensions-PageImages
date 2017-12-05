@@ -15,6 +15,5 @@
 	"apihelp-query+pageimages-param-limit": "Quantas propriedades de página a serem retornadas.",
 	"apihelp-query+pageimages-param-license": "Limite as imagens da página a um determinado tipo de licença",
 	"apihelp-query+pageimages-paramvalue-license-free": "apenas imagens gratuitas",
-	"apihelp-query+pageimages-paramvalue-license-any": "melhor imagem, seja gratuita ou não gratuita.",
-	"apiwarn-query+pageimages-original-in-thumbnail-deprecated": "O URL de origem da imagem original agora é fornecido com suas dimensões em sua própria propriedade para o objeto da página. Ele será removido da propriedade 'thumbnail' em uma versão futura."
+	"apihelp-query+pageimages-paramvalue-license-any": "melhor imagem, seja gratuita ou não gratuita."
 }
