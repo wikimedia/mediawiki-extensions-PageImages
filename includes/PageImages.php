@@ -71,8 +71,8 @@ class PageImages {
 	 *
 	 * @see https://www.mediawiki.org/wiki/Manual:Hooks/InfoAction
 	 *
-	 * @param IContextSource $context
-	 * @param array[] &$pageInfo
+	 * @param IContextSource $context Context, used to extract the title of the page
+	 * @param array[] &$pageInfo Auxillary information about the page.
 	 */
 	public static function onInfoAction( IContextSource $context, &$pageInfo ) {
 		global $wgThumbLimits;
@@ -106,7 +106,7 @@ class PageImages {
 	/**
 	 * ApiOpenSearchSuggest hook handler, enhances ApiOpenSearch results with this extension's data
 	 *
-	 * @param array[] &$results
+	 * @param array[] &$results Array of results to add page images too
 	 */
 	public static function onApiOpenSearchSuggest( array &$results ) {
 		global $wgPageImagesExpandOpenSearchXml;
@@ -129,9 +129,9 @@ class PageImages {
 	/**
 	 * SpecialMobileEditWatchlist::images hook handler, adds images to mobile watchlist A-Z view
 	 *
-	 * @param IContextSource $context
-	 * @param array[] $watchlist
-	 * @param array[] &$images
+	 * @param IContextSource $context Context object. Ignored
+	 * @param array[] $watchlist Array of relevant pages on the watchlist, sorted by namespace
+	 * @param array[] &$images Array of images to populate
 	 */
 	public static function onSpecialMobileEditWatchlistImages(
 		IContextSource $context, array $watchlist, array &$images
@@ -206,8 +206,8 @@ class PageImages {
 	}
 
 	/**
-	 * @param OutputPage &$out
-	 * @param Skin &$skin
+	 * @param OutputPage &$out The page being output.
+	 * @param Skin &$skin Skin object used to generate the page. Ignored
 	 */
 	public static function onBeforePageDisplay( OutputPage &$out, Skin &$skin ) {
 		$imageFile = self::getPageImage( $out->getContext()->getTitle() );

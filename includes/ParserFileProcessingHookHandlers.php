@@ -21,10 +21,10 @@ class ParserFileProcessingHookHandlers {
 	 *
 	 * @see https://www.mediawiki.org/wiki/Manual:Hooks/ParserMakeImageParams
 	 *
-	 * @param Title $title
-	 * @param File|bool $file
-	 * @param array[] &$params
-	 * @param Parser $parser
+	 * @param Title $title The title of the image
+	 * @param File|bool $file The file name of the image
+	 * @param array[] &$params The parameters used to generate the image
+	 * @param Parser $parser Parser that is parsing this image
 	 */
 	public static function onParserMakeImageParams(
 		Title $title,
@@ -39,8 +39,8 @@ class ParserFileProcessingHookHandlers {
 	/**
 	 * AfterParserFetchFileAndTitle hook handler, saves information about gallery images
 	 *
-	 * @param Parser $parser
-	 * @param ImageGalleryBase $gallery
+	 * @param Parser $parser Parser that is parsing the gallery
+	 * @param ImageGalleryBase $gallery Object representing the gallery being created
 	 */
 	public static function onAfterParserFetchFileAndTitle(
 		Parser $parser, ImageGalleryBase $gallery
@@ -50,10 +50,10 @@ class ParserFileProcessingHookHandlers {
 	}
 
 	/**
-	 * @param Title $title
-	 * @param File|bool $file
-	 * @param array[] &$params
-	 * @param Parser $parser
+	 * @param Title $title The title of the image
+	 * @param File|bool $file The file name of the image
+	 * @param array[] &$params The parameters used to generate the image
+	 * @param Parser $parser Parser that called the hook
 	 */
 	public function doParserMakeImageParams(
 		Title $title,
@@ -65,8 +65,8 @@ class ParserFileProcessingHookHandlers {
 	}
 
 	/**
-	 * @param Parser $parser
-	 * @param ImageGalleryBase $gallery
+	 * @param Parser $parser Parser that is parsing the gallery
+	 * @param ImageGalleryBase $gallery Object representing the gallery being created
 	 */
 	public function doAfterParserFetchFileAndTitle( Parser $parser, ImageGalleryBase $gallery ) {
 		foreach ( $gallery->getImages() as $image ) {

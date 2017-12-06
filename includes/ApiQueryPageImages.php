@@ -24,8 +24,8 @@ class ApiQueryPageImages extends ApiQueryBase {
 	const PARAM_LICENSE_ANY = 'any';
 
 	/**
-	 * @param ApiQuery $query
-	 * @param string $moduleName
+	 * @param ApiQuery $query API query module
+	 * @param string $moduleName Name of this query module
 	 */
 	public function __construct( ApiQuery $query, $moduleName ) {
 		parent::__construct( $query, $moduleName, 'pi' );
@@ -165,7 +165,8 @@ class ApiQueryPageImages extends ApiQueryBase {
 	 * otherwise both free and non-free property names will be returned. That's
 	 * because we save the image name only once if it's free and the best image.
 	 *
-	 * @param string $license
+	 * @param string $license either PARAM_LICENSE_FREE or PARAM_LICENSE_ANY,
+	 * specifying whether to return the non-free property name or not
 	 * @return string|array
 	 */
 	protected static function getPropNames( $license ) {

@@ -25,7 +25,7 @@ class LinksUpdateHookHandler {
 	 *
 	 * @see https://www.mediawiki.org/wiki/Manual:Hooks/LinksUpdate
 	 *
-	 * @param LinksUpdate $linksUpdate
+	 * @param LinksUpdate $linksUpdate the LinksUpdate object that this hook is parsing
 	 */
 	public static function onLinksUpdate( LinksUpdate $linksUpdate ) {
 		$handler = new self();
@@ -35,7 +35,8 @@ class LinksUpdateHookHandler {
 	/**
 	 * Returns a list of page image candidates for consideration
 	 * for scoring algorithm.
-	 * @param LinksUpdate $linksUpdate
+	 * @param LinksUpdate $linksUpdate LinksUpdate object used to determine what page
+	 * to get page images for
 	 * @return array $image Associative array describing an image
 	 */
 	public function getPageImageCandidates( LinksUpdate $linksUpdate ) {
@@ -63,7 +64,7 @@ class LinksUpdateHookHandler {
 	}
 
 	/**
-	 * @param LinksUpdate $linksUpdate
+	 * @param LinksUpdate $linksUpdate the LinksUpdate object that was passed to the handler
 	 */
 	public function doLinksUpdate( LinksUpdate $linksUpdate ) {
 		$images = $this->getPageImageCandidates( $linksUpdate );
@@ -147,8 +148,9 @@ class LinksUpdateHookHandler {
 	/**
 	 * Returns score based on table of ranges
 	 *
-	 * @param int $value
-	 * @param int[] $scores
+	 * @param int $value The number that the various bounds are compared against
+	 * to calculate the score
+	 * @param int[] $scores Table of scores for different ranges of $value
 	 *
 	 * @return int
 	 */
@@ -185,7 +187,7 @@ class LinksUpdateHookHandler {
 	/**
 	 * Fetch file metadata
 	 *
-	 * @param File $file
+	 * @param File $file File to fetch metadata from
 	 * @return array
 	 */
 	protected function fetchFileMetadata( $file ) {
@@ -202,7 +204,7 @@ class LinksUpdateHookHandler {
 	/**
 	 * Returns width/height ratio of an image as displayed or 0 is not available
 	 *
-	 * @param array $image
+	 * @param array $image Array representing the image to get the aspect ratio from
 	 *
 	 * @return float|int
 	 */
