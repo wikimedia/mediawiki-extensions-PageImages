@@ -27,6 +27,10 @@ class InitImageData extends Maintenance {
 		$this->setBatchSize( 100 );
 	}
 
+	/**
+	 * Do the actual work of filling out page images
+	 * @return null
+	 */
 	public function execute() {
 		global $wgPageImagesNamespaces;
 
