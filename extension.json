@@ -29,7 +29,7 @@
 		"LinksUpdate": "PageImages\\Hooks\\LinksUpdateHookHandler::onLinksUpdate",
 		"OpenSearchXml": "PageImages::onApiOpenSearchSuggest",
 		"ParserMakeImageParams": "PageImages\\Hooks\\ParserFileProcessingHookHandlers::onParserMakeImageParams",
-		"SpecialMobileEditWatchlist::images": "PageImages::onSpecialMobileEditWatchlist_images"
+		"SpecialMobileEditWatchlist::images": "PageImages::onSpecialMobileEditWatchlistImages"
 	},
 	"JobClasses": {
 		"InitImageDataJob": "PageImages\\Job\\InitImageDataJob"

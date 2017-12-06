@@ -133,7 +133,7 @@ class PageImages {
 	 * @param array[] $watchlist
 	 * @param array[] &$images
 	 */
-	public static function onSpecialMobileEditWatchlist_images(
+	public static function onSpecialMobileEditWatchlistImages(
 		IContextSource $context, array $watchlist, array &$images
 	) {
 		$ids = [];

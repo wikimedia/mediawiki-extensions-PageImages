@@ -5,7 +5,6 @@
 		<exclude name="MediaWiki.Files.ClassMatchesFilename.NotMatch" />
 		<exclude name="MediaWiki.Files.ClassMatchesFilename.WrongCase" />
 		<exclude name="MediaWiki.Files.OneClassPerFile.MultipleFound" />
-		<exclude name="MediaWiki.NamingConventions.LowerCamelFunctionsName.FunctionName" />
 	</rule>
 	<file>.</file>
 	<arg name="extensions" value="php,php5,inc" />
