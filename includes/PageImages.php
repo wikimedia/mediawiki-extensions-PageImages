@@ -197,6 +197,10 @@ class PageImages {
 		return $ret;
 	}
 
+	/**
+	 * Hook function called after the extension is loaded to define PAGE_IMAGES_INSTALLED
+	 * @return null
+	 */
 	public static function onRegistration() {
 		define( 'PAGE_IMAGES_INSTALLED', true );
 	}

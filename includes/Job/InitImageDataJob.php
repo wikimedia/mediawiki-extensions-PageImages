@@ -9,10 +9,18 @@ use RefreshLinks;
 use Title;
 
 class InitImageDataJob extends Job {
+	/**
+	 * @param Title $title Title object associated with this job
+	 * @param array|bool $params Parameters to the job, containing an array of
+	 * page ids representing which pages to process
+	 */
 	public function __construct( Title $title, array $params ) {
 		parent::__construct( 'InitImageDataJob', $title, $params );
 	}
 
+	/**
+	 * @inheritDoc
+	 */
 	public function run() {
 		$lbFactory = MediaWikiServices::getInstance()->getDBLoadBalancerFactory();
 
