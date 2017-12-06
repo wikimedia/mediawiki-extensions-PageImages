@@ -191,8 +191,10 @@ class LinksUpdateHookHandler {
 	protected function fetchFileMetadata( $file ) {
 		$format = new FormatMetadata;
 		$context = new DerivativeContext( $format->getContext() );
-		$format->setSingleLanguage( true ); // we don't care and it's slightly faster
-		$context->setLanguage( 'en' ); // we don't care so avoid splitting the cache
+		// we don't care about the language, and specifying singleLanguage is slightly faster
+		$format->setSingleLanguage( true );
+		// we don't care about the language, so avoid splitting the cache by selecting English
+		$context->setLanguage( 'en' );
 		$format->setContext( $context );
 		return $format->fetchExtendedMetadata( $file );
 	}

@@ -142,8 +142,8 @@ class ApiQueryPageImages extends ApiQueryBase {
 				$fileName = $row->pp_value;
 				$this->setResultValues( $prop, $pageId, $fileName, $size );
 			}
-
-		} // End page props image extraction
+		// End page props image extraction
+		}
 
 		// Extract images from file namespace pages. In this case we just use
 		// the file itself rather than searching for a page_image. (Bug 50252)
