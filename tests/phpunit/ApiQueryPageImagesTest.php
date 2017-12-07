@@ -10,23 +10,6 @@ use PHPUnit_Framework_TestCase;
 use Title;
 use Wikimedia\TestingAccessWrapper;
 
-class ApiPageSetStub extends ApiPageSet {
-
-	public function __construct( $goodTitles, $missingTitlesByNamespace ) {
-		$this->goodTitles = $goodTitles;
-		$this->missingTitlesByNamespace = $missingTitlesByNamespace;
-	}
-
-	public function getGoodTitles() {
-		return $this->goodTitles;
-	}
-
-	public function getMissingTitlesByNamespace() {
-		return $this->missingTitlesByNamespace;
-	}
-
-}
-
 class ApiQueryPageImagesProxy extends ApiQueryPageImages {
 
 	public function __construct( ApiPageSet $pageSet ) {
@@ -134,7 +117,15 @@ class ApiQueryPageImagesTest extends PHPUnit_Framework_TestCase {
 	 * @dataProvider provideGetTitles
 	 */
 	public function testGetTitles( $titles, $missingTitlesByNamespace, $expected ) {
-		$pageSet = new ApiPageSetStub( $titles, $missingTitlesByNamespace );
+		$pageSet = $this->getMockBuilder( 'ApiPageSet' )
+			->disableOriginalConstructor()
+			->getMock();
+		$pageSet->expects( $this->any() )
+			->method( 'getGoodTitles' )
+			->will( $this->returnValue( $titles ) );
+		$pageSet->expects( $this->any() )
+			->method( 'getMissingTitlesByNamespace' )
+			->will( $this->returnValue( $missingTitlesByNamespace ) );
 		$queryPageImages = new ApiQueryPageImagesProxy( $pageSet );
 
 		$this->assertEquals( $expected, $queryPageImages->getTitles() );
