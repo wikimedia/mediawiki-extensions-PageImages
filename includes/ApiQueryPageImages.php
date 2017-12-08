@@ -234,13 +234,6 @@ class ApiQueryPageImages extends ApiQueryBase {
 	}
 
 	/**
-	 * @deprecated since MediaWiki core 1.25
-	 */
-	public function getDescription() {
-		return 'Returns information about images on the page such as thumbnail and presence of photos.';
-	}
-
-	/**
 	 * Return an array describing all possible parameters to this module
 	 * @return array
 	 */
@@ -277,22 +270,6 @@ class ApiQueryPageImages extends ApiQueryBase {
 				defined( 'ApiBase::PARAM_HELP_MSG' )
 					? ApiBase::PARAM_HELP_MSG : '' => 'api-help-param-continue',
 			],
-		];
-	}
-
-	/**
-	 * @deprecated since MediaWiki core 1.25
-	 */
-	public function getParamDescription() {
-		return [
-			'prop' => [ 'What information to return',
-				' thumbnail - URL and dimensions of image associated with page, if any',
-				' name - image title',
-				' original - URL and dimensions of the original image',
-			],
-			'thumbsize' => 'Maximum width in pixels of thumbnail images',
-			'limit' => 'Properties of how many pages to return',
-			'continue' => 'When more results are available, use this to continue',
 		];
 	}
 
