@@ -76,13 +76,6 @@ class ApiQueryPageImagesTest extends PHPUnit_Framework_TestCase {
 		$this->assertInstanceOf( 'ApiQueryPageImages', $instance );
 	}
 
-	public function testGetDescription() {
-		$instance = $this->newInstance();
-		$description = $instance->getDescription();
-		$this->assertInternalType( 'string', $description );
-		$this->assertNotEmpty( $description );
-	}
-
 	public function testGetCacheMode() {
 		$instance = $this->newInstance();
 		$this->assertSame( 'public', $instance->getCacheMode( [] ) );
@@ -104,13 +97,6 @@ class ApiQueryPageImagesTest extends PHPUnit_Framework_TestCase {
 		$this->assertEquals( $params['license'][\ApiBase::PARAM_TYPE], [ 'free', 'any' ] );
 		$this->assertEquals( $params['license'][\ApiBase::PARAM_DFLT], 'free' );
 		$this->assertEquals( $params['license'][\ApiBase::PARAM_ISMULTI], false );
-	}
-
-	public function testGetParamDescription() {
-		$instance = $this->newInstance();
-		$descriptions = $instance->getParamDescription();
-		$this->assertInternalType( 'array', $descriptions );
-		$this->assertNotEmpty( $descriptions );
 	}
 
 	/**
