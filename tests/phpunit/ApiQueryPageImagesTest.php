@@ -2,32 +2,13 @@
 
 namespace PageImages\Tests;
 
-use ApiPageSet;
+require_once 'ApiQueryPageImagesProxyMock.php';
+
 use ApiQueryPageImages;
 use PageImages;
 use Title;
 use Wikimedia\Rdbms\FakeResultWrapper;
 use Wikimedia\TestingAccessWrapper;
-
-class ApiQueryPageImagesProxy extends ApiQueryPageImages {
-
-	public function __construct( ApiPageSet $pageSet ) {
-		$this->pageSet = $pageSet;
-	}
-
-	public function getPageSet() {
-		return $this->pageSet;
-	}
-
-	public function getTitles() {
-		return parent::getTitles();
-	}
-
-	/** inheritdoc */
-	public static function getPropNames( $license ) {
-		return parent::getPropNames( $license );
-	}
-}
 
 /**
  * @covers ApiQueryPageImages
@@ -111,7 +92,7 @@ class ApiQueryPageImagesTest extends \PHPUnit\Framework\TestCase {
 		$pageSet->expects( $this->any() )
 			->method( 'getMissingTitlesByNamespace' )
 			->will( $this->returnValue( $missingTitlesByNamespace ) );
-		$queryPageImages = new ApiQueryPageImagesProxy( $pageSet );
+		$queryPageImages = new ApiQueryPageImagesProxyMock( $pageSet );
 
 		$this->assertEquals( $expected, $queryPageImages->getTitles() );
 	}
@@ -306,7 +287,7 @@ class ApiQueryPageImagesTest extends \PHPUnit\Framework\TestCase {
 	 * @param string $expected
 	 */
 	public function testGetPropName( $license, $expected ) {
-		$this->assertEquals( $expected, ApiQueryPageImagesProxy::getPropNames( $license ) );
+		$this->assertEquals( $expected, ApiQueryPageImagesProxyMock::getPropNames( $license ) );
 	}
 
 	public function provideGetPropName() {
