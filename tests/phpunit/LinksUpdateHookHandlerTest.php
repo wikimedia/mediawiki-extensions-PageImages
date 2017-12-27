@@ -12,7 +12,7 @@ use Title;
 use Wikimedia\TestingAccessWrapper;
 
 /**
- * @covers PageImages\Hooks\LinksUpdateHookHandler
+ * @covers \PageImages\Hooks\LinksUpdateHookHandler
  *
  * @group PageImages
  *
@@ -115,7 +115,7 @@ class LinksUpdateHookHandlerTest extends MediaWikiTestCase {
 
 	/**
 	 * @dataProvider provideDoLinksUpdate
-	 * @covers LinksUpdateHookHandler::doLinksUpdate
+	 * @covers \PageImages\Hooks\LinksUpdateHookHandler::doLinksUpdate
 	 */
 	public function testDoLinksUpdate(
 		array $images,
@@ -203,7 +203,7 @@ class LinksUpdateHookHandlerTest extends MediaWikiTestCase {
 	}
 
 	/**
-	 * @covers LinksUpdateHookHandler::getPageImageCandidates
+	 * @covers \PageImages\Hooks\LinksUpdateHookHandler::getPageImageCandidates
 	 */
 	public function testGetPageImageCandidates() {
 		$candidates = [
@@ -288,7 +288,7 @@ class LinksUpdateHookHandlerTest extends MediaWikiTestCase {
 
 	/**
 	 * @dataProvider provideScoreFromTable
-	 * @covers LinksUpdateHookHandler::scoreFromTable
+	 * @covers \PageImages\Hooks\LinksUpdateHookHandler::scoreFromTable
 	 */
 	public function testScoreFromTable( $type, $value, $expected ) {
 		global $wgPageImagesScores;
@@ -327,7 +327,7 @@ class LinksUpdateHookHandlerTest extends MediaWikiTestCase {
 
 	/**
 	 * @dataProvider provideIsFreeImage
-	 * @covers LinksUpdateHookHandler::isImageFree
+	 * @covers \PageImages\Hooks\LinksUpdateHookHandler::isImageFree
 	 */
 	public function testIsFreeImage( $fileName, $metadata, $expected ) {
 		RepoGroup::setSingleton( $this->getRepoGroup() );
