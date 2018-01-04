@@ -4,10 +4,10 @@ namespace PageImages\Tests;
 
 use ApiPageSet;
 use ApiQueryPageImages;
-use FakeResultWrapper;
 use PageImages;
 use PHPUnit_Framework_TestCase;
 use Title;
+use Wikimedia\Rdbms\FakeResultWrapper;
 use Wikimedia\TestingAccessWrapper;
 
 class ApiQueryPageImagesProxy extends ApiQueryPageImages {
