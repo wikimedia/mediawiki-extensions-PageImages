@@ -25,6 +25,8 @@ class InitImageData extends Maintenance {
 			'If not provided or 0 will be run in-process.', false, true );
 		$this->addOption( 'quiet', "Don't report on job queue pressure" );
 		$this->setBatchSize( 100 );
+
+		$this->requireExtension( 'PageImages' );
 	}
 
 	/**
