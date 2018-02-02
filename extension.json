@@ -5,6 +5,9 @@
 	"descriptionmsg": "pageimages-desc",
 	"license-name": "WTFPL",
 	"type": "api",
+	"requires": {
+		"MediaWiki": ">= 1.29.0"
+	},
 	"callback": "PageImages::onRegistration",
 	"APIPropModules": {
 		"pageimages": "ApiQueryPageImages"
