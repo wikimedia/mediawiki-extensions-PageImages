@@ -5,7 +5,6 @@ namespace PageImages\Tests;
 use ApiPageSet;
 use ApiQueryPageImages;
 use PageImages;
-use PHPUnit_Framework_TestCase;
 use Title;
 use Wikimedia\Rdbms\FakeResultWrapper;
 use Wikimedia\TestingAccessWrapper;
@@ -39,7 +38,7 @@ class ApiQueryPageImagesProxy extends ApiQueryPageImages {
  * @author Sam Smith
  * @author Thiemo Kreuz
  */
-class ApiQueryPageImagesTest extends PHPUnit_Framework_TestCase {
+class ApiQueryPageImagesTest extends \PHPUnit\Framework\TestCase {
 
 	private function newInstance() {
 		$config = new \HashConfig( [
