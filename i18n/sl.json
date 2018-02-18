@@ -1,8 +1,10 @@
 {
 	"@metadata": {
 		"authors": [
-			"Eleassar"
+			"Eleassar",
+			"Janezdrilc"
 		]
 	},
-	"pageimages-desc": "Pridobi informacije o slikah na strani"
+	"pageimages-desc": "Pridobi informacije o slikah na strani",
+	"pageimages-info-label": "Slika strani"
 }
