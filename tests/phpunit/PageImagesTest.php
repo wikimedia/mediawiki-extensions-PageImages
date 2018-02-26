@@ -49,7 +49,8 @@ class PageImagesTest extends MediaWikiTestCase {
 		$outputPage->expects( $this->never() )
 			->method( 'addMeta' );
 
-		PageImages::onBeforePageDisplay( $outputPage, new SkinTemplate() );
+		$skinTemplate = new SkinTemplate();
+		PageImages::onBeforePageDisplay( $outputPage, $skinTemplate );
 	}
 
 	/**
