@@ -1,8 +1,11 @@
 {
 	"@metadata": {
 		"authors": [
-			"Reza1615"
+			"Reza1615",
+			"Ladsgroup"
 		]
 	},
-	"pageimages-desc": "جمع‌آوری اطلاعات درباره تصاویر مورد استفاده در صفحه"
+	"pageimages-desc": "جمع‌آوری اطلاعات درباره تصاویر مورد استفاده در صفحه",
+	"pageimages-info-label": "تصویر صفحه",
+	"apihelp-query+pageimages-description": "اطلاعات مربوط به تصویرهای یک صفحه شامل بندانگشتی و حضورشان را بر می‌گرداند"
 }
