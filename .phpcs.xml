@@ -2,11 +2,6 @@
 <ruleset>
 	<rule ref="./vendor/mediawiki/mediawiki-codesniffer/MediaWiki" />
 	<file>.</file>
-	<rule ref="MediaWiki.Files.ClassMatchesFilename.WrongCase">
-		<exclude-pattern>maintenance/initImageData.php</exclude-pattern>
-	</rule>
 	<arg name="extensions" value="php,php5,inc" />
 	<arg name="encoding" value="UTF-8" />
-	<exclude-pattern>vendor</exclude-pattern>
-	<exclude-pattern>node_modules</exclude-pattern>
 </ruleset>
