@@ -308,7 +308,7 @@ class LinksUpdateHookHandler {
 		global $wgFileExtensions;
 
 		$list = [];
-		$text = Http::get( $url, 3 );
+		$text = Http::get( $url, [ 'timeout' => 3 ], __METHOD__ );
 		$regex = '/\[\[:([^|\#]*?\.(?:' . implode( '|', $wgFileExtensions ) . '))/i';
 
 		if ( $text && preg_match_all( $regex, $text, $matches ) ) {
