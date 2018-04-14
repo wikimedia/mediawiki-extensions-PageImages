@@ -45,7 +45,7 @@ class LinksUpdateHookHandlerTest extends MediaWikiTestCase {
 		$parserOutput = new ParserOutput();
 		$parserOutput->setExtensionData( 'pageImages', $images );
 		$parserOutputLead = new ParserOutput();
-		$parserOutputLead->setExtensionData( 'pageImages', $leadImages || $images );
+		$parserOutputLead->setExtensionData( 'pageImages', $leadImages ?: $images );
 
 		$rev = $this->getMockBuilder( 'Revision' )
 			->disableOriginalConstructor()
@@ -216,11 +216,11 @@ class LinksUpdateHookHandlerTest extends MediaWikiTestCase {
 		$handler = new LinksUpdateHookHandler();
 		$this->setMwGlobals( 'wgPageImagesLeadSectionOnly', false );
 		$images = $handler->getPageImageCandidates( $linksUpdate );
-		$this->assertTrue( count( $images ) === 2, 'All images are returned.' );
+		$this->assertCount( 2, $images, 'All images are returned.' );
 
 		$this->setMwGlobals( 'wgPageImagesLeadSectionOnly', true );
 		$images = $handler->getPageImageCandidates( $linksUpdate );
-		$this->assertTrue( count( $images ) === 1, 'Only lead images are returned.' );
+		$this->assertCount( 1, $images, 'Only lead images are returned.' );
 	}
 
 	/**
