@@ -45,7 +45,8 @@ class PageImagesTest extends MediaWikiTestCase {
 		$context->method( 'getTitle' )
 			->will( $this->returnValue( $this->newTitle() ) );
 
-		$outputPage = $this->getMock( OutputPage::class, null, [ $context ] );
+		$outputPage = $this->getMock(
+			OutputPage::class, [ 'addMeta' ], [ $context ] );
 		$outputPage->expects( $this->never() )
 			->method( 'addMeta' );
 
