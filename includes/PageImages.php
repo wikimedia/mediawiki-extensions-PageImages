@@ -184,15 +184,9 @@ class PageImages {
 			$api = new ApiMain( new FauxRequest( $request ) );
 			$api->execute();
 
-			if ( defined( 'ApiResult::META_CONTENT' ) ) {
-				$ret += (array)$api->getResult()->getResultData( [ 'query', 'pages' ],
-					[ 'Strip' => 'base' ] );
-			} else {
-				$data = $api->getResultData();
-				if ( isset( $data['query']['pages'] ) ) {
-					$ret += $data['query']['pages'];
-				}
-			}
+			$ret += (array)$api->getResult()->getResultData(
+				[ 'query', 'pages' ], [ 'Strip' => 'base' ]
+			);
 		}
 		return $ret;
 	}
