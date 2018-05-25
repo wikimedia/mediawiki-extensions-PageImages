@@ -16,7 +16,7 @@ use Wikimedia\TestingAccessWrapper;
  *
  * @group PageImages
  *
- * @license WTFPL 2.0
+ * @license WTFPL
  * @author Thiemo Kreuz
  */
 class LinksUpdateHookHandlerTest extends MediaWikiTestCase {

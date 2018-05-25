@@ -14,7 +14,7 @@ use Title;
 /**
  * Handler for the "LinksUpdate" hook.
  *
- * @license WTFPL 2.0
+ * @license WTFPL
  * @author Max Semenik
  * @author Thiemo Kreuz
  */

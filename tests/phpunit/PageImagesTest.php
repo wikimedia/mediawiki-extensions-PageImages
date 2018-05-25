@@ -15,7 +15,7 @@ use Title;
  * @group PageImages
  * @group Database
  *
- * @license WTFPL 2.0
+ * @license WTFPL
  * @author Thiemo Kreuz
  */
 class PageImagesTest extends MediaWikiTestCase {

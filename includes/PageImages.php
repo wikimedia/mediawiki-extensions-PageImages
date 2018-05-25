@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @license WTFPL 2.0
+ * @license WTFPL
  * @author Max Semenik
  * @author Brad Jorsch
  * @author Thiemo Kreuz

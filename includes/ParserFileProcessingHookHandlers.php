@@ -10,7 +10,7 @@ use Title;
 /**
  * Handler for the "ParserMakeImageParams" and "AfterParserFetchFileAndTitle" hooks.
  *
- * @license WTFPL 2.0
+ * @license WTFPL
  * @author Max Semenik
  * @author Thiemo Kreuz
  */

@@ -9,7 +9,7 @@ require_once "$IP/maintenance/Maintenance.php";
 use PageImages\Job\InitImageDataJob;
 
 /**
- * @license WTFPL 2.0
+ * @license WTFPL
  * @author Max Semenik
  */
 class InitImageData extends Maintenance {

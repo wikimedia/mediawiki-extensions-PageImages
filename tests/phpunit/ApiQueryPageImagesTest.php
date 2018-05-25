@@ -15,7 +15,7 @@ use Wikimedia\TestingAccessWrapper;
  *
  * @group PageImages
  *
- * @license WTFPL 2.0
+ * @license WTFPL
  * @author Sam Smith
  * @author Thiemo Kreuz
  */
