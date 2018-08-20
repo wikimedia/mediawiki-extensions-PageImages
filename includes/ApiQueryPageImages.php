@@ -79,13 +79,9 @@ class ApiQueryPageImages extends ApiQueryBase {
 		$params = $this->extractRequestParams();
 		$prop = array_flip( $params['prop'] );
 		if ( !count( $prop ) ) {
-			if ( is_callable( [ $this, 'dieWithError' ] ) ) {
-				$this->dieWithError(
-					[ 'apierror-paramempty', $this->encodeParamName( 'prop' ) ], 'noprop'
-				);
-			} else {
-				$this->dieUsage( 'No properties selected', '_noprop' );
-			}
+			$this->dieWithError(
+				[ 'apierror-paramempty', $this->encodeParamName( 'prop' ) ], 'noprop'
+			);
 		}
 
 		$allTitles = $this->getTitles();
