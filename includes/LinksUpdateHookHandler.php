@@ -10,6 +10,7 @@ use Http;
 use LinksUpdate;
 use PageImages;
 use Title;
+use Revision;
 
 /**
  * Handler for the "LinksUpdate" hook.
@@ -45,6 +46,9 @@ class LinksUpdateHookHandler {
 
 		if ( $wgPageImagesLeadSectionOnly ) {
 			$rev = $linksUpdate->getRevision();
+			if ( !$rev ) {
+				$rev = Revision::newFromTitle( $linksUpdate->getTitle() );
+			}
 			if ( $rev ) {
 				$content = $rev->getContent();
 				if ( $content ) {
