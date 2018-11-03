@@ -1,8 +1,10 @@
 {
 	"@metadata": {
 		"authors": [
-			"Milicevic01"
+			"Milicevic01",
+			"Zoranzoki21"
 		]
 	},
+	"pageimages-desc": "Сакупља информације о сликама које се користе на страници",
 	"pageimages-info-label": "Слика на страници"
 }
