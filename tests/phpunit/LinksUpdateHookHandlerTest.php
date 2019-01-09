@@ -290,40 +290,54 @@ class LinksUpdateHookHandlerTest extends MediaWikiTestCase {
 	 * @dataProvider provideScoreFromTable
 	 * @covers \PageImages\Hooks\LinksUpdateHookHandler::scoreFromTable
 	 */
-	public function testScoreFromTable( $type, $value, $expected ) {
-		global $wgPageImagesScores;
-
+	public function testScoreFromTable( array $scores, $value, $expected ) {
 		$handlerWrapper = TestingAccessWrapper::newFromObject( new LinksUpdateHookHandler );
 
-		$score = $handlerWrapper->scoreFromTable( $value, $wgPageImagesScores[$type] );
+		$score = $handlerWrapper->scoreFromTable( $value, $scores );
 		$this->assertEquals( $expected, $score );
 	}
 
 	public function provideScoreFromTable() {
-		return [
-			[ 'width', 100, -100 ],
-			[ 'width', 119, -100 ],
-			[ 'width', 300, 10 ],
-			[ 'width', 400, 10 ],
-			[ 'width', 500, 5 ],
-			[ 'width', 600, 5 ],
-			[ 'width', 601, 0 ],
-			[ 'width', 999, 0 ],
-			[ 'galleryImageWidth', 99, -100 ],
-			[ 'galleryImageWidth', 100, 0 ],
-			[ 'galleryImageWidth', 500, 0 ],
-			[ 'ratio', 1, -100 ],
-			[ 'ratio', 3, -100 ],
-			[ 'ratio', 4, 0 ],
-			[ 'ratio', 5, 0 ],
-			[ 'ratio', 10, 5 ],
-			[ 'ratio', 20, 5 ],
-			[ 'ratio', 25, 0 ],
-			[ 'ratio', 30, 0 ],
-			[ 'ratio', 31, -100 ],
-			[ 'ratio', 40, -100 ],
+		global $wgPageImagesScores;
 
-			'T212013' => [ 'width', 0, -100 ],
+		return [
+			'no match' => [ [], 100, 0 ],
+
+			'always min when below range' => [ [ 200 => 2, 800 => 1 ], 0, 2 ],
+			'always max when above range' => [ [ 200 => 2, 800 => 1 ], 1000, 1 ],
+
+			'always min when below range (reversed)' => [ [ 800 => 1, 200 => 2 ], 0, 2 ],
+			'always max when above range (reversed)' => [ [ 800 => 1, 200 => 2 ], 1000, 1 ],
+
+			'min match' => [ [ 200 => 2, 400 => 3, 800 => 1 ], 200, 2 ],
+			'above min' => [ [ 200 => 2, 400 => 3, 800 => 1 ], 201, 3 ],
+			'second last match' => [ [ 200 => 2, 400 => 3, 800 => 1 ], 400, 3 ],
+			'above second last' => [ [ 200 => 2, 400 => 3, 800 => 1 ], 401, 1 ],
+
+			// These test cases use the default values from extension.json
+			[ $wgPageImagesScores['width'], 100, -100 ],
+			[ $wgPageImagesScores['width'], 119, -100 ],
+			[ $wgPageImagesScores['width'], 300, 10 ],
+			[ $wgPageImagesScores['width'], 400, 10 ],
+			[ $wgPageImagesScores['width'], 500, 5 ],
+			[ $wgPageImagesScores['width'], 600, 5 ],
+			[ $wgPageImagesScores['width'], 601, 0 ],
+			[ $wgPageImagesScores['width'], 999, 0 ],
+			[ $wgPageImagesScores['galleryImageWidth'], 99, -100 ],
+			[ $wgPageImagesScores['galleryImageWidth'], 100, 0 ],
+			[ $wgPageImagesScores['galleryImageWidth'], 500, 0 ],
+			[ $wgPageImagesScores['ratio'], 1, -100 ],
+			[ $wgPageImagesScores['ratio'], 3, -100 ],
+			[ $wgPageImagesScores['ratio'], 4, 0 ],
+			[ $wgPageImagesScores['ratio'], 5, 0 ],
+			[ $wgPageImagesScores['ratio'], 10, 5 ],
+			[ $wgPageImagesScores['ratio'], 20, 5 ],
+			[ $wgPageImagesScores['ratio'], 25, 0 ],
+			[ $wgPageImagesScores['ratio'], 30, 0 ],
+			[ $wgPageImagesScores['ratio'], 31, -100 ],
+			[ $wgPageImagesScores['ratio'], 40, -100 ],
+
+			'T212013' => [ $wgPageImagesScores['width'], 0, -100 ],
 		];
 	}
 

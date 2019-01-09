@@ -161,12 +161,15 @@ class LinksUpdateHookHandler {
 	protected function scoreFromTable( $value, array $scores ) {
 		$lastScore = 0;
 
-		foreach ( $scores as $boundary => $score ) {
-			if ( $value <= $boundary ) {
-				return $score;
-			}
-
+		// The loop stops at the *first* match, and therefore *requires* the input array keys to be
+		// in increasing order.
+		ksort( $scores, SORT_NUMERIC );
+		foreach ( $scores as $upperBoundary => $score ) {
 			$lastScore = $score;
+
+			if ( $value <= $upperBoundary ) {
+				break;
+			}
 		}
 
 		return $lastScore;
