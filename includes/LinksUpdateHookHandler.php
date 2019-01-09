@@ -121,7 +121,7 @@ class LinksUpdateHookHandler {
 	 * @param array $image Associative array describing an image
 	 * @param int $position Image order on page
 	 *
-	 * @return int
+	 * @return float
 	 */
 	protected function getScore( array $image, $position ) {
 		global $wgPageImagesScores;
@@ -154,9 +154,9 @@ class LinksUpdateHookHandler {
 	 *
 	 * @param int $value The number that the various bounds are compared against
 	 * to calculate the score
-	 * @param int[] $scores Table of scores for different ranges of $value
+	 * @param float[] $scores Table of scores for different ranges of $value
 	 *
-	 * @return int
+	 * @return float
 	 */
 	protected function scoreFromTable( $value, array $scores ) {
 		$lastScore = 0;
@@ -172,7 +172,11 @@ class LinksUpdateHookHandler {
 			}
 		}
 
-		return $lastScore;
+		if ( !is_numeric( $lastScore ) ) {
+			wfLogWarning( 'The PageImagesScores setting must only contain numeric values!' );
+		}
+
+		return (float)$lastScore;
 	}
 
 	/**

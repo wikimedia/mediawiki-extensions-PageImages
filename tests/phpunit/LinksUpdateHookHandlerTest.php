@@ -302,6 +302,7 @@ class LinksUpdateHookHandlerTest extends MediaWikiTestCase {
 
 		return [
 			'no match' => [ [], 100, 0 ],
+			'float' => [ [ 0.5 ], 0, 0.5 ],
 
 			'always min when below range' => [ [ 200 => 2, 800 => 1 ], 0, 2 ],
 			'always max when above range' => [ [ 200 => 2, 800 => 1 ], 1000, 1 ],
