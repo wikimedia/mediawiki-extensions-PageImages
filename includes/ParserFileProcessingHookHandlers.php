@@ -86,7 +86,8 @@ class ParserFileProcessingHookHandlers {
 
 		if ( !( $file instanceof File ) ) {
 			$file = wfFindFile( $file );
-			if ( !$file ) {
+			// Non-image files (e.g. audio files) from a <gallery> can end here
+			if ( !$file || !$file->canRender() ) {
 				return;
 			}
 		}
