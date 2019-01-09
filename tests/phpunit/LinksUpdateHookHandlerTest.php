@@ -322,6 +322,8 @@ class LinksUpdateHookHandlerTest extends MediaWikiTestCase {
 			[ 'ratio', 30, 0 ],
 			[ 'ratio', 31, -100 ],
 			[ 'ratio', 40, -100 ],
+
+			'T212013' => [ 'width', 0, -100 ],
 		];
 	}
 

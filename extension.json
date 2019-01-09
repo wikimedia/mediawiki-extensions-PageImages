@@ -38,6 +38,7 @@
 	},
 	"config": {
 		"PageImagesScores": {
+			"@doc": "Images <120px are usually from maintenace or stub templates; >600px are panoramas, less suitable.",
 			"value": {
 				"position": [
 					8,
@@ -46,10 +47,8 @@
 					3
 				],
 				"width": {
-					"@doc119": "Very small images are usually from maintenace or stub templates",
 					"119": -100,
 					"400": 10,
-					"@doc600@": "Larger images are panoramas, less suitable",
 					"600": 5,
 					"601": 0
 				},
