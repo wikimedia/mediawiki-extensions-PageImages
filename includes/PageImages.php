@@ -49,7 +49,7 @@ class PageImages {
 	public static function getPageImage( Title $title ) {
 		$dbr = wfGetDB( DB_REPLICA );
 		$fileName = $dbr->selectField( 'page_props',
-			[ 'pp_value' ],
+			'pp_value',
 			[
 				'pp_page' => $title->getArticleID(),
 				'pp_propname' => [ self::PROP_NAME, self::PROP_NAME_FREE ]
