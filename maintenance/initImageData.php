@@ -118,5 +118,5 @@ class InitImageData extends Maintenance {
 	}
 }
 
-$maintClass = 'InitImageData';
+$maintClass = InitImageData::class;
 require_once RUN_MAINTENANCE_IF_MAIN;
