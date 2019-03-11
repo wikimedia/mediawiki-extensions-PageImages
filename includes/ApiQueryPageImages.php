@@ -51,9 +51,7 @@ class ApiQueryPageImages extends ApiQueryBase {
 		// in #execute, so include the set of missing filespace pages,
 		// which were initially rejected in ApiPageSet#execute.
 		$missingTitles = $pageSet->getMissingTitlesByNamespace();
-		$missingFileTitles = isset( $missingTitles[NS_FILE] )
-			? $missingTitles[NS_FILE]
-			: [];
+		$missingFileTitles = $missingTitles[NS_FILE] ?? [];
 
 		// $titles is a map of ID to title object, which is ideal,
 		// whereas $missingFileTitles is a map of title text to ID.
