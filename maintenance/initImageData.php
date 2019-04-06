@@ -15,7 +15,7 @@ use PageImages\Job\InitImageDataJob;
 class InitImageData extends Maintenance {
 	public function __construct() {
 		parent::__construct();
-		$this->mDescription = 'Initializes PageImages data';
+		$this->addDescription( 'Initializes PageImages data' );
 		$this->addOption( 'namespaces',
 			'Comma-separated list of namespace(s) to refresh', false, true );
 		$this->addOption( 'earlier-than',
