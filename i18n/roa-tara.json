@@ -4,5 +4,9 @@
 			"Joetaras"
 		]
 	},
-	"pageimages-desc": "Collezzione 'mbormaziune sus a le immaggine ausate sus 'à pàgene"
+	"pageimages-desc": "Collezzione 'mbormaziune sus a le immaggine ausate sus 'à pàgene",
+	"pageimages-info-label": "Immggine d'a pàgene",
+	"apihelp-query+pageimages-description": "Dèje 'mbormaziune sus a le immaggine jndr'à pàgene, pe esembie le andeprime e 'a presenze de fote.",
+	"apihelp-query+pageimages-summary": "Dèje 'mbormaziune sus a le immaggine jndr'à pàgene, pe esembie le andeprime e 'a presenze de fote.",
+	"apihelp-query+pageimages-example-1": "Pigghie 'u nome e miniature a <kbd>100</kbd>-pixel de 'n'immaggine sus 'a pàgene de <kbd>Albert Einstein</kbd>."
 }
