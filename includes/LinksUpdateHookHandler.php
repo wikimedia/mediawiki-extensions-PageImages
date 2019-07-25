@@ -47,7 +47,9 @@ class LinksUpdateHookHandler {
 		if ( $wgPageImagesLeadSectionOnly ) {
 			$rev = $linksUpdate->getRevision();
 			if ( !$rev ) {
-				$rev = Revision::newFromTitle( $linksUpdate->getTitle() );
+				// Use READ_LATEST (T221763)
+				$rev = Revision::newFromTitle( $linksUpdate->getTitle(), 0,
+					Revision::READ_LATEST );
 			}
 			if ( $rev ) {
 				$content = $rev->getContent();
