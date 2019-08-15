@@ -47,6 +47,10 @@ class PageImages {
 	 * @return File|bool
 	 */
 	public static function getPageImage( Title $title ) {
+		if ( $title->inNamespace( NS_FILE ) ) {
+			return wfFindFile( $title );
+		}
+
 		$dbr = wfGetDB( DB_REPLICA );
 		$fileName = $dbr->selectField( 'page_props',
 			'pp_value',
