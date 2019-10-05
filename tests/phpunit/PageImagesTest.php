@@ -41,12 +41,14 @@ class PageImagesTest extends MediaWikiTestCase {
 	}
 
 	public function testGivenNonExistingPageOnBeforePageDisplayDoesNotAddMeta() {
-		$context = $this->getMock( IContextSource::class );
+		$context = $this->createMock( IContextSource::class );
 		$context->method( 'getTitle' )
 			->will( $this->returnValue( $this->newTitle() ) );
 
-		$outputPage = $this->getMock(
-			OutputPage::class, [ 'addMeta' ], [ $context ] );
+		$outputPage = $this->getMockBuilder( OutputPage::class )
+			->setMethods( [ 'addMeta' ] )
+			->setConstructorArgs( [ $context ] )
+			->getMock();
 		$outputPage->expects( $this->never() )
 			->method( 'addMeta' );
 
