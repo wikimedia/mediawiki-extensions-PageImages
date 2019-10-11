@@ -21,13 +21,13 @@ use Wikimedia\TestingAccessWrapper;
  */
 class LinksUpdateHookHandlerTest extends MediaWikiTestCase {
 
-	public function tearDown() {
+	public function tearDown() : void {
 		// remove mock added in testGetMetadata()
 		RepoGroup::destroySingleton();
 		parent::tearDown();
 	}
 
-	public function setUp() {
+	public function setUp() : void {
 		parent::setUp();
 
 		// Force LinksUpdateHookHandler::getPageImageCanditates to look at all
