@@ -44,6 +44,12 @@ class PageImagesTest extends MediaWikiTestCase {
 		$context = $this->createMock( IContextSource::class );
 		$context->method( 'getTitle' )
 			->will( $this->returnValue( $this->newTitle() ) );
+		$fauxRequest = new \FauxRequest();
+		$config = new \HashConfig();
+		$context->method( 'getRequest' )
+			->willReturn( $fauxRequest );
+		$context->method( 'getConfig' )
+			->willReturn( $config );
 
 		$outputPage = $this->getMockBuilder( OutputPage::class )
 			->setMethods( [ 'addMeta' ] )
