@@ -47,8 +47,18 @@ class PageImages {
 	 * @return File|bool
 	 */
 	public static function getPageImage( Title $title ) {
+		// Do not query for special pages or other titles never in the database
+		if ( !$title->canExist() ) {
+			return false;
+		}
+
 		if ( $title->inNamespace( NS_FILE ) ) {
 			return wfFindFile( $title );
+		}
+
+		if ( !$title->exists() ) {
+			// No page id to select from
+			return false;
 		}
 
 		$dbr = wfGetDB( DB_REPLICA );
