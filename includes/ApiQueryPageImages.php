@@ -55,14 +55,9 @@ class ApiQueryPageImages extends ApiQueryBase {
 
 		// $titles is a map of ID to title object, which is ideal,
 		// whereas $missingFileTitles is a map of title text to ID.
-		$missingFileTitles = array_map( function ( $text ) {
-			return Title::newFromText( $text, NS_FILE );
-		}, array_flip( $missingFileTitles ) );
-
-		// N.B. We can't use array_merge here as it doesn't preserve
-		// keys.
-		foreach ( $missingFileTitles as $id => $title ) {
-			$titles[$id] = $title;
+		// Do not use array_merge here as it doesn't preserve keys.
+		foreach ( $missingFileTitles as $dbkey => $id ) {
+			$titles[$id] = Title::makeTitle( NS_FILE, $dbkey );
 		}
 
 		return $titles;
