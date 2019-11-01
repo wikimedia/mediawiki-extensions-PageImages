@@ -100,29 +100,29 @@ class ApiQueryPageImagesTest extends \PHPUnit\Framework\TestCase {
 	public function provideGetTitles() {
 		return [
 			[
-				[ Title::newFromText( 'Foo' ) ],
+				[ Title::makeTitle( NS_MAIN, 'Foo' ) ],
 				[],
-				[ Title::newFromText( 'Foo' ) ],
+				[ Title::makeTitle( NS_MAIN, 'Foo' ) ],
 			],
 			[
-				[ Title::newFromText( 'Foo' ) ],
+				[ Title::makeTitle( NS_MAIN, 'Foo' ) ],
 				[
 					NS_TALK => [
 						'Bar' => -1,
 					],
 				],
-				[ Title::newFromText( 'Foo' ) ],
+				[ Title::makeTitle( NS_MAIN, 'Foo' ) ],
 			],
 			[
-				[ Title::newFromText( 'Foo' ) ],
+				[ Title::makeTitle( NS_MAIN, 'Foo' ) ],
 				[
 					NS_FILE => [
 						'Bar' => -1,
 					],
 				],
 				[
-					0 => Title::newFromText( 'Foo' ),
-					-1 => Title::newFromText( 'Bar', NS_FILE ),
+					0 => Title::makeTitle( NS_MAIN, 'Foo' ),
+					-1 => Title::makeTitle( NS_FILE, 'Bar' ),
 				],
 			],
 		];
