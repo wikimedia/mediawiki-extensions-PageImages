@@ -38,7 +38,7 @@ class LinksUpdateHookHandler {
 	 * for scoring algorithm.
 	 * @param LinksUpdate $linksUpdate LinksUpdate object used to determine what page
 	 * to get page images for
-	 * @return array $image Associative array describing an image
+	 * @return array[]|null $image Associative array describing an image
 	 */
 	public function getPageImageCandidates( LinksUpdate $linksUpdate ) {
 		global $wgPageImagesLeadSectionOnly;
@@ -325,6 +325,7 @@ class LinksUpdateHookHandler {
 		$regex = '/\[\[:([^|\#]*?\.(?:' . implode( '|', $wgFileExtensions ) . '))/i';
 
 		if ( $text && preg_match_all( $regex, $text, $matches ) ) {
+			// @phan-suppress-next-line PhanTypeArraySuspiciousNullable From capture group in regex
 			foreach ( $matches[1] as $s ) {
 				$t = Title::makeTitleSafe( NS_FILE, $s );
 
