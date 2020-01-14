@@ -9,8 +9,8 @@ use FormatMetadata;
 use Http;
 use LinksUpdate;
 use PageImages;
-use Title;
 use Revision;
+use Title;
 
 /**
  * Handler for the "LinksUpdate" hook.

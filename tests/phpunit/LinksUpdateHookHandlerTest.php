@@ -3,10 +3,10 @@
 namespace PageImages\Tests\Hooks;
 
 use LinksUpdate;
+use MediaWikiTestCase;
 use PageImages;
 use PageImages\Hooks\LinksUpdateHookHandler;
 use ParserOutput;
-use MediaWikiTestCase;
 use RepoGroup;
 use Title;
 use Wikimedia\TestingAccessWrapper;
@@ -148,13 +148,13 @@ class LinksUpdateHookHandlerTest extends MediaWikiTestCase {
 		$mock->doLinksUpdate( $linksUpdate );
 
 		$this->assertTrue( property_exists( $linksUpdate, 'mProperties' ), 'precondition' );
-		if ( is_null( $expectedFreeFileName ) ) {
+		if ( $expectedFreeFileName === null ) {
 			$this->assertArrayNotHasKey( PageImages::PROP_NAME_FREE, $linksUpdate->mProperties );
 		} else {
 			$this->assertSame( $expectedFreeFileName,
 				$linksUpdate->mProperties[PageImages::PROP_NAME_FREE] );
 		}
-		if ( is_null( $expectedNonFreeFileName ) ) {
+		if ( $expectedNonFreeFileName === null ) {
 			$this->assertArrayNotHasKey( PageImages::PROP_NAME, $linksUpdate->mProperties );
 		} else {
 			$this->assertSame( $expectedNonFreeFileName, $linksUpdate->mProperties[PageImages::PROP_NAME] );

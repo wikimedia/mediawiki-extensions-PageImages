@@ -64,7 +64,7 @@ class ApiQueryPageImagesTest extends \PHPUnit\Framework\TestCase {
 	public function testGetAllowedParams() {
 		$instance = $this->newInstance();
 		$params = $instance->getAllowedParams();
-		$this->assertInternalType( 'array', $params );
+		$this->assertIsArray( $params );
 		$this->assertNotEmpty( $params );
 		$this->assertContainsOnly( 'array', $params );
 		$this->assertArrayHasKey( 'limit', $params );
