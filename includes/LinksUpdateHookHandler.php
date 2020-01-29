@@ -325,7 +325,6 @@ class LinksUpdateHookHandler {
 		$regex = '/\[\[:([^|\#]*?\.(?:' . implode( '|', $wgFileExtensions ) . '))/i';
 
 		if ( $text && preg_match_all( $regex, $text, $matches ) ) {
-			// @phan-suppress-next-line PhanTypeArraySuspiciousNullable From capture group in regex
 			foreach ( $matches[1] as $s ) {
 				$t = Title::makeTitleSafe( NS_FILE, $s );
 
