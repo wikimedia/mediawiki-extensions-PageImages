@@ -3,6 +3,7 @@
 namespace PageImages\Tests\Hooks;
 
 use LinksUpdate;
+use MediaWiki\Revision\RevisionRecord;
 use MediaWikiTestCase;
 use PageImages;
 use PageImages\Hooks\LinksUpdateHookHandler;
@@ -47,17 +48,37 @@ class LinksUpdateHookHandlerTest extends MediaWikiTestCase {
 		$parserOutputLead = new ParserOutput();
 		$parserOutputLead->setExtensionData( 'pageImages', $leadImages ?: $images );
 
-		$rev = $this->getMockBuilder( 'Revision' )
+		$sectionContent = $this->getMockBuilder( 'AbstractContent' )
 			->disableOriginalConstructor()
 			->getMock();
+
+		$sectionContent->expects( $this->any() )
+			->method( 'getParserOutput' )
+			->will( $this->returnValue( $parserOutputLead ) );
 
 		$content = $this->getMockBuilder( 'AbstractContent' )
 			->disableOriginalConstructor()
 			->getMock();
 
-		$sectionContent = $this->getMockBuilder( 'AbstractContent' )
+		$content->expects( $this->any() )
+			->method( 'getSection' )
+			->will( $this->returnValue( $sectionContent ) );
+
+		$revRecord = $this->getMockBuilder( RevisionRecord::class )
 			->disableOriginalConstructor()
 			->getMock();
+
+		$revRecord->expects( $this->any() )
+			->method( 'getContent' )
+			->will( $this->returnValue( $content ) );
+
+		$rev = $this->getMockBuilder( 'Revision' )
+			->disableOriginalConstructor()
+			->getMock();
+
+		$rev->expects( $this->any() )
+			->method( 'getRevisionRecord' )
+			->will( $this->returnValue( $revRecord ) );
 
 		$linksUpdate = $this->getMockBuilder( 'LinksUpdate' )
 			->disableOriginalConstructor()
@@ -74,18 +95,6 @@ class LinksUpdateHookHandlerTest extends MediaWikiTestCase {
 		$linksUpdate->expects( $this->any() )
 			->method( 'getRevision' )
 			->will( $this->returnValue( $rev ) );
-
-		$rev->expects( $this->any() )
-			->method( 'getContent' )
-			->will( $this->returnValue( $content ) );
-
-		$content->expects( $this->any() )
-			->method( 'getSection' )
-			->will( $this->returnValue( $sectionContent ) );
-
-		$sectionContent->expects( $this->any() )
-			->method( 'getParserOutput' )
-			->will( $this->returnValue( $parserOutputLead ) );
 
 		return $linksUpdate;
 	}
