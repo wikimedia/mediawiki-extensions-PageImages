@@ -65,7 +65,7 @@ class LinksUpdateHookHandlerTest extends MediaWikiTestCase {
 
 		$linksUpdate->expects( $this->any() )
 			->method( 'getTitle' )
-			->will( $this->returnValue( new Title( 'LinksUpdateHandlerTest' ) ) );
+			->will( $this->returnValue( $this->createMock( Title::class ) ) );
 
 		$linksUpdate->expects( $this->any() )
 			->method( 'getParserOutput' )
