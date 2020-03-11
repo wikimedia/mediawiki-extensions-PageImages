@@ -7,9 +7,11 @@ use Exception;
 use File;
 use FormatMetadata;
 use Http;
+use IDBAccessObject;
 use LinksUpdate;
+use MediaWiki\MediaWikiServices;
+use MediaWiki\Storage\SlotRecord;
 use PageImages;
-use Revision;
 use Title;
 
 /**
@@ -45,14 +47,19 @@ class LinksUpdateHookHandler {
 		$po = false;
 
 		if ( $wgPageImagesLeadSectionOnly ) {
+			$revRecord = null;
 			$rev = $linksUpdate->getRevision();
-			if ( !$rev ) {
-				// Use READ_LATEST (T221763)
-				$rev = Revision::newFromTitle( $linksUpdate->getTitle(), 0,
-					Revision::READ_LATEST );
-			}
 			if ( $rev ) {
-				$content = $rev->getContent();
+				$revRecord = $rev->getRevisionRecord();
+			} else {
+				// Use READ_LATEST (T221763)
+				$revRecord = MediaWikiServices::getInstance()
+					->getRevisionLookup()
+					->getRevisionByTitle( $linksUpdate->getTitle(), 0,
+						IDBAccessObject::READ_LATEST );
+			}
+			if ( $revRecord ) {
+				$content = $revRecord->getContent( SlotRecord::MAIN );
 				if ( $content ) {
 					$section = $content->getSection( 0 );
 
