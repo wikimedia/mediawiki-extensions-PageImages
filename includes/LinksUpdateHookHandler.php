@@ -242,8 +242,8 @@ class LinksUpdateHookHandler {
 	/**
 	 * Returns a list of images blacklisted from influencing this extension's output
 	 *
-	 * @throws Exception
 	 * @return int[] Flipped associative array in format "image BDB key" => int
+	 * @throws Exception
 	 */
 	protected function getBlacklist() {
 		global $wgPageImagesBlacklist, $wgPageImagesBlacklistExpiry, $wgMemc;
