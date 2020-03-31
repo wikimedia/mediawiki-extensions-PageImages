@@ -2,6 +2,8 @@
 
 namespace PageImages\Tests\Hooks;
 
+use AbstractContent;
+use File;
 use LinksUpdate;
 use MediaWiki\Revision\RevisionRecord;
 use MediaWikiTestCase;
@@ -21,12 +23,6 @@ use Wikimedia\TestingAccessWrapper;
  * @author Thiemo Kreuz
  */
 class LinksUpdateHookHandlerTest extends MediaWikiTestCase {
-
-	public function tearDown() : void {
-		// remove mock added in testGetMetadata()
-		RepoGroup::destroySingleton();
-		parent::tearDown();
-	}
 
 	public function setUp() : void {
 		parent::setUp();
@@ -48,7 +44,7 @@ class LinksUpdateHookHandlerTest extends MediaWikiTestCase {
 		$parserOutputLead = new ParserOutput();
 		$parserOutputLead->setExtensionData( 'pageImages', $leadImages ?: $images );
 
-		$sectionContent = $this->getMockBuilder( 'AbstractContent' )
+		$sectionContent = $this->getMockBuilder( AbstractContent::class )
 			->disableOriginalConstructor()
 			->getMock();
 
@@ -56,7 +52,7 @@ class LinksUpdateHookHandlerTest extends MediaWikiTestCase {
 			->method( 'getParserOutput' )
 			->will( $this->returnValue( $parserOutputLead ) );
 
-		$content = $this->getMockBuilder( 'AbstractContent' )
+		$content = $this->getMockBuilder( AbstractContent::class )
 			->disableOriginalConstructor()
 			->getMock();
 
@@ -72,7 +68,7 @@ class LinksUpdateHookHandlerTest extends MediaWikiTestCase {
 			->method( 'getContent' )
 			->will( $this->returnValue( $content ) );
 
-		$linksUpdate = $this->getMockBuilder( 'LinksUpdate' )
+		$linksUpdate = $this->getMockBuilder( LinksUpdate::class )
 			->disableOriginalConstructor()
 			->getMock();
 
@@ -92,11 +88,11 @@ class LinksUpdateHookHandlerTest extends MediaWikiTestCase {
 	}
 
 	/**
-	 * Required to make wfFindFile in LinksUpdateHookHandler::getScore return something.
+	 * Required to make RepoGroup::findFile in LinksUpdateHookHandler::getScore return something.
 	 * @return RepoGroup
 	 */
 	private function getRepoGroup() {
-		$file = $this->getMockBuilder( 'File' )
+		$file = $this->getMockBuilder( File::class )
 			->disableOriginalConstructor()
 			->getMock();
 		// ugly hack to avoid all the unmockable crap in FormatMetadata
@@ -104,7 +100,7 @@ class LinksUpdateHookHandlerTest extends MediaWikiTestCase {
 			->method( 'isDeleted' )
 			->will( $this->returnValue( true ) );
 
-		$repoGroup = $this->getMockBuilder( 'RepoGroup' )
+		$repoGroup = $this->getMockBuilder( RepoGroup::class )
 			->disableOriginalConstructor()
 			->getMock();
 		$repoGroup->expects( $this->any() )
@@ -348,7 +344,12 @@ class LinksUpdateHookHandlerTest extends MediaWikiTestCase {
 	 * @covers \PageImages\Hooks\LinksUpdateHookHandler::isImageFree
 	 */
 	public function testIsFreeImage( $fileName, $metadata, $expected ) {
-		RepoGroup::setSingleton( $this->getRepoGroup() );
+		$this->overrideMwServices( null, [
+			'RepoGroup' => function () {
+				return $this->getRepoGroup();
+			}
+		] );
+
 		$mock = TestingAccessWrapper::newFromObject(
 			$this->getMockBuilder( LinksUpdateHookHandler::class )
 				->setMethods( [ 'fetchFileMetadata' ] )
