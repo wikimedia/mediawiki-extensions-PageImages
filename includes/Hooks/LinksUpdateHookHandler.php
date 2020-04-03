@@ -12,6 +12,7 @@ use LinksUpdate;
 use MediaWiki\MediaWikiServices;
 use MediaWiki\Storage\SlotRecord;
 use PageImages\PageImages;
+use RuntimeException;
 use Title;
 
 /**
@@ -255,39 +256,41 @@ class LinksUpdateHookHandler {
 	 * @throws Exception
 	 */
 	protected function getBlacklist() {
-		global $wgPageImagesBlacklist, $wgPageImagesBlacklistExpiry, $wgMemc;
-		static $list = false;
+		global $wgPageImagesBlacklistExpiry;
 
-		if ( $list !== false ) {
-			return $list;
-		}
+		$cache = MediaWikiServices::getInstance()->getMainWANObjectCache();
 
-		$key = wfMemcKey( 'pageimages', 'blacklist' );
-		$list = $wgMemc->get( $key );
-		if ( $list !== false ) {
-			return $list;
-		}
+		return $cache->getWithSetCallback(
+			$cache->makeKey( 'pageimages-blacklist' ),
+			$wgPageImagesBlacklistExpiry,
+			function () {
+				global $wgPageImagesBlacklist;
 
-		wfDebug( __METHOD__ . "(): cache miss\n" );
-		$list = [];
+				$list = [];
+				foreach ( $wgPageImagesBlacklist as $source ) {
+					switch ( $source['type'] ) {
+						case 'db':
+							$list = array_merge(
+								$list,
+								$this->getDbBlacklist( $source['db'], $source['page'] )
+							);
+							break;
+						case 'url':
+							$list = array_merge(
+								$list,
+								$this->getUrlBlacklist( $source['url'] )
+							);
+							break;
+						default:
+							throw new RuntimeException(
+								"unrecognized image blacklist type '{$source['type']}'"
+							);
+					}
+				}
 
-		foreach ( $wgPageImagesBlacklist as $source ) {
-			switch ( $source['type'] ) {
-				case 'db':
-					$list = array_merge( $list, $this->getDbBlacklist( $source['db'], $source['page'] ) );
-					break;
-				case 'url':
-					$list = array_merge( $list, $this->getUrlBlacklist( $source['url'] ) );
-					break;
-				default:
-					throw new Exception(
-						__METHOD__ . "(): unrecognized image blacklist type '{$source['type']}'" );
+				return array_flip( $list );
 			}
-		}
-
-		$list = array_flip( $list );
-		$wgMemc->set( $key, $list, $wgPageImagesBlacklistExpiry );
-		return $list;
+		);
 	}
 
 	/**
