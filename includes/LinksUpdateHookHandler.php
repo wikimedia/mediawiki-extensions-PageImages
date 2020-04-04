@@ -204,7 +204,7 @@ class LinksUpdateHookHandler {
 	 * @return bool
 	 */
 	protected function isImageFree( $fileName ) {
-		$file = wfFindFile( $fileName );
+		$file = MediaWikiServices::getInstance()->getRepoGroup()->findFile( $fileName );
 		if ( $file ) {
 			// Process copyright metadata from CommonsMetadata, if present.
 			// Image is considered free if the value is '0' or unset.

@@ -1,5 +1,7 @@
 <?php
 
+use MediaWiki\MediaWikiServices;
+
 /**
  * @license WTFPL
  * @author Max Semenik
@@ -53,7 +55,7 @@ class PageImages {
 		}
 
 		if ( $title->inNamespace( NS_FILE ) ) {
-			return wfFindFile( $title );
+			return MediaWikiServices::getInstance()->getRepoGroup()->findFile( $title );
 		}
 
 		if ( !$title->exists() ) {
@@ -74,7 +76,7 @@ class PageImages {
 
 		$file = false;
 		if ( $fileName ) {
-			$file = wfFindFile( $fileName );
+			$file = MediaWikiServices::getInstance()->getRepoGroup()->findFile( $fileName );
 		}
 
 		return $file;

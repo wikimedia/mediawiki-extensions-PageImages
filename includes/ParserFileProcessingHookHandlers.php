@@ -4,6 +4,7 @@ namespace PageImages\Hooks;
 
 use File;
 use ImageGalleryBase;
+use MediaWiki\MediaWikiServices;
 use Parser;
 use Title;
 
@@ -85,7 +86,7 @@ class ParserFileProcessingHookHandlers {
 		}
 
 		if ( !( $file instanceof File ) ) {
-			$file = wfFindFile( $file );
+			$file = MediaWikiServices::getInstance()->getRepoGroup()->findFile( $file );
 			// Non-image files (e.g. audio files) from a <gallery> can end here
 			if ( !$file || !$file->canRender() ) {
 				return;

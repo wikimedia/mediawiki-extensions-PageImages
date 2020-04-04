@@ -1,5 +1,7 @@
 <?php
 
+use MediaWiki\MediaWikiServices;
+
 /**
  * Expose image information for a page via a new prop=pageimages API.
  *
@@ -186,7 +188,7 @@ class ApiQueryPageImages extends ApiQueryBase {
 	protected function setResultValues( array $prop, $pageId, $fileName, $size ) {
 		$vals = [];
 		if ( isset( $prop['thumbnail'] ) || isset( $prop['original'] ) ) {
-			$file = wfFindFile( $fileName );
+			$file = MediaWikiServices::getInstance()->getRepoGroup()->findFile( $fileName );
 			if ( $file ) {
 				if ( isset( $prop['thumbnail'] ) ) {
 					$thumb = $file->transform( [ 'width' => $size, 'height' => $size ] );
