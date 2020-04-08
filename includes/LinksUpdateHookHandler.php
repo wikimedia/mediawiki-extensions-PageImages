@@ -48,16 +48,25 @@ class LinksUpdateHookHandler {
 
 		if ( $wgPageImagesLeadSectionOnly ) {
 			$revRecord = null;
-			$rev = $linksUpdate->getRevision();
-			if ( $rev ) {
-				$revRecord = $rev->getRevisionRecord();
+
+			if ( method_exists( $linksUpdate, 'getRevisionRecord' ) ) {
+				// MW 1.35+
+				$revRecord = $linksUpdate->getRevisionRecord();
 			} else {
+				$rev = $linksUpdate->getRevision();
+				if ( $rev ) {
+					$revRecord = $rev->getRevisionRecord();
+				}
+			}
+
+			if ( $revRecord === null ) {
 				// Use READ_LATEST (T221763)
 				$revRecord = MediaWikiServices::getInstance()
 					->getRevisionLookup()
 					->getRevisionByTitle( $linksUpdate->getTitle(), 0,
 						IDBAccessObject::READ_LATEST );
 			}
+
 			if ( $revRecord ) {
 				$content = $revRecord->getContent( SlotRecord::MAIN );
 				if ( $content ) {

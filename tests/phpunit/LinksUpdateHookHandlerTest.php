@@ -72,14 +72,6 @@ class LinksUpdateHookHandlerTest extends MediaWikiTestCase {
 			->method( 'getContent' )
 			->will( $this->returnValue( $content ) );
 
-		$rev = $this->getMockBuilder( 'Revision' )
-			->disableOriginalConstructor()
-			->getMock();
-
-		$rev->expects( $this->any() )
-			->method( 'getRevisionRecord' )
-			->will( $this->returnValue( $revRecord ) );
-
 		$linksUpdate = $this->getMockBuilder( 'LinksUpdate' )
 			->disableOriginalConstructor()
 			->getMock();
@@ -93,8 +85,8 @@ class LinksUpdateHookHandlerTest extends MediaWikiTestCase {
 			->will( $this->returnValue( $parserOutput ) );
 
 		$linksUpdate->expects( $this->any() )
-			->method( 'getRevision' )
-			->will( $this->returnValue( $rev ) );
+			->method( 'getRevisionRecord' )
+			->will( $this->returnValue( $revRecord ) );
 
 		return $linksUpdate;
 	}
