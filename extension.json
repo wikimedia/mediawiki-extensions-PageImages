@@ -6,7 +6,7 @@
 	"license-name": "WTFPL",
 	"type": "api",
 	"requires": {
-		"MediaWiki": ">= 1.34.0"
+		"MediaWiki": ">= 1.35.0"
 	},
 	"APIPropModules": {
 		"pageimages": "ApiQueryPageImages"
@@ -19,10 +19,10 @@
 	},
 	"AutoloadClasses": {
 		"ApiQueryPageImages": "includes/ApiQueryPageImages.php",
-		"PageImages": "includes/PageImages.php",
-		"PageImages\\Hooks\\LinksUpdateHookHandler": "includes/LinksUpdateHookHandler.php",
-		"PageImages\\Hooks\\ParserFileProcessingHookHandlers": "includes/ParserFileProcessingHookHandlers.php",
-		"PageImages\\Job\\InitImageDataJob": "includes/Job/InitImageDataJob.php"
+		"PageImages": "includes/PageImages.php"
+	},
+	"AutoloadNamespaces": {
+		"PageImages\\": "includes/"
 	},
 	"Hooks": {
 		"AfterParserFetchFileAndTitle": "PageImages\\Hooks\\ParserFileProcessingHookHandlers::onAfterParserFetchFileAndTitle",
