@@ -24,6 +24,9 @@
 	"AutoloadNamespaces": {
 		"PageImages\\": "includes/"
 	},
+	"TestAutoloadNamespaces": {
+		"PageImages\\Tests\\": "tests/phpunit/"
+	},
 	"Hooks": {
 		"AfterParserFetchFileAndTitle": "PageImages\\Hooks\\ParserFileProcessingHookHandlers::onAfterParserFetchFileAndTitle",
 		"ApiOpenSearchSuggest": "PageImages\\PageImages::onApiOpenSearchSuggest",

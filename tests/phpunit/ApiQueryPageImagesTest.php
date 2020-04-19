@@ -2,8 +2,6 @@
 
 namespace PageImages\Tests;
 
-require_once 'ApiQueryPageImagesProxyMock.php';
-
 use PageImages\ApiQueryPageImages;
 use PageImages\PageImages;
 use Title;
