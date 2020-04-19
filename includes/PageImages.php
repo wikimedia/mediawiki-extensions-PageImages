@@ -1,6 +1,16 @@
 <?php
 
+namespace PageImages;
+
+use ApiBase;
+use ApiMain;
+use FauxRequest;
+use File;
+use IContextSource;
 use MediaWiki\MediaWikiServices;
+use OutputPage;
+use Skin;
+use Title;
 
 /**
  * @license WTFPL
@@ -227,3 +237,5 @@ class PageImages {
 	}
 
 }
+
+class_alias( PageImages::class, 'PageImages' );

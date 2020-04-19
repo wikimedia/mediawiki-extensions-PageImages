@@ -5,12 +5,12 @@ namespace PageImages\Tests;
 use IContextSource;
 use MediaWikiTestCase;
 use OutputPage;
-use PageImages;
+use PageImages\PageImages;
 use SkinTemplate;
 use Title;
 
 /**
- * @covers PageImages
+ * @covers \PageImages\PageImages
  *
  * @group PageImages
  * @group Database

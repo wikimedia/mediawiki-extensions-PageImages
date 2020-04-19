@@ -9,7 +9,7 @@
 		"MediaWiki": ">= 1.35.0"
 	},
 	"APIPropModules": {
-		"pageimages": "ApiQueryPageImages"
+		"pageimages": "PageImages\\ApiQueryPageImages"
 	},
 	"MessagesDirs": {
 		"PageImages": [
@@ -18,20 +18,20 @@
 		]
 	},
 	"AutoloadClasses": {
-		"ApiQueryPageImages": "includes/ApiQueryPageImages.php",
-		"PageImages": "includes/PageImages.php"
+		"PageImages": "includes/PageImages.php",
+		"PageImages\\PageImages": "includes/PageImages.php"
 	},
 	"AutoloadNamespaces": {
 		"PageImages\\": "includes/"
 	},
 	"Hooks": {
 		"AfterParserFetchFileAndTitle": "PageImages\\Hooks\\ParserFileProcessingHookHandlers::onAfterParserFetchFileAndTitle",
-		"ApiOpenSearchSuggest": "PageImages::onApiOpenSearchSuggest",
-		"BeforePageDisplay": "PageImages::onBeforePageDisplay",
-		"InfoAction": "PageImages::onInfoAction",
+		"ApiOpenSearchSuggest": "PageImages\\PageImages::onApiOpenSearchSuggest",
+		"BeforePageDisplay": "PageImages\\PageImages::onBeforePageDisplay",
+		"InfoAction": "PageImages\\PageImages::onInfoAction",
 		"LinksUpdate": "PageImages\\Hooks\\LinksUpdateHookHandler::onLinksUpdate",
-		"ParserMakeImageParams": "PageImages\\Hooks\\ParserFileProcessingHookHandlers::onParserMakeImageParams",
-		"SpecialMobileEditWatchlist::images": "PageImages::onSpecialMobileEditWatchlistImages"
+		"ParserMakeImageParams": "PageImages\\PageImages\\Hooks\\ParserFileProcessingHookHandlers::onParserMakeImageParams",
+		"SpecialMobileEditWatchlist::images": "PageImages\\PageImages::onSpecialMobileEditWatchlistImages"
 	},
 	"JobClasses": {
 		"InitImageDataJob": "PageImages\\Job\\InitImageDataJob"

@@ -3,7 +3,7 @@
 namespace PageImages\Tests;
 
 use ApiPageSet;
-use ApiQueryPageImages;
+use PageImages\ApiQueryPageImages;
 
 class ApiQueryPageImagesProxyMock extends ApiQueryPageImages {
 

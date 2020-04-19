@@ -1,6 +1,12 @@
 <?php
 
+namespace PageImages;
+
+use ApiBase;
+use ApiQuery;
+use ApiQueryBase;
 use MediaWiki\MediaWikiServices;
+use Title;
 
 /**
  * Expose image information for a page via a new prop=pageimages API.

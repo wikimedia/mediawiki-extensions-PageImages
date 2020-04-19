@@ -11,7 +11,7 @@ use IDBAccessObject;
 use LinksUpdate;
 use MediaWiki\MediaWikiServices;
 use MediaWiki\Storage\SlotRecord;
-use PageImages;
+use PageImages\PageImages;
 use Title;
 
 /**

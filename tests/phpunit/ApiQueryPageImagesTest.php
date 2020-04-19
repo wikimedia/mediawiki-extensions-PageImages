@@ -4,8 +4,8 @@ namespace PageImages\Tests;
 
 require_once 'ApiQueryPageImagesProxyMock.php';
 
-use ApiQueryPageImages;
-use PageImages;
+use PageImages\ApiQueryPageImages;
+use PageImages\PageImages;
 use Title;
 use Wikimedia\Rdbms\FakeResultWrapper;
 use Wikimedia\TestingAccessWrapper;
@@ -53,7 +53,7 @@ class ApiQueryPageImagesTest extends \PHPUnit\Framework\TestCase {
 
 	public function testConstructor() {
 		$instance = $this->newInstance();
-		$this->assertInstanceOf( 'ApiQueryPageImages', $instance );
+		$this->assertInstanceOf( ApiQueryPageImages::class, $instance );
 	}
 
 	public function testGetCacheMode() {
@@ -292,8 +292,8 @@ class ApiQueryPageImagesTest extends \PHPUnit\Framework\TestCase {
 
 	public function provideGetPropName() {
 		return [
-			[ 'free', \PageImages::PROP_NAME_FREE ],
-			[ 'any', [ \PageImages::PROP_NAME_FREE, \PageImages::PROP_NAME ] ]
+			[ 'free', \PageImages\PageImages::PROP_NAME_FREE ],
+			[ 'any', [ \PageImages\PageImages::PROP_NAME_FREE, \PageImages\PageImages::PROP_NAME ] ]
 		];
 	}
 
