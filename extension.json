@@ -33,7 +33,7 @@
 		"BeforePageDisplay": "PageImages\\PageImages::onBeforePageDisplay",
 		"InfoAction": "PageImages\\PageImages::onInfoAction",
 		"LinksUpdate": "PageImages\\Hooks\\LinksUpdateHookHandler::onLinksUpdate",
-		"ParserMakeImageParams": "PageImages\\PageImages\\Hooks\\ParserFileProcessingHookHandlers::onParserMakeImageParams",
+		"ParserMakeImageParams": "PageImages\\Hooks\\ParserFileProcessingHookHandlers::onParserMakeImageParams",
 		"SpecialMobileEditWatchlist::images": "PageImages\\PageImages::onSpecialMobileEditWatchlistImages"
 	},
 	"JobClasses": {
