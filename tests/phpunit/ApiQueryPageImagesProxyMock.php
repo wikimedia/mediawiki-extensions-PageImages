@@ -21,9 +21,4 @@ class ApiQueryPageImagesProxyMock extends ApiQueryPageImages {
 	public function getTitles() {
 		return parent::getTitles();
 	}
-
-	/** @inheritDoc */
-	public static function getPropNames( $license ) {
-		return parent::getPropNames( $license );
-	}
 }

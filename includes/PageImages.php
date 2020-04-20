@@ -19,6 +19,15 @@ use Title;
  * @author Thiemo Kreuz
  */
 class PageImages {
+	/**
+	 * @const value for free images
+	 */
+	const LICENSE_FREE = 'free';
+
+	/**
+	 * @const value for images with any type of license
+	 */
+	const LICENSE_ANY = 'any';
 
 	/**
 	 * Page property used to store the best page image information.
@@ -49,6 +58,24 @@ class PageImages {
 	 */
 	public static function getPropName( $isFree ) {
 		return $isFree ? self::PROP_NAME_FREE : self::PROP_NAME;
+	}
+
+	/**
+	 * Get property names used in page_props table
+	 *
+	 * If the license is free, then only the free property name will be returned,
+	 * otherwise both free and non-free property names will be returned. That's
+	 * because we save the image name only once if it's free and the best image.
+	 *
+	 * @param string $license either LICENSE_FREE or LICENSE_ANY,
+	 * specifying whether to return the non-free property name or not
+	 * @return string|array
+	 */
+	public static function getPropNames( $license ) {
+		if ( $license === self::LICENSE_FREE ) {
+			return self::getPropName( true );
+		}
+		return [ self::getPropName( true ), self::getPropName( false ) ];
 	}
 
 	/**

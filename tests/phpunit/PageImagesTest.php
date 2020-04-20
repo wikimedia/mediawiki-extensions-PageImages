@@ -40,6 +40,17 @@ class PageImagesTest extends MediaWikiTestCase {
 		$this->assertSame( 'page_image_free', PageImages::getPropName( true ) );
 	}
 
+	public function testGetPropNames() {
+		$this->assertSame(
+			[ PageImages::PROP_NAME_FREE, PageImages::PROP_NAME ],
+			PageImages::getPropNames( PageImages::LICENSE_ANY )
+		);
+		$this->assertSame(
+			PageImages::PROP_NAME_FREE,
+			PageImages::getPropNames( PageImages::LICENSE_FREE )
+		);
+	}
+
 	public function testGivenNonExistingPageOnBeforePageDisplayDoesNotAddMeta() {
 		$context = $this->createMock( IContextSource::class );
 		$context->method( 'getTitle' )

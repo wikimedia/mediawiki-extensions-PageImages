@@ -28,6 +28,7 @@
 		"ApiOpenSearchSuggest": "PageImages\\PageImages::onApiOpenSearchSuggest",
 		"BeforePageDisplay": "PageImages\\PageImages::onBeforePageDisplay",
 		"InfoAction": "PageImages\\PageImages::onInfoAction",
+		"SearchResultProvideThumbnail": "PageImages\\Hooks\\SearchResultProvideThumbnailHookHandler::onSearchResultProvideThumbnail",
 		"LinksUpdate": "PageImages\\Hooks\\LinksUpdateHookHandler::onLinksUpdate",
 		"ParserMakeImageParams": "PageImages\\Hooks\\ParserFileProcessingHookHandlers::onParserMakeImageParams",
 		"SpecialMobileEditWatchlist::images": "PageImages\\PageImages::onSpecialMobileEditWatchlistImages"

@@ -166,7 +166,7 @@ class ApiQueryPageImagesTest extends \PHPUnit\Framework\TestCase {
 		$this->assertTrue( $this->hasExpectedProperties( $queryResults, $originalRequested ) );
 
 		$license = isset( $requestParams['license'] ) ? $requestParams['license'] : 'free';
-		if ( $license == ApiQueryPageImages::PARAM_LICENSE_ANY ) {
+		if ( $license == PageImages::LICENSE_ANY ) {
 			$propName = [ PageImages::getPropName( true ), PageImages::getPropName( false ) ];
 		} else {
 			$propName = PageImages::getPropName( true );
@@ -276,22 +276,6 @@ class ApiQueryPageImagesTest extends \PHPUnit\Framework\TestCase {
 				],
 				2
 			],
-		];
-	}
-
-	/**
-	 * @dataProvider provideGetPropName
-	 * @param string $license
-	 * @param string $expected
-	 */
-	public function testGetPropName( $license, $expected ) {
-		$this->assertEquals( $expected, ApiQueryPageImagesProxyMock::getPropNames( $license ) );
-	}
-
-	public function provideGetPropName() {
-		return [
-			[ 'free', \PageImages\PageImages::PROP_NAME_FREE ],
-			[ 'any', [ \PageImages\PageImages::PROP_NAME_FREE, \PageImages\PageImages::PROP_NAME ] ]
 		];
 	}
 
