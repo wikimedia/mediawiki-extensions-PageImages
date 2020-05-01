@@ -27,7 +27,7 @@ class PageImagesTest extends MediaWikiTestCase {
 
 	public function testConstructor() {
 		$pageImages = new PageImages();
-		$this->assertInstanceOf( 'PageImages', $pageImages );
+		$this->assertInstanceOf( PageImages::class, $pageImages );
 	}
 
 	public function testGivenNonExistingPageGetPageImageReturnsFalse() {

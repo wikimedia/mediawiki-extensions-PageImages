@@ -17,10 +17,6 @@
 			"i18n/api"
 		]
 	},
-	"AutoloadClasses": {
-		"PageImages": "includes/PageImages.php",
-		"PageImages\\PageImages": "includes/PageImages.php"
-	},
 	"AutoloadNamespaces": {
 		"PageImages\\": "includes/"
 	},

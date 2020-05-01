@@ -237,5 +237,3 @@ class PageImages {
 	}
 
 }
-
-class_alias( PageImages::class, 'PageImages' );
