@@ -92,7 +92,9 @@ class SearchResultProvideThumbnailHookHandler {
 			if ( !$thumb ) {
 				continue;
 			}
-			$thumbSize = $thumb->getLocalCopyPath() ? filesize( $thumb->getLocalCopyPath() ) : null;
+
+			$localPath = $thumb->getLocalCopyPath();
+			$thumbSize = $localPath && file_exists( $localPath ) ? filesize( $localPath ) : null;
 
 			$res[$pageId] = new SearchResultThumbnail(
 				$thumb->getFile()->getMimeType(),

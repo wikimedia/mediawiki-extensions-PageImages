@@ -35,7 +35,7 @@ class SearchResultProvideThumbnailHookHandlerTest extends MediaWikiTestCase {
 			] )
 			->getMock();
 
-			$thumbnail->expects( $this->exactly( $thumbFilePath ? 2 : 1 ) )
+			$thumbnail->expects( $this->once() )
 				->method( 'getLocalCopyPath' )
 				->willReturn( $thumbFilePath );
 
