@@ -22,12 +22,12 @@ class PageImages {
 	/**
 	 * @const value for free images
 	 */
-	const LICENSE_FREE = 'free';
+	public const LICENSE_FREE = 'free';
 
 	/**
 	 * @const value for images with any type of license
 	 */
-	const LICENSE_ANY = 'any';
+	public const LICENSE_ANY = 'any';
 
 	/**
 	 * Page property used to store the best page image information.
@@ -38,7 +38,7 @@ class PageImages {
 	 * and cause them to be regenerated.
 	 * @see PageImages::PROP_NAME_FREE
 	 */
-	const PROP_NAME = 'page_image';
+	public const PROP_NAME = 'page_image';
 
 	/**
 	 * Page property used to store the best free page image information
@@ -46,7 +46,7 @@ class PageImages {
 	 * existing page property names on a production instance
 	 * and cause them to be regenerated.
 	 */
-	const PROP_NAME_FREE = 'page_image_free';
+	public const PROP_NAME_FREE = 'page_image_free';
 
 	/**
 	 * Get property name used in page_props table. When a page image

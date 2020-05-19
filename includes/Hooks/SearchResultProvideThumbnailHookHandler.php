@@ -12,7 +12,7 @@ use Title;
 
 class SearchResultProvideThumbnailHookHandler {
 
-	const THUMBNAIL_SIZE = 200;
+	public const THUMBNAIL_SIZE = 200;
 
 	/** @var PageProps */
 	private $pageProps;
