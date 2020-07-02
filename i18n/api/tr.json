@@ -11,6 +11,6 @@
 	"apihelp-query+pageimages-param-thumbsize": "Küçük resim görüntülerinin piksel cinsinden maksimum genişliği.",
 	"apihelp-query+pageimages-param-limit": "Döndürülecek sayfa sayısı.",
 	"apihelp-query+pageimages-param-license": "Sayfa görüntülerini belirli bir lisans türüyle sınırlandır",
-	"apihelp-query+pageimages-paramvalue-license-free": "sadece özgür resimler",
+	"apihelp-query+pageimages-paramvalue-license-free": "yalnızca özgür resimler",
 	"apihelp-query+pageimages-paramvalue-license-any": "En iyi görüntü, özgür veya özgür olmayan."
 }
