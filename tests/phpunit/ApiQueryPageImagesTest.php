@@ -184,7 +184,8 @@ class ApiQueryPageImagesTest extends \PHPUnit\Framework\TestCase {
 	public function provideExecute() {
 		return [
 			[
-				[ 'prop' => [ 'thumbnail' ], 'thumbsize' => 100, 'limit' => 10, 'license' => 'any' ],
+				[ 'prop' => [ 'thumbnail' ], 'thumbsize' => 100, 'limit' => 10,
+				  'license' => 'any', 'langcode' => null ],
 				[ Title::newFromText( 'Page 1' ), Title::newFromText( 'Page 2' ) ],
 				[ 0, 1 ],
 				[
@@ -198,7 +199,7 @@ class ApiQueryPageImagesTest extends \PHPUnit\Framework\TestCase {
 				2
 			],
 			[
-				[ 'prop' => [ 'thumbnail' ], 'thumbsize' => 200, 'limit' => 10 ],
+				[ 'prop' => [ 'thumbnail' ], 'thumbsize' => 200, 'limit' => 10, 'langcode' => null ],
 				[],
 				[],
 				[],
@@ -206,7 +207,7 @@ class ApiQueryPageImagesTest extends \PHPUnit\Framework\TestCase {
 			],
 			[
 				[ 'prop' => [ 'thumbnail' ], 'continue' => 1, 'thumbsize' => 400,
-					'limit' => 10, 'license' => 'any' ],
+				  'limit' => 10, 'license' => 'any', 'langcode' => null ],
 				[ Title::newFromText( 'Page 1' ), Title::newFromText( 'Page 2' ) ],
 				[ 1 ],
 				[
@@ -218,7 +219,8 @@ class ApiQueryPageImagesTest extends \PHPUnit\Framework\TestCase {
 				1
 			],
 			[
-				[ 'prop' => [ 'thumbnail' ], 'thumbsize' => 500, 'limit' => 10, 'license' => 'any' ],
+				[ 'prop' => [ 'thumbnail' ], 'thumbsize' => 500, 'limit' => 10,
+				  'license' => 'any', 'langcode' => 'en' ],
 				[ Title::newFromText( 'Page 1' ), Title::newFromText( 'Page 2' ) ],
 				[ 0, 1 ],
 				[
@@ -229,7 +231,7 @@ class ApiQueryPageImagesTest extends \PHPUnit\Framework\TestCase {
 			],
 			[
 				[ 'prop' => [ 'thumbnail' ], 'continue' => 1, 'thumbsize' => 500,
-					'limit' => 10, 'license' => 'any' ],
+				  'limit' => 10, 'license' => 'any', 'langcode' => 'de' ],
 				[ Title::newFromText( 'Page 1' ), Title::newFromText( 'Page 2' ) ],
 				[ 1 ],
 				[
@@ -239,14 +241,16 @@ class ApiQueryPageImagesTest extends \PHPUnit\Framework\TestCase {
 				1
 			],
 			[
-				[ 'prop' => [ 'thumbnail' ], 'thumbsize' => 510, 'limit' => 10, 'license' => 'free' ],
+				[ 'prop' => [ 'thumbnail' ], 'thumbsize' => 510, 'limit' => 10,
+				  'license' => 'free', 'langcode' => 'de' ],
 				[ Title::newFromText( 'Page 1' ), Title::newFromText( 'Page 2' ) ],
 				[ 0, 1 ],
 				[],
 				0
 			],
 			[
-				[ 'prop' => [ 'thumbnail' ], 'thumbsize' => 510, 'limit' => 10, 'license' => 'free' ],
+				[ 'prop' => [ 'thumbnail' ], 'thumbsize' => 510, 'limit' => 10,
+				  'license' => 'free', 'langcode' => 'en' ],
 				[ Title::newFromText( 'Page 1' ), Title::newFromText( 'Page 2' ) ],
 				[ 0, 1 ],
 				[
@@ -259,7 +263,7 @@ class ApiQueryPageImagesTest extends \PHPUnit\Framework\TestCase {
 			],
 			[
 				[ 'prop' => [ 'thumbnail', 'original' ], 'thumbsize' => 510,
-					'limit' => 10, 'license' => 'free' ],
+				  'limit' => 10, 'license' => 'free', 'langcode' => 'en' ],
 				[ Title::newFromText( 'Page 1' ), Title::newFromText( 'Page 2' ) ],
 				[ 0, 1 ],
 				[
