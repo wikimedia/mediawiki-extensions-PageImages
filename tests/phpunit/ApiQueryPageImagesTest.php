@@ -9,7 +9,7 @@ use Wikimedia\Rdbms\FakeResultWrapper;
 use Wikimedia\TestingAccessWrapper;
 
 /**
- * @covers ApiQueryPageImages
+ * @covers \PageImages\ApiQueryPageImages
  *
  * @group PageImages
  *

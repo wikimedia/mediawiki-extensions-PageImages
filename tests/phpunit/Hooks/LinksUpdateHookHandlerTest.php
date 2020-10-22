@@ -8,6 +8,7 @@ use LinksUpdate;
 use MediaWiki\Revision\RevisionRecord;
 use MediaWikiTestCase;
 use PageImages\Hooks\LinksUpdateHookHandler;
+use PageImages\PageImageCandidate;
 use PageImages\PageImages;
 use ParserOutput;
 use RepoGroup;
@@ -126,17 +127,16 @@ class LinksUpdateHookHandlerTest extends MediaWikiTestCase {
 				->getMock()
 		);
 
-		$scoreMap = [];
 		$isFreeMap = [];
-		$counter = 0;
 		foreach ( $images as $image ) {
-			array_push( $scoreMap, [ $image, $counter++, $image['score'] ] );
 			array_push( $isFreeMap, [ $image['filename'], $image['isFree'] ] );
 		}
 
 		$mock->expects( $this->any() )
 			->method( 'getScore' )
-			->will( $this->returnValueMap( $scoreMap ) );
+			->will( $this->returnCallback( function ( PageImageCandidate $_, $position ) use ( $images ) {
+				return $images[$position]['score'];
+			} ) );
 
 		$mock->expects( $this->any() )
 			->method( 'isImageFree' )
@@ -239,7 +239,7 @@ class LinksUpdateHookHandlerTest extends MediaWikiTestCase {
 			->method( 'getBlacklist' )
 			->will( $this->returnValue( [ 'blacklisted.jpg' => 1 ] ) );
 
-		$score = $mock->getScore( $image, $position );
+		$score = $mock->getScore( PageImageCandidate::newFromArray( $image ), $position );
 		$this->assertEquals( $expected, $score );
 	}
 
