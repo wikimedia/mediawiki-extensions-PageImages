@@ -17,6 +17,9 @@ use RepoGroup;
 class SearchResultProvideThumbnailHookHandlerTest extends MediaWikiTestCase {
 	/**
 	 * Creates mock object for LocalFile
+	 * @param int $size
+	 * @param LocalFile $file
+	 * @param string $thumbFilePath
 	 * @return ThumbnailImage
 	 */
 	private function getMockThumbnailImage(
@@ -60,6 +63,8 @@ class SearchResultProvideThumbnailHookHandlerTest extends MediaWikiTestCase {
 
 	/**
 	 * Creates mock object for LocalFile
+	 * @param int $size
+	 * @param string $thumbFilePath
 	 * @return LocalFile
 	 */
 	private function getMockLocalFile( int $size, $thumbFilePath ): LocalFile {
