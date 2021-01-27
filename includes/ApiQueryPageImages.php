@@ -63,7 +63,6 @@ class ApiQueryPageImages extends ApiQueryBase {
 	/**
 	 * Evaluates the parameters, performs the requested retrieval of page images,
 	 * and sets up the result
-	 * @return null
 	 */
 	public function execute() {
 		$params = $this->extractRequestParams();
