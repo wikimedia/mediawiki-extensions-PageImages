@@ -49,17 +49,7 @@ class LinksUpdateHookHandler {
 		$po = false;
 
 		if ( $wgPageImagesLeadSectionOnly ) {
-			$revRecord = null;
-
-			if ( method_exists( $linksUpdate, 'getRevisionRecord' ) ) {
-				// MW 1.35+
-				$revRecord = $linksUpdate->getRevisionRecord();
-			} else {
-				$rev = $linksUpdate->getRevision();
-				if ( $rev ) {
-					$revRecord = $rev->getRevisionRecord();
-				}
-			}
+			$revRecord = $linksUpdate->getRevisionRecord();
 
 			if ( $revRecord === null ) {
 				// Use READ_LATEST (T221763)
