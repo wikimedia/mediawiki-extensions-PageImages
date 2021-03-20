@@ -51,7 +51,7 @@ class LinksUpdateHookHandlerTest extends MediaWikiTestCase {
 
 		$sectionContent->expects( $this->any() )
 			->method( 'getParserOutput' )
-			->will( $this->returnValue( $parserOutputLead ) );
+			->willReturn( $parserOutputLead );
 
 		$content = $this->getMockBuilder( AbstractContent::class )
 			->disableOriginalConstructor()
@@ -59,7 +59,7 @@ class LinksUpdateHookHandlerTest extends MediaWikiTestCase {
 
 		$content->expects( $this->any() )
 			->method( 'getSection' )
-			->will( $this->returnValue( $sectionContent ) );
+			->willReturn( $sectionContent );
 
 		$revRecord = $this->getMockBuilder( RevisionRecord::class )
 			->disableOriginalConstructor()
@@ -67,7 +67,7 @@ class LinksUpdateHookHandlerTest extends MediaWikiTestCase {
 
 		$revRecord->expects( $this->any() )
 			->method( 'getContent' )
-			->will( $this->returnValue( $content ) );
+			->willReturn( $content );
 
 		$linksUpdate = $this->getMockBuilder( LinksUpdate::class )
 			->disableOriginalConstructor()
@@ -75,15 +75,15 @@ class LinksUpdateHookHandlerTest extends MediaWikiTestCase {
 
 		$linksUpdate->expects( $this->any() )
 			->method( 'getTitle' )
-			->will( $this->returnValue( $this->createMock( Title::class ) ) );
+			->willReturn( $this->createMock( Title::class ) );
 
 		$linksUpdate->expects( $this->any() )
 			->method( 'getParserOutput' )
-			->will( $this->returnValue( $parserOutput ) );
+			->willReturn( $parserOutput );
 
 		$linksUpdate->expects( $this->any() )
 			->method( 'getRevisionRecord' )
-			->will( $this->returnValue( $revRecord ) );
+			->willReturn( $revRecord );
 
 		return $linksUpdate;
 	}
@@ -99,14 +99,14 @@ class LinksUpdateHookHandlerTest extends MediaWikiTestCase {
 		// ugly hack to avoid all the unmockable crap in FormatMetadata
 		$file->expects( $this->any() )
 			->method( 'isDeleted' )
-			->will( $this->returnValue( true ) );
+			->willReturn( true );
 
 		$repoGroup = $this->getMockBuilder( RepoGroup::class )
 			->disableOriginalConstructor()
 			->getMock();
 		$repoGroup->expects( $this->any() )
 			->method( 'findFile' )
-			->will( $this->returnValue( $file ) );
+			->willReturn( $file );
 
 		return $repoGroup;
 	}
@@ -134,13 +134,15 @@ class LinksUpdateHookHandlerTest extends MediaWikiTestCase {
 
 		$mock->expects( $this->any() )
 			->method( 'getScore' )
-			->will( $this->returnCallback( function ( PageImageCandidate $_, $position ) use ( $images ) {
-				return $images[$position]['score'];
-			} ) );
+			->willReturnCallback(
+				function ( PageImageCandidate $_, $position ) use ( $images ) {
+					return $images[$position]['score'];
+				}
+			);
 
 		$mock->expects( $this->any() )
 			->method( 'isImageFree' )
-			->will( $this->returnValueMap( $isFreeMap ) );
+			->willReturnMap( $isFreeMap );
 
 		$mock->doLinksUpdate( $linksUpdate );
 
@@ -204,8 +206,8 @@ class LinksUpdateHookHandlerTest extends MediaWikiTestCase {
 	 */
 	public function testGetPageImageCandidates() {
 		$candidates = [
-				[ 'filename' => 'A.jpg', 'score' => 100, 'isFree' => false ],
-				[ 'filename' => 'B.jpg', 'score' => 90, 'isFree' => false ],
+			[ 'filename' => 'A.jpg', 'score' => 100, 'isFree' => false ],
+			[ 'filename' => 'B.jpg', 'score' => 90, 'isFree' => false ],
 		];
 		$linksUpdate = $this->getLinksUpdate( $candidates, array_slice( $candidates, 0, 1 ) );
 
@@ -231,13 +233,13 @@ class LinksUpdateHookHandlerTest extends MediaWikiTestCase {
 		);
 		$mock->expects( $this->any() )
 			->method( 'scoreFromTable' )
-			->will( $this->returnValue( $scoreFromTable ) );
+			->willReturn( $scoreFromTable );
 		$mock->expects( $this->any() )
 			->method( 'getRatio' )
-			->will( $this->returnValue( 0 ) );
+			->willReturn( 0 );
 		$mock->expects( $this->any() )
 			->method( 'getBlacklist' )
-			->will( $this->returnValue( [ 'blacklisted.jpg' => 1 ] ) );
+			->willReturn( [ 'blacklisted.jpg' => 1 ] );
 
 		$score = $mock->getScore( PageImageCandidate::newFromArray( $image ), $position );
 		$this->assertEquals( $expected, $score );
@@ -357,7 +359,7 @@ class LinksUpdateHookHandlerTest extends MediaWikiTestCase {
 		);
 		$mock->expects( $this->any() )
 			->method( 'fetchFileMetadata' )
-			->will( $this->returnValue( $metadata ) );
+			->willReturn( $metadata );
 		$this->assertEquals( $expected, $mock->isImageFree( $fileName ) );
 	}
 

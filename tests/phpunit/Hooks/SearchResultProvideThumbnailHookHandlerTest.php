@@ -2,12 +2,14 @@
 
 namespace PageImages\Tests\Hooks;
 
+use LocalFile;
 use MediaWiki\Rest\Entity\SearchResultPageIdentityValue;
 use MediaWikiTestCase;
 use PageImages\Hooks\SearchResultProvideThumbnailHookHandler;
 use PageImages\PageImages;
 use PageProps;
 use RepoGroup;
+use ThumbnailImage;
 
 /**
  * @covers \PageImages\Hooks\SearchResultProvideThumbnailHookHandler
@@ -121,20 +123,20 @@ class SearchResultProvideThumbnailHookHandlerTest extends MediaWikiTestCase {
 			->getMock();
 
 		$repoGroup->expects( $this->exactly( 4 ) )
-					->method( 'findFile' )
-					->withConsecutive( [ 'File1.jpg' ], [ 'File2_any.jpg' ], [ 'dbKey3' ], [ 'dbKey4' ] )
-					->willReturnOnConsecutiveCalls(
-						$this->getMockLocalFile(
-							SearchResultProvideThumbnailHookHandler::THUMBNAIL_SIZE,
-							__FILE__
-						),
-						null,
-						$this->getMockLocalFile(
-							SearchResultProvideThumbnailHookHandler::THUMBNAIL_SIZE,
-							false
-						),
-						null
-					);
+			->method( 'findFile' )
+			->withConsecutive( [ 'File1.jpg' ], [ 'File2_any.jpg' ], [ 'dbKey3' ], [ 'dbKey4' ] )
+			->willReturnOnConsecutiveCalls(
+				$this->getMockLocalFile(
+					SearchResultProvideThumbnailHookHandler::THUMBNAIL_SIZE,
+					__FILE__
+				),
+				null,
+				$this->getMockLocalFile(
+					SearchResultProvideThumbnailHookHandler::THUMBNAIL_SIZE,
+					false
+				),
+				null
+			);
 
 		$handler = new SearchResultProvideThumbnailHookHandler( $pageProps, $repoGroup );
 

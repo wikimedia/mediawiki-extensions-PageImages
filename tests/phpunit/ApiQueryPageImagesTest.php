@@ -2,8 +2,10 @@
 
 namespace PageImages\Tests;
 
+use ApiBase;
 use PageImages\ApiQueryPageImages;
 use PageImages\PageImages;
+use PHPUnit\Framework\TestCase;
 use Title;
 use Wikimedia\Rdbms\FakeResultWrapper;
 use Wikimedia\TestingAccessWrapper;
@@ -17,7 +19,7 @@ use Wikimedia\TestingAccessWrapper;
  * @author Sam Smith
  * @author Thiemo Kreuz
  */
-class ApiQueryPageImagesTest extends \PHPUnit\Framework\TestCase {
+class ApiQueryPageImagesTest extends TestCase {
 
 	private function newInstance() {
 		$config = new \HashConfig( [
@@ -37,14 +39,14 @@ class ApiQueryPageImagesTest extends \PHPUnit\Framework\TestCase {
 			->getMock();
 		$main->expects( $this->once() )
 			->method( 'getContext' )
-			->will( $this->returnValue( $context ) );
+			->willReturn( $context );
 
 		$query = $this->getMockBuilder( 'ApiQuery' )
 			->disableOriginalConstructor()
 			->getMock();
 		$query->expects( $this->once() )
 			->method( 'getMain' )
-			->will( $this->returnValue( $main ) );
+			->willReturn( $main );
 
 		return new ApiQueryPageImages( $query, '' );
 	}
@@ -62,19 +64,20 @@ class ApiQueryPageImagesTest extends \PHPUnit\Framework\TestCase {
 	public function testGetAllowedParams() {
 		$instance = $this->newInstance();
 		$params = $instance->getAllowedParams();
+
 		$this->assertIsArray( $params );
 		$this->assertNotEmpty( $params );
 		$this->assertContainsOnly( 'array', $params );
 		$this->assertArrayHasKey( 'limit', $params );
-		$this->assertEquals( $params['limit'][\ApiBase::PARAM_DFLT], 50 );
-		$this->assertEquals( $params['limit'][\ApiBase::PARAM_TYPE], 'limit' );
-		$this->assertEquals( $params['limit'][\ApiBase::PARAM_MIN], 1 );
-		$this->assertEquals( $params['limit'][\ApiBase::PARAM_MAX], 50 );
-		$this->assertEquals( $params['limit'][\ApiBase::PARAM_MAX2], 100 );
+		$this->assertEquals( $params['limit'][ApiBase::PARAM_DFLT], 50 );
+		$this->assertEquals( $params['limit'][ApiBase::PARAM_TYPE], 'limit' );
+		$this->assertEquals( $params['limit'][ApiBase::PARAM_MIN], 1 );
+		$this->assertEquals( $params['limit'][ApiBase::PARAM_MAX], 50 );
+		$this->assertEquals( $params['limit'][ApiBase::PARAM_MAX2], 100 );
 		$this->assertArrayHasKey( 'license', $params );
-		$this->assertEquals( $params['license'][\ApiBase::PARAM_TYPE], [ 'free', 'any' ] );
-		$this->assertEquals( $params['license'][\ApiBase::PARAM_DFLT], 'free' );
-		$this->assertEquals( $params['license'][\ApiBase::PARAM_ISMULTI], false );
+		$this->assertEquals( $params['license'][ApiBase::PARAM_TYPE], [ 'free', 'any' ] );
+		$this->assertEquals( $params['license'][ApiBase::PARAM_DFLT], 'free' );
+		$this->assertEquals( $params['license'][ApiBase::PARAM_ISMULTI], false );
 	}
 
 	/**
@@ -86,10 +89,10 @@ class ApiQueryPageImagesTest extends \PHPUnit\Framework\TestCase {
 			->getMock();
 		$pageSet->expects( $this->any() )
 			->method( 'getGoodTitles' )
-			->will( $this->returnValue( $titles ) );
+			->willReturn( $titles );
 		$pageSet->expects( $this->any() )
 			->method( 'getMissingTitlesByNamespace' )
-			->will( $this->returnValue( $missingTitlesByNamespace ) );
+			->willReturn( $missingTitlesByNamespace );
 		$queryPageImages = new ApiQueryPageImagesProxyMock( $pageSet );
 
 		$this->assertEquals( $expected, $queryPageImages->getTitles() );
