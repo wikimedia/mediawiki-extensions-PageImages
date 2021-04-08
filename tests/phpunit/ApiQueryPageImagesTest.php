@@ -26,7 +26,7 @@ class ApiQueryPageImagesTest extends TestCase {
 			'PageImagesAPIDefaultLicense' => 'free'
 		] );
 
-		$context = $this->getMockBuilder( 'IContextSource' )
+		$context = $this->getMockBuilder( \IContextSource::class )
 			->disableOriginalConstructor()
 			->getMock();
 
@@ -34,14 +34,14 @@ class ApiQueryPageImagesTest extends TestCase {
 			->method( 'getConfig' )
 			->willReturn( $config );
 
-		$main = $this->getMockBuilder( 'ApiMain' )
+		$main = $this->getMockBuilder( \ApiMain::class )
 			->disableOriginalConstructor()
 			->getMock();
 		$main->expects( $this->once() )
 			->method( 'getContext' )
 			->willReturn( $context );
 
-		$query = $this->getMockBuilder( 'ApiQuery' )
+		$query = $this->getMockBuilder( \ApiQuery::class )
 			->disableOriginalConstructor()
 			->getMock();
 		$query->expects( $this->once() )
@@ -84,7 +84,7 @@ class ApiQueryPageImagesTest extends TestCase {
 	 * @dataProvider provideGetTitles
 	 */
 	public function testGetTitles( $titles, $missingTitlesByNamespace, $expected ) {
-		$pageSet = $this->getMockBuilder( 'ApiPageSet' )
+		$pageSet = $this->getMockBuilder( \ApiPageSet::class )
 			->disableOriginalConstructor()
 			->getMock();
 		$pageSet->expects( $this->any() )
