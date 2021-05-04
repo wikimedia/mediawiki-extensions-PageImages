@@ -26,12 +26,9 @@ class ApiQueryPageImagesTest extends TestCase {
 			'PageImagesAPIDefaultLicense' => 'free'
 		] );
 
-		$context = $this->getMockBuilder( \IContextSource::class )
-			->disableOriginalConstructor()
-			->getMock();
+		$context = $this->createMock( \IContextSource::class );
 
-		$context->expects( $this->any() )
-			->method( 'getConfig' )
+		$context->method( 'getConfig' )
 			->willReturn( $config );
 
 		$main = $this->getMockBuilder( \ApiMain::class )
@@ -69,15 +66,15 @@ class ApiQueryPageImagesTest extends TestCase {
 		$this->assertNotEmpty( $params );
 		$this->assertContainsOnly( 'array', $params );
 		$this->assertArrayHasKey( 'limit', $params );
-		$this->assertEquals( $params['limit'][ApiBase::PARAM_DFLT], 50 );
-		$this->assertEquals( $params['limit'][ApiBase::PARAM_TYPE], 'limit' );
-		$this->assertEquals( $params['limit'][ApiBase::PARAM_MIN], 1 );
-		$this->assertEquals( $params['limit'][ApiBase::PARAM_MAX], 50 );
-		$this->assertEquals( $params['limit'][ApiBase::PARAM_MAX2], 100 );
+		$this->assertSame( $params['limit'][ApiBase::PARAM_DFLT], 50 );
+		$this->assertSame( $params['limit'][ApiBase::PARAM_TYPE], 'limit' );
+		$this->assertSame( $params['limit'][ApiBase::PARAM_MIN], 1 );
+		$this->assertSame( $params['limit'][ApiBase::PARAM_MAX], 50 );
+		$this->assertSame( $params['limit'][ApiBase::PARAM_MAX2], 100 );
 		$this->assertArrayHasKey( 'license', $params );
-		$this->assertEquals( $params['license'][ApiBase::PARAM_TYPE], [ 'free', 'any' ] );
-		$this->assertEquals( $params['license'][ApiBase::PARAM_DFLT], 'free' );
-		$this->assertEquals( $params['license'][ApiBase::PARAM_ISMULTI], false );
+		$this->assertSame( $params['license'][ApiBase::PARAM_TYPE], [ 'free', 'any' ] );
+		$this->assertSame( $params['license'][ApiBase::PARAM_DFLT], 'free' );
+		$this->assertFalse( $params['license'][ApiBase::PARAM_ISMULTI] );
 	}
 
 	/**
@@ -87,11 +84,9 @@ class ApiQueryPageImagesTest extends TestCase {
 		$pageSet = $this->getMockBuilder( \ApiPageSet::class )
 			->disableOriginalConstructor()
 			->getMock();
-		$pageSet->expects( $this->any() )
-			->method( 'getGoodTitles' )
+		$pageSet->method( 'getGoodTitles' )
 			->willReturn( $titles );
-		$pageSet->expects( $this->any() )
-			->method( 'getMissingTitlesByNamespace' )
+		$pageSet->method( 'getMissingTitlesByNamespace' )
 			->willReturn( $missingTitlesByNamespace );
 		$queryPageImages = new ApiQueryPageImagesProxyMock( $pageSet );
 
@@ -147,21 +142,18 @@ class ApiQueryPageImagesTest extends TestCase {
 					'addTables', 'addFields', 'addWhere', 'select', 'setResultValues' ] )
 				->getMock()
 		);
-		$mock->expects( $this->any() )
-			->method( 'extractRequestParams' )
+		$mock->method( 'extractRequestParams' )
 			->willReturn( $requestParams );
-		$mock->expects( $this->any() )
-			->method( 'getTitles' )
+		$mock->method( 'getTitles' )
 			->willReturn( $titles );
-		$mock->expects( $this->any() )
-			->method( 'select' )
+		$mock->method( 'select' )
 			->willReturn( new FakeResultWrapper( $queryResults ) );
 
 		// continue page ID is not found
 		if ( isset( $requestParams['continue'] )
 			&& $requestParams['continue'] > count( $titles )
 		) {
-			$mock->expects( $this->exactly( 1 ) )
+			$mock->expects( $this->once() )
 				->method( 'dieUsage' );
 		}
 
