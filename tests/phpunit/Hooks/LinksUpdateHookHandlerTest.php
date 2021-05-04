@@ -277,6 +277,7 @@ class LinksUpdateHookHandlerTest extends MediaWikiTestCase {
 	 * @covers \PageImages\Hooks\LinksUpdateHookHandler::scoreFromTable
 	 */
 	public function testScoreFromTable( array $scores, $value, $expected ) {
+		/** @var LinksUpdateHookHandler $handlerWrapper */
 		$handlerWrapper = TestingAccessWrapper::newFromObject( new LinksUpdateHookHandler );
 
 		$score = $handlerWrapper->scoreFromTable( $value, $scores );

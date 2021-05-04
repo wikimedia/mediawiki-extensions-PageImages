@@ -69,7 +69,7 @@ class SearchResultProvideThumbnailHookHandler {
 	 *
 	 * @param array $titlesByPageId a key value array where key is pageId and value is Title
 	 * @param int $size size of thumbnail height and width in points
-	 * @return array of SearchResultThumbnail
+	 * @return SearchResultThumbnail[]
 	 */
 	private function getThumbnails( array $titlesByPageId, int $size ): array {
 		$pagesByPageId = array_filter( $titlesByPageId, function ( $title ) {
