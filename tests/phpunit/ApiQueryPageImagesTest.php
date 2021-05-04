@@ -168,7 +168,7 @@ class ApiQueryPageImagesTest extends TestCase {
 		$originalRequested = in_array( 'original', $requestParams['prop'] );
 		$this->assertTrue( $this->hasExpectedProperties( $queryResults, $originalRequested ) );
 
-		$license = isset( $requestParams['license'] ) ? $requestParams['license'] : 'free';
+		$license = $requestParams['license'] ?? 'free';
 		if ( $license == PageImages::LICENSE_ANY ) {
 			$propName = [ PageImages::getPropName( true ), PageImages::getPropName( false ) ];
 		} else {
