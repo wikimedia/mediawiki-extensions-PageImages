@@ -66,14 +66,14 @@ class ApiQueryPageImagesTest extends TestCase {
 		$this->assertNotEmpty( $params );
 		$this->assertContainsOnly( 'array', $params );
 		$this->assertArrayHasKey( 'limit', $params );
-		$this->assertSame( $params['limit'][ApiBase::PARAM_DFLT], 50 );
-		$this->assertSame( $params['limit'][ApiBase::PARAM_TYPE], 'limit' );
-		$this->assertSame( $params['limit'][ApiBase::PARAM_MIN], 1 );
-		$this->assertSame( $params['limit'][ApiBase::PARAM_MAX], 50 );
-		$this->assertSame( $params['limit'][ApiBase::PARAM_MAX2], 100 );
+		$this->assertSame( 50, $params['limit'][ApiBase::PARAM_DFLT] );
+		$this->assertSame( 'limit', $params['limit'][ApiBase::PARAM_TYPE] );
+		$this->assertSame( 1, $params['limit'][ApiBase::PARAM_MIN] );
+		$this->assertSame( 50, $params['limit'][ApiBase::PARAM_MAX] );
+		$this->assertSame( 100, $params['limit'][ApiBase::PARAM_MAX2] );
 		$this->assertArrayHasKey( 'license', $params );
-		$this->assertSame( $params['license'][ApiBase::PARAM_TYPE], [ 'free', 'any' ] );
-		$this->assertSame( $params['license'][ApiBase::PARAM_DFLT], 'free' );
+		$this->assertSame( [ 'free', 'any' ], $params['license'][ApiBase::PARAM_TYPE] );
+		$this->assertSame( 'free', $params['license'][ApiBase::PARAM_DFLT] );
 		$this->assertFalse( $params['license'][ApiBase::PARAM_ISMULTI] );
 	}
 
