@@ -65,16 +65,16 @@
 				}
 			}
 		},
-		"PageImagesBlacklist": {
+		"PageImagesDenylist": {
 			"value": [
 				{
 					"type": "db",
-					"page": "MediaWiki:Pageimages-blacklist",
+					"page": "MediaWiki:Pageimages-denylist",
 					"db": false
 				}
 			]
 		},
-		"PageImagesBlacklistExpiry": {
+		"PageImagesDenylistExpiry": {
 			"value": 900
 		},
 		"PageImagesExpandOpenSearchXml": {

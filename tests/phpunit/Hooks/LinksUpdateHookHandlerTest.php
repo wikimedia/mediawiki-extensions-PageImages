@@ -218,15 +218,15 @@ class LinksUpdateHookHandlerTest extends MediaWikiTestCase {
 	public function testGetScore( $image, $scoreFromTable, $position, $expected ) {
 		$mock = TestingAccessWrapper::newFromObject(
 			$this->getMockBuilder( LinksUpdateHookHandler::class )
-				->setMethods( [ 'scoreFromTable', 'getMetadata', 'getRatio', 'getBlacklist' ] )
+				->setMethods( [ 'scoreFromTable', 'getMetadata', 'getRatio', 'getDenylist' ] )
 				->getMock()
 		);
 		$mock->method( 'scoreFromTable' )
 			->willReturn( $scoreFromTable );
 		$mock->method( 'getRatio' )
 			->willReturn( 0 );
-		$mock->method( 'getBlacklist' )
-			->willReturn( [ 'blacklisted.jpg' => 1 ] );
+		$mock->method( 'getDenylist' )
+			->willReturn( [ 'denylisted.jpg' => 1 ] );
 
 		$score = $mock->getScore( PageImageCandidate::newFromArray( $image ), $position );
 		$this->assertSame( $expected, $score );
@@ -263,10 +263,10 @@ class LinksUpdateHookHandlerTest extends MediaWikiTestCase {
 				103
 			],
 			[
-				[ 'filename' => 'blacklisted.jpg', 'fullwidth' => 100 ],
+				[ 'filename' => 'denylisted.jpg', 'fullwidth' => 100 ],
 				50,
 				3,
-				// blacklist score
+				// denylist score
 				- 1000
 			],
 		];
