@@ -115,7 +115,7 @@ class LinksUpdateHookHandlerTest extends MediaWikiTestCase {
 		$linksUpdate = $this->getLinksUpdate( $images );
 		$mock = TestingAccessWrapper::newFromObject(
 				$this->getMockBuilder( LinksUpdateHookHandler::class )
-				->setMethods( [ 'getScore', 'isImageFree' ] )
+				->onlyMethods( [ 'getScore', 'isImageFree' ] )
 				->getMock()
 		);
 
@@ -126,7 +126,7 @@ class LinksUpdateHookHandlerTest extends MediaWikiTestCase {
 
 		$mock->method( 'getScore' )
 			->willReturnCallback(
-				function ( PageImageCandidate $_, $position ) use ( $images ) {
+				static function ( PageImageCandidate $_, $position ) use ( $images ) {
 					return $images[$position]['score'];
 				}
 			);
@@ -218,7 +218,7 @@ class LinksUpdateHookHandlerTest extends MediaWikiTestCase {
 	public function testGetScore( $image, $scoreFromTable, $position, $expected ) {
 		$mock = TestingAccessWrapper::newFromObject(
 			$this->getMockBuilder( LinksUpdateHookHandler::class )
-				->setMethods( [ 'scoreFromTable', 'getMetadata', 'getRatio', 'getDenylist' ] )
+				->onlyMethods( [ 'scoreFromTable', 'fetchFileMetadata', 'getRatio', 'getDenylist' ] )
 				->getMock()
 		);
 		$mock->method( 'scoreFromTable' )
@@ -342,7 +342,7 @@ class LinksUpdateHookHandlerTest extends MediaWikiTestCase {
 
 		$mock = TestingAccessWrapper::newFromObject(
 			$this->getMockBuilder( LinksUpdateHookHandler::class )
-				->setMethods( [ 'fetchFileMetadata' ] )
+				->onlyMethods( [ 'fetchFileMetadata' ] )
 				->getMock()
 		);
 		$mock->method( 'fetchFileMetadata' )

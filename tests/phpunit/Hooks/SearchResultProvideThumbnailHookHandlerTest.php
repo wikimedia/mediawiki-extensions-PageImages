@@ -32,7 +32,7 @@ class SearchResultProvideThumbnailHookHandlerTest extends MediaWikiTestCase {
 	): ThumbnailImage {
 		$thumbnail = $this->getMockBuilder( ThumbnailImage::class )
 			->disableOriginalConstructor()
-			->setMethods( [
+			->onlyMethods( [
 				'getLocalCopyPath',
 				'getWidth',
 				'getHeight',
@@ -73,7 +73,7 @@ class SearchResultProvideThumbnailHookHandlerTest extends MediaWikiTestCase {
 	private function getMockLocalFile( int $size, $thumbFilePath ): LocalFile {
 		$file = $this->getMockBuilder( LocalFile::class )
 			->disableOriginalConstructor()
-			->setMethods( [
+			->onlyMethods( [
 				'transform',
 				'getMimeType'
 			] )
@@ -94,7 +94,7 @@ class SearchResultProvideThumbnailHookHandlerTest extends MediaWikiTestCase {
 	public function testProvideThumbnail() {
 		$pageProps = $this->getMockBuilder( PageProps::class )
 			->disableOriginalConstructor()
-			->setMethods( [ 'getProperties' ] )
+			->onlyMethods( [ 'getProperties' ] )
 			->getMock();
 
 		$pageIdentities = [
@@ -120,7 +120,7 @@ class SearchResultProvideThumbnailHookHandlerTest extends MediaWikiTestCase {
 
 		$repoGroup = $this->getMockBuilder( RepoGroup::class )
 			->disableOriginalConstructor()
-			->setMethods( [ 'findFile' ] )
+			->onlyMethods( [ 'findFile' ] )
 			->getMock();
 
 		$repoGroup->expects( $this->exactly( 4 ) )

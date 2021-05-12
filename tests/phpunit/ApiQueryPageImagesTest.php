@@ -138,7 +138,7 @@ class ApiQueryPageImagesTest extends TestCase {
 		$mock = TestingAccessWrapper::newFromObject(
 			$this->getMockBuilder( ApiQueryPageImages::class )
 				->disableOriginalConstructor()
-				->setMethods( [ 'extractRequestParams', 'getTitles', 'setContinueParameter', 'dieUsage',
+				->onlyMethods( [ 'extractRequestParams', 'getTitles', 'dieWithError',
 					'addTables', 'addFields', 'addWhere', 'select', 'setResultValues' ] )
 				->getMock()
 		);
@@ -154,7 +154,7 @@ class ApiQueryPageImagesTest extends TestCase {
 			&& $requestParams['continue'] > count( $titles )
 		) {
 			$mock->expects( $this->once() )
-				->method( 'dieUsage' );
+				->method( 'dieWithError' );
 		}
 
 		$originalRequested = in_array( 'original', $requestParams['prop'] );

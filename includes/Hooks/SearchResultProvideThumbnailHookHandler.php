@@ -40,13 +40,13 @@ class SearchResultProvideThumbnailHookHandler {
 			$pagesByPageId,
 			PageImages::getPropNames( PageImages::LICENSE_ANY )
 		);
-		$fileNames = array_map( function ( $prop ) {
+		$fileNames = array_map( static function ( $prop ) {
 			return $prop[ PageImages::getPropName( false ) ]
 				?? $prop[ PageImages::getPropName( true ) ]
 				?? null;
 		}, $propValues );
 
-		return array_filter( $fileNames, function ( $fileName ) {
+		return array_filter( $fileNames, static function ( $fileName ) {
 			return $fileName != null;
 		} );
 	}
@@ -59,7 +59,7 @@ class SearchResultProvideThumbnailHookHandler {
 	 * @return array
 	 */
 	private function getFileNamesForFileTitles( $linkFileTargetsByPageId ): array {
-		return array_map( function ( $linkFileTarget ) {
+		return array_map( static function ( $linkFileTarget ) {
 			return $linkFileTarget->getDBkey();
 		}, $linkFileTargetsByPageId );
 	}
@@ -72,10 +72,10 @@ class SearchResultProvideThumbnailHookHandler {
 	 * @return SearchResultThumbnail[]
 	 */
 	private function getThumbnails( array $titlesByPageId, int $size ): array {
-		$pagesByPageId = array_filter( $titlesByPageId, function ( $title ) {
+		$pagesByPageId = array_filter( $titlesByPageId, static function ( $title ) {
 			return !$title->inNamespace( NS_FILE );
 		} );
-		$titleFilesByPageId = array_filter( $titlesByPageId, function ( $title ) {
+		$titleFilesByPageId = array_filter( $titlesByPageId, static function ( $title ) {
 			return $title->inNamespace( NS_FILE );
 		} );
 
@@ -115,7 +115,7 @@ class SearchResultProvideThumbnailHookHandler {
 	 * @param array &$results Placeholder for result. $pageId => SearchResultThumbnail
 	 */
 	public function doSearchResultProvideThumbnail( array $pageIdentities, &$results ): void {
-		$pageIdTitles = array_map( function ( SearchResultPageIdentity $identity ) {
+		$pageIdTitles = array_map( static function ( SearchResultPageIdentity $identity ) {
 			return Title::makeTitle( $identity->getNamespace(), $identity->getDBkey() );
 		}, $pageIdentities );
 

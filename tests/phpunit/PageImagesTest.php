@@ -63,7 +63,7 @@ class PageImagesTest extends MediaWikiTestCase {
 			->willReturn( $config );
 
 		$outputPage = $this->getMockBuilder( OutputPage::class )
-			->setMethods( [ 'addMeta' ] )
+			->onlyMethods( [ 'addMeta' ] )
 			->setConstructorArgs( [ $context ] )
 			->getMock();
 		$outputPage->expects( $this->never() )

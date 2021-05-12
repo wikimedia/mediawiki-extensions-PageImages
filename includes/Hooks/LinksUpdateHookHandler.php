@@ -75,7 +75,7 @@ class LinksUpdateHookHandler {
 		}
 
 		if ( $po && $po->getExtensionData( 'pageImages' ) ) {
-			return array_map( function ( $candidateData ) {
+			return array_map( static function ( $candidateData ) {
 				return PageImageCandidate::newFromArray( $candidateData );
 			}, $po->getExtensionData( 'pageImages' ) );
 		}
