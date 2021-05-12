@@ -3,6 +3,7 @@
 namespace PageImages\Tests\Hooks;
 
 use LocalFile;
+use MediaWiki\Page\PageIdentity;
 use MediaWiki\Rest\Entity\SearchResultPageIdentityValue;
 use MediaWikiTestCase;
 use PageImages\Hooks\SearchResultProvideThumbnailHookHandler;
@@ -97,10 +98,10 @@ class SearchResultProvideThumbnailHookHandlerTest extends MediaWikiTestCase {
 			->getMock();
 
 		$pageIdentities = [
-			1 => new SearchResultPageIdentityValue( 1, NS_MAIN, 'dbKey1' ),
-			2 => new SearchResultPageIdentityValue( 2, NS_MAIN, 'dbKey2' ),
-			3 => new SearchResultPageIdentityValue( 3, NS_FILE, 'dbKey3' ),
-			4 => new SearchResultPageIdentityValue( 4, NS_FILE, 'dbKey4' )
+			1 => new SearchResultPageIdentityValue( 1, NS_MAIN, 'dbKey1', PageIdentity::LOCAL ),
+			2 => new SearchResultPageIdentityValue( 2, NS_MAIN, 'dbKey2', PageIdentity::LOCAL ),
+			3 => new SearchResultPageIdentityValue( 3, NS_FILE, 'dbKey3', PageIdentity::LOCAL ),
+			4 => new SearchResultPageIdentityValue( 4, NS_FILE, 'dbKey4', PageIdentity::LOCAL )
 		];
 
 		$pageProps->expects( $this->once() )
