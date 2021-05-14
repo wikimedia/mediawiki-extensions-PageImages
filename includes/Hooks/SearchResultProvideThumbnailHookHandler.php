@@ -3,7 +3,7 @@
 namespace PageImages\Hooks;
 
 use MediaWiki\MediaWikiServices;
-use MediaWiki\Rest\Entity\SearchResultPageIdentity;
+use MediaWiki\Page\PageIdentity;
 use MediaWiki\Search\Entity\SearchResultThumbnail;
 use PageImages\PageImages;
 use PageProps;
@@ -115,7 +115,7 @@ class SearchResultProvideThumbnailHookHandler {
 	 * @param array &$results Placeholder for result. $pageId => SearchResultThumbnail
 	 */
 	public function doSearchResultProvideThumbnail( array $pageIdentities, &$results ): void {
-		$pageIdTitles = array_map( static function ( SearchResultPageIdentity $identity ) {
+		$pageIdTitles = array_map( static function ( PageIdentity $identity ) {
 			return Title::makeTitle( $identity->getNamespace(), $identity->getDBkey() );
 		}, $pageIdentities );
 
@@ -133,7 +133,7 @@ class SearchResultProvideThumbnailHookHandler {
 	}
 
 	/**
-	 * @param array[] $pageIdentities array that contain $pageId => SearchResultPageIdentity.
+	 * @param array[] $pageIdentities array that contain $pageId => PageIdentity.
 	 * @param array[] &$results Placeholder for result. $pageId => SearchResultThumbnail
 	 */
 	public static function onSearchResultProvideThumbnail( $pageIdentities, &$results ): void {
