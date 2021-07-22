@@ -44,7 +44,7 @@ class LinksUpdateHookHandler {
 	 * to get page images for
 	 * @return PageImageCandidate[] $image Associative array describing an image
 	 */
-	public function getPageImageCandidates( LinksUpdate $linksUpdate ) : array {
+	public function getPageImageCandidates( LinksUpdate $linksUpdate ): array {
 		global $wgPageImagesLeadSectionOnly;
 		$po = false;
 

@@ -25,7 +25,7 @@ use Wikimedia\TestingAccessWrapper;
  */
 class LinksUpdateHookHandlerTest extends MediaWikiTestCase {
 
-	public function setUp() : void {
+	public function setUp(): void {
 		parent::setUp();
 
 		// Force LinksUpdateHookHandler::getPageImageCanditates to look at all
