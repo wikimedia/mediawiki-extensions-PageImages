@@ -89,7 +89,7 @@ class SearchResultProvideThumbnailHookHandler {
 				continue;
 			}
 			$thumb = $file->transform( [ 'width' => $size , 'height' => $size ] );
-			if ( !$thumb ) {
+			if ( !$thumb || $thumb->isError() ) {
 				continue;
 			}
 
