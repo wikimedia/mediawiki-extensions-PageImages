@@ -126,9 +126,10 @@ class SearchResultProvideThumbnailHookHandler {
 	}
 
 	public static function newFromGlobalState(): SearchResultProvideThumbnailHookHandler {
+		$services = MediaWikiServices::getInstance();
 		return new SearchResultProvideThumbnailHookHandler(
-			PageProps::getInstance(),
-			MediaWikiServices::getInstance()->getRepoGroup()
+			$services->getPageProps(),
+			$services->getRepoGroup()
 		);
 	}
 
