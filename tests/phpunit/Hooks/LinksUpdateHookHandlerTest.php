@@ -6,7 +6,7 @@ use AbstractContent;
 use File;
 use LinksUpdate;
 use MediaWiki\Revision\RevisionRecord;
-use MediaWikiTestCase;
+use MediaWikiIntegrationTestCase;
 use PageImages\Hooks\LinksUpdateHookHandler;
 use PageImages\PageImageCandidate;
 use PageImages\PageImages;
@@ -23,7 +23,7 @@ use Wikimedia\TestingAccessWrapper;
  * @license WTFPL
  * @author Thiemo Kreuz
  */
-class LinksUpdateHookHandlerTest extends MediaWikiTestCase {
+class LinksUpdateHookHandlerTest extends MediaWikiIntegrationTestCase {
 
 	public function setUp(): void {
 		parent::setUp();
