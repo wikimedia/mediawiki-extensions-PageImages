@@ -5,6 +5,7 @@ namespace PageImages\Tests\Hooks;
 use AbstractContent;
 use File;
 use LinksUpdate;
+use MediaWiki\Content\Renderer\ContentRenderer;
 use MediaWiki\Revision\RevisionRecord;
 use MediaWikiIntegrationTestCase;
 use PageImages\Hooks\LinksUpdateHookHandler;
@@ -45,14 +46,20 @@ class LinksUpdateHookHandlerTest extends MediaWikiIntegrationTestCase {
 		$parserOutputLead = new ParserOutput();
 		$parserOutputLead->setExtensionData( 'pageImages', $leadImages ?: $images );
 
-		$sectionContent = $this->getMockBuilder( AbstractContent::class )
+		$contentRenderer = $this->getMockBuilder( ContentRenderer::class )
 			->disableOriginalConstructor()
 			->getMock();
 
-		$sectionContent->method( 'getParserOutput' )
+		$this->setService( 'ContentRenderer', $contentRenderer );
+
+		$contentRenderer->method( 'getParserOutput' )
 			->willReturn( $parserOutputLead );
 
 		$content = $this->getMockBuilder( AbstractContent::class )
+			->disableOriginalConstructor()
+			->getMock();
+
+		$sectionContent = $this->getMockBuilder( AbstractContent::class )
 			->disableOriginalConstructor()
 			->getMock();
 

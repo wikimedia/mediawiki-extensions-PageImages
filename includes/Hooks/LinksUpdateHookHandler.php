@@ -50,10 +50,10 @@ class LinksUpdateHookHandler {
 
 		if ( $wgPageImagesLeadSectionOnly ) {
 			$revRecord = $linksUpdate->getRevisionRecord();
-
+			$services = MediaWikiServices::getInstance();
 			if ( $revRecord === null ) {
 				// Use READ_LATEST (T221763)
-				$revRecord = MediaWikiServices::getInstance()
+				$revRecord = $services
 					->getRevisionLookup()
 					->getRevisionByTitle( $linksUpdate->getTitle(), 0,
 						IDBAccessObject::READ_LATEST );
@@ -66,7 +66,8 @@ class LinksUpdateHookHandler {
 
 					// Certain content types e.g. AbstractContent return null if sections do not apply
 					if ( $section ) {
-						$po = $section->getParserOutput( $linksUpdate->getTitle() );
+						$contentRenderer = $services->getContentRenderer();
+						$po = $contentRenderer->getParserOutput( $section, $linksUpdate->getTitle() );
 					}
 				}
 			}
