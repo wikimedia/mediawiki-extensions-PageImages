@@ -38,7 +38,7 @@
 	},
 	"config": {
 		"PageImagesScores": {
-			"description": "Images <120px are usually from maintenace or stub templates; >600px are panoramas, less suitable.",
+			"description": "Images <120px are usually from maintenance or stub templates; >600px are panoramas, less suitable.",
 			"value": {
 				"position": [
 					8,
