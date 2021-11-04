@@ -32,7 +32,7 @@ class SearchResultProvideThumbnailHookHandler {
 	/**
 	 * Returns a list fileNames associated with given pages
 	 *
-	 * @param array $pagesByPageId - key-value array where key is pageID and value is Title
+	 * @param array $pagesByPageId key-value array where key is pageID and value is Title
 	 * @return array
 	 */
 	private function getFileNamesForPageTitles( $pagesByPageId ): array {
@@ -54,7 +54,7 @@ class SearchResultProvideThumbnailHookHandler {
 	/**
 	 * Returns a list fileNames for with given LinkTarget, where title is NS_FILE
 	 *
-	 * @param array $linkFileTargetsByPageId - key-value array of where key
+	 * @param array $linkFileTargetsByPageId key-value array of where key
 	 *   is pageId, value is LinkTarget
 	 * @return array
 	 */
