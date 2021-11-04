@@ -262,6 +262,12 @@ class ParserFileProcessingHookHandlersTest extends MediaWikiIntegrationTestCase 
 				// denylist score
 				- 1000
 			],
+			[
+				[ 'filename' => 'A.jpg', 'frame' => [ 'class' => 'notpageimage' ] ],
+				0,
+				0,
+				-1000
+			],
 		];
 	}
 

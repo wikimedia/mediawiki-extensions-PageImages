@@ -304,6 +304,12 @@ class ParserFileProcessingHookHandlers {
 	protected function getScore( PageImageCandidate $image, $position ) {
 		global $wgPageImagesScores;
 
+		$classes = preg_split( '/\s+/', $image->getFrameClass(), -1, PREG_SPLIT_NO_EMPTY );
+		if ( in_array( 'notpageimage', $classes ) ) {
+			// Exclude images with class=nopageimage
+			return -1000;
+		}
+
 		if ( $image->getHandlerWidth() ) {
 			// Standalone image
 			$score = $this->scoreFromTable( $image->getHandlerWidth(), $wgPageImagesScores['width'] );
