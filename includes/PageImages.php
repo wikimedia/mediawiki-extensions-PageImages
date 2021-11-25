@@ -136,7 +136,8 @@ class PageImages {
 			return;
 		}
 
-		$thumbSetting = $context->getUser()->getOption( 'thumbsize' );
+		$userOptionsLookup = MediaWikiServices::getInstance()->getUserOptionsLookup();
+		$thumbSetting = $userOptionsLookup->getOption( $context->getUser(), 'thumbsize' );
 		$thumbSize = $wgThumbLimits[$thumbSetting];
 
 		$thumb = $imageFile->transform( [ 'width' => $thumbSize ] );
