@@ -2,95 +2,64 @@
 
 namespace PageImages\Tests\Hooks;
 
-use AbstractContent;
 use File;
-use LinksUpdate;
-use MediaWiki\Content\Renderer\ContentRenderer;
-use MediaWiki\Revision\RevisionRecord;
 use MediaWikiIntegrationTestCase;
-use PageImages\Hooks\LinksUpdateHookHandler;
+use PageImages\Hooks\ParserFileProcessingHookHandlers;
 use PageImages\PageImageCandidate;
 use PageImages\PageImages;
-use ParserOutput;
+use Parser;
+use ParserOptions;
 use RepoGroup;
 use Title;
 use Wikimedia\TestingAccessWrapper;
 
 /**
- * @covers \PageImages\Hooks\LinksUpdateHookHandler
+ * @covers \PageImages\Hooks\ParserFileProcessingHookHandlers
  *
  * @group PageImages
  *
  * @license WTFPL
  * @author Thiemo Kreuz
  */
-class LinksUpdateHookHandlerTest extends MediaWikiIntegrationTestCase {
+class ParserFileProcessingHookHandlersTest extends MediaWikiIntegrationTestCase {
 
 	public function setUp(): void {
 		parent::setUp();
 
-		// Force LinksUpdateHookHandler::getPageImageCanditates to look at all
+		// Force LinksUpdateHookHandler::getPageImageCandidates to look at all
 		// sections.
 		$this->setMwGlobals( 'wgPageImagesLeadSectionOnly', false );
 	}
 
 	/**
 	 * @param array[] $images
-	 * @param array[]|bool $leadImages
 	 *
-	 * @return LinksUpdate
+	 * @return Parser
 	 */
-	private function getLinksUpdate( array $images, $leadImages = false ) {
-		$parserOutput = new ParserOutput();
-		$parserOutput->setExtensionData( 'pageImages', $images );
-		$parserOutputLead = new ParserOutput();
-		$parserOutputLead->setExtensionData( 'pageImages', $leadImages ?: $images );
+	private function getParser( array $images ) {
+		$parser = $this->getServiceContainer()->getParser();
+		$title = Title::newFromText( 'test' );
+		$options = ParserOptions::newFromAnon();
+		$parser->startExternalParse( $title, $options, Parser::OT_HTML );
+		$parser->getOutput()->setExtensionData( 'pageImages', $images );
+		return $parser;
+	}
 
-		$contentRenderer = $this->getMockBuilder( ContentRenderer::class )
-			->disableOriginalConstructor()
-			->getMock();
-
-		$this->setService( 'ContentRenderer', $contentRenderer );
-
-		$contentRenderer->method( 'getParserOutput' )
-			->willReturn( $parserOutputLead );
-
-		$content = $this->getMockBuilder( AbstractContent::class )
-			->disableOriginalConstructor()
-			->getMock();
-
-		$sectionContent = $this->getMockBuilder( AbstractContent::class )
-			->disableOriginalConstructor()
-			->getMock();
-
-		$content->method( 'getSection' )
-			->willReturn( $sectionContent );
-
-		$revRecord = $this->getMockBuilder( RevisionRecord::class )
-			->disableOriginalConstructor()
-			->getMock();
-
-		$revRecord->method( 'getContent' )
-			->willReturn( $content );
-
-		$linksUpdate = $this->getMockBuilder( LinksUpdate::class )
-			->disableOriginalConstructor()
-			->getMock();
-
-		$linksUpdate->method( 'getTitle' )
-			->willReturn( $this->createMock( Title::class ) );
-
-		$linksUpdate->method( 'getParserOutput' )
-			->willReturn( $parserOutput );
-
-		$linksUpdate->method( 'getRevisionRecord' )
-			->willReturn( $revRecord );
-
-		return $linksUpdate;
+	private function getHtml( $indexes, $nonLeadIndex = INF ) {
+		$html = '';
+		$doneSectionBreak = false;
+		foreach ( $indexes as $index ) {
+			if ( $index >= $nonLeadIndex && !$doneSectionBreak ) {
+				$html .= '<mw:editsection page="Test" section="1"/>';
+				$doneSectionBreak = true;
+			}
+			$html .= "<!--MW-PAGEIMAGES-CANDIDATE-$index-->";
+		}
+		return $html;
 	}
 
 	/**
-	 * Required to make RepoGroup::findFile in LinksUpdateHookHandler::getScore return something.
+	 * Required to make RepoGroup::findFile in ParserFileProcessingHookHandlers::getScore return something.
 	 * @return RepoGroup
 	 */
 	private function getRepoGroup() {
@@ -110,54 +79,57 @@ class LinksUpdateHookHandlerTest extends MediaWikiIntegrationTestCase {
 		return $repoGroup;
 	}
 
+	private function getHandler( $images ) {
+		return new class ( $images ) extends ParserFileProcessingHookHandlers {
+			private $images;
+			private $isFreeMap;
+
+			public function __construct( $images ) {
+				$this->images = $images;
+				foreach ( $images as $image ) {
+					$this->isFreeMap[$image['filename']] = $image['isFree'];
+				}
+			}
+
+			protected function isImageFree( $fileName ) {
+				return $this->isFreeMap[$fileName] ?? false;
+			}
+
+			protected function getScore( PageImageCandidate $image, $position ) {
+				return $this->images[$position]['score'];
+			}
+		};
+	}
+
 	/**
-	 * @dataProvider provideDoLinksUpdate
-	 * @covers \PageImages\Hooks\LinksUpdateHookHandler::doLinksUpdate
+	 * @dataProvider provideDoParserAfterTidy
+	 * @covers \PageImages\Hooks\ParserFileProcessingHookHandlers::doParserAfterTidy
 	 */
-	public function testDoLinksUpdate(
+	public function testDoParserAfterTidy(
 		array $images,
 		$expectedFreeFileName,
 		$expectedNonFreeFileName
 	) {
-		$linksUpdate = $this->getLinksUpdate( $images );
-		$mock = TestingAccessWrapper::newFromObject(
-				$this->getMockBuilder( LinksUpdateHookHandler::class )
-				->onlyMethods( [ 'getScore', 'isImageFree' ] )
-				->getMock()
-		);
+		$parser = $this->getParser( $images );
+		$html = $this->getHtml( array_keys( $images ) );
+		$handler = $this->getHandler( $images );
+		$handler->doParserAfterTidy( $parser, $html );
+		$properties = $parser->getOutput()->getPageProperties();
 
-		$isFreeMap = [];
-		foreach ( $images as $image ) {
-			array_push( $isFreeMap, [ $image['filename'], $image['isFree'] ] );
-		}
-
-		$mock->method( 'getScore' )
-			->willReturnCallback(
-				static function ( PageImageCandidate $_, $position ) use ( $images ) {
-					return $images[$position]['score'];
-				}
-			);
-
-		$mock->method( 'isImageFree' )
-			->willReturnMap( $isFreeMap );
-
-		$mock->doLinksUpdate( $linksUpdate );
-
-		$this->assertTrue( property_exists( $linksUpdate, 'mProperties' ), 'precondition' );
 		if ( $expectedFreeFileName === null ) {
-			$this->assertArrayNotHasKey( PageImages::PROP_NAME_FREE, $linksUpdate->mProperties );
+			$this->assertArrayNotHasKey( PageImages::PROP_NAME_FREE, $properties );
 		} else {
 			$this->assertSame( $expectedFreeFileName,
-				$linksUpdate->mProperties[PageImages::PROP_NAME_FREE] );
+				$properties[PageImages::PROP_NAME_FREE] );
 		}
 		if ( $expectedNonFreeFileName === null ) {
-			$this->assertArrayNotHasKey( PageImages::PROP_NAME, $linksUpdate->mProperties );
+			$this->assertArrayNotHasKey( PageImages::PROP_NAME, $properties );
 		} else {
-			$this->assertSame( $expectedNonFreeFileName, $linksUpdate->mProperties[PageImages::PROP_NAME] );
+			$this->assertSame( $expectedNonFreeFileName, $properties[PageImages::PROP_NAME] );
 		}
 	}
 
-	public function provideDoLinksUpdate() {
+	public function provideDoParserAfterTidy() {
 		return [
 			// both images are non-free
 			[
@@ -199,24 +171,38 @@ class LinksUpdateHookHandlerTest extends MediaWikiIntegrationTestCase {
 	}
 
 	/**
-	 * @covers \PageImages\Hooks\LinksUpdateHookHandler::getPageImageCandidates
+	 * @dataProvider provideDoParserAfterTidy_lead
+	 * @covers \PageImages\Hooks\ParserFileProcessingHookHandlers::doParserAfterTidy
 	 */
-	public function testGetPageImageCandidates() {
+	public function testDoParserAfterTidy_lead( $leadOnly ) {
+		$this->setMwGlobals( 'wgPageImagesLeadSectionOnly', $leadOnly );
 		$candidates = [
 			[ 'filename' => 'A.jpg', 'score' => 100, 'isFree' => false ],
-			[ 'filename' => 'B.jpg', 'score' => 90, 'isFree' => false ],
+			[ 'filename' => 'B.jpg', 'score' => 90, 'isFree' => true ],
 		];
-		$linksUpdate = $this->getLinksUpdate( $candidates, array_slice( $candidates, 0, 1 ) );
 
-		// should get without lead.
-		$handler = new LinksUpdateHookHandler();
-		$this->setMwGlobals( 'wgPageImagesLeadSectionOnly', false );
-		$images = $handler->getPageImageCandidates( $linksUpdate );
-		$this->assertCount( 2, $images, 'All images are returned.' );
+		$parser = $this->getParser( $candidates );
+		$html = $this->getHtml( array_keys( $candidates ), 1 );
+		$handler = $this->getHandler( $candidates );
+		$handler->doParserAfterTidy( $parser, $html );
+		if ( $leadOnly ) {
+			$this->assertFalse(
+				$parser->getOutput()->getPageProperty( PageImages::PROP_NAME_FREE ),
+				'Only lead images are returned.' );
+		} else {
+			$this->assertIsString(
+				$parser->getOutput()->getPageProperty( PageImages::PROP_NAME_FREE ),
+				'All images are returned'
+			);
 
-		$this->setMwGlobals( 'wgPageImagesLeadSectionOnly', true );
-		$images = $handler->getPageImageCandidates( $linksUpdate );
-		$this->assertCount( 1, $images, 'Only lead images are returned.' );
+		}
+	}
+
+	public static function provideDoParserAfterTidy_lead() {
+		return [
+			[ false ],
+			[ true ]
+		];
 	}
 
 	/**
@@ -224,7 +210,7 @@ class LinksUpdateHookHandlerTest extends MediaWikiIntegrationTestCase {
 	 */
 	public function testGetScore( $image, $scoreFromTable, $position, $expected ) {
 		$mock = TestingAccessWrapper::newFromObject(
-			$this->getMockBuilder( LinksUpdateHookHandler::class )
+			$this->getMockBuilder( ParserFileProcessingHookHandlers::class )
 				->onlyMethods( [ 'scoreFromTable', 'fetchFileMetadata', 'getRatio', 'getDenylist' ] )
 				->getMock()
 		);
@@ -281,11 +267,11 @@ class LinksUpdateHookHandlerTest extends MediaWikiIntegrationTestCase {
 
 	/**
 	 * @dataProvider provideScoreFromTable
-	 * @covers \PageImages\Hooks\LinksUpdateHookHandler::scoreFromTable
+	 * @covers \PageImages\Hooks\ParserFileProcessingHookHandlers::scoreFromTable
 	 */
 	public function testScoreFromTable( array $scores, $value, $expected ) {
-		/** @var LinksUpdateHookHandler $handlerWrapper */
-		$handlerWrapper = TestingAccessWrapper::newFromObject( new LinksUpdateHookHandler );
+		/** @var ParserFileProcessingHookHandlers $handlerWrapper */
+		$handlerWrapper = TestingAccessWrapper::newFromObject( new ParserFileProcessingHookHandlers );
 
 		$score = $handlerWrapper->scoreFromTable( $value, $scores );
 		$this->assertEquals( $expected, $score );
@@ -338,7 +324,7 @@ class LinksUpdateHookHandlerTest extends MediaWikiIntegrationTestCase {
 
 	/**
 	 * @dataProvider provideIsFreeImage
-	 * @covers \PageImages\Hooks\LinksUpdateHookHandler::isImageFree
+	 * @covers \PageImages\Hooks\ParserFileProcessingHookHandlers::isImageFree
 	 */
 	public function testIsFreeImage( $fileName, $metadata, $expected ) {
 		$this->overrideMwServices( null, [
@@ -348,13 +334,13 @@ class LinksUpdateHookHandlerTest extends MediaWikiIntegrationTestCase {
 		] );
 
 		$mock = TestingAccessWrapper::newFromObject(
-			$this->getMockBuilder( LinksUpdateHookHandler::class )
+			$this->getMockBuilder( ParserFileProcessingHookHandlers::class )
 				->onlyMethods( [ 'fetchFileMetadata' ] )
 				->getMock()
 		);
 		$mock->method( 'fetchFileMetadata' )
 			->willReturn( $metadata );
-		/** @var LinksUpdateHookHandler $mock */
+		/** @var ParserFileProcessingHookHandlers $mock */
 		$this->assertSame( $expected, $mock->isImageFree( $fileName ) );
 	}
 
