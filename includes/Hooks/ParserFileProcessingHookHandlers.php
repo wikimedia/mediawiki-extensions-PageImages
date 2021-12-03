@@ -122,27 +122,26 @@ class ParserFileProcessingHookHandlers implements
 			return;
 		}
 
-		// Find our special comments
+		// Find and remove our special comments
 		$images = [];
 		if ( $wgPageImagesLeadSectionOnly ) {
-			$sectionText = strstr( $text, '<mw:editsection', true );
-			if ( $sectionText === false ) {
-				$sectionText = $text;
-			}
+			$leadEndPos = strpos( $text, '<mw:editsection' );
 		} else {
-			$sectionText = $text;
+			$leadEndPos = false;
 		}
-		$matches = [];
-		preg_match_all( self::CANDIDATE_REGEX, $sectionText, $matches );
-		foreach ( $matches[1] as $id ) {
-			$id = intval( $id );
-			if ( isset( $allImages[$id] ) ) {
-				$images[] = PageImageCandidate::newFromArray( $allImages[$id] );
-			}
-		}
-
-		// Remove the comments
-		$text = preg_replace( self::CANDIDATE_REGEX, '', $text );
+		$text = preg_replace_callback(
+			self::CANDIDATE_REGEX,
+			static function ( $m ) use ( $allImages, &$images, $leadEndPos ) {
+				$offset = $m[0][1];
+				$id = intval( $m[1][0] );
+				$inLead = $leadEndPos === false || $offset < $leadEndPos;
+				if ( $inLead && isset( $allImages[$id] ) ) {
+					$images[] = PageImageCandidate::newFromArray( $allImages[$id] );
+				}
+				return '';
+			},
+			$text, -1, $count, PREG_OFFSET_CAPTURE
+		);
 
 		list( $bestImageName, $freeImageName ) = $this->findBestImages( $images );
 
