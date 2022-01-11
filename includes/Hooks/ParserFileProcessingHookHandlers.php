@@ -33,6 +33,8 @@ use Title;
  * @author Thiemo Kreuz
  */
 class ParserFileProcessingHookHandlers {
+	private const CANDIDATE_REGEX = '/<!--MW-PAGEIMAGES-CANDIDATE-([0-9]+)-->/';
+
 	/**
 	 * ParserModifyImageHTML hook. Save candidate images, and mark them with a
 	 * comment so that we can later tell if they were in the lead section.
@@ -48,10 +50,6 @@ class ParserFileProcessingHookHandlers {
 		array $params,
 		&$html
 	): void {
-		if ( defined( 'MW_PARSER_TEST' ) ) {
-			// T298930
-			return;
-		}
 		$handler = new self();
 		$handler->doParserModifyImageHTML( $parser, $file, $params, $html );
 	}
@@ -135,9 +133,8 @@ class ParserFileProcessingHookHandlers {
 		} else {
 			$sectionText = $text;
 		}
-		$candidateRegex = '/<!--MW-PAGEIMAGES-CANDIDATE-([0-9]+)-->/';
 		$matches = [];
-		preg_match_all( $candidateRegex, $sectionText, $matches );
+		preg_match_all( self::CANDIDATE_REGEX, $sectionText, $matches );
 		foreach ( $matches[1] as $id ) {
 			$id = intval( $id );
 			if ( isset( $allImages[$id] ) ) {
@@ -146,7 +143,7 @@ class ParserFileProcessingHookHandlers {
 		}
 
 		// Remove the comments
-		$text = preg_replace( $candidateRegex, '', $text );
+		$text = preg_replace( self::CANDIDATE_REGEX, '', $text );
 
 		list( $bestImageName, $freeImageName ) = $this->findBestImages( $images );
 
@@ -157,6 +154,14 @@ class ParserFileProcessingHookHandlers {
 		// Only store the image if it's not free. Free image (if any) has already been stored above.
 		if ( $bestImageName && $bestImageName !== $freeImageName ) {
 			$parserOutput->setPageProperty( PageImages::getPropName( false ), $bestImageName );
+		}
+
+		// Strip comments from indicators (T298930)
+		foreach ( $parserOutput->getIndicators() as $id => $value ) {
+			$stripped = preg_replace( self::CANDIDATE_REGEX, '', $value );
+			if ( $stripped !== $value ) {
+				$parserOutput->setIndicator( $id, $stripped );
+			}
 		}
 	}
 
