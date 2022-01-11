@@ -48,6 +48,10 @@ class ParserFileProcessingHookHandlers {
 		array $params,
 		&$html
 	): void {
+		if ( defined( 'MW_PARSER_TEST' ) ) {
+			// T298930
+			return;
+		}
 		$handler = new self();
 		$handler->doParserModifyImageHTML( $parser, $file, $params, $html );
 	}
