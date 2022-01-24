@@ -130,6 +130,9 @@ class ParserFileProcessingHookHandlers {
 		$images = [];
 		if ( $wgPageImagesLeadSectionOnly ) {
 			$sectionText = strstr( $text, '<mw:editsection', true );
+			if ( $sectionText === false ) {
+				$sectionText = $text;
+			}
 		} else {
 			$sectionText = $text;
 		}
