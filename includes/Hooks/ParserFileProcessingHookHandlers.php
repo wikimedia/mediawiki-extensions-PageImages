@@ -67,6 +67,24 @@ class ParserFileProcessingHookHandlers {
 	}
 
 	/**
+	 * @param array &$globals
+	 */
+	public static function onParserTestGlobals( &$globals ) {
+		$globals += [
+			'wgPageImagesScores' => [
+				'width' => [
+					200 => 10,
+					1000 => 20
+				],
+				'position' => [],
+				'ratio' => [],
+				'galleryImageWidth' => []
+			],
+			'wgPageImagesLeadSectionOnly' => true
+		];
+	}
+
+	/**
 	 * @param Parser $parser
 	 * @param File $file
 	 * @param array $params

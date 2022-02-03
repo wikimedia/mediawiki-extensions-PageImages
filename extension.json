@@ -29,6 +29,7 @@
 		"InfoAction": "PageImages\\PageImages::onInfoAction",
 		"ParserAfterTidy": "PageImages\\Hooks\\ParserFileProcessingHookHandlers::onParserAfterTidy",
 		"ParserModifyImageHTML": "PageImages\\Hooks\\ParserFileProcessingHookHandlers::onParserModifyImageHTML",
+		"ParserTestGlobals": "PageImages\\Hooks\\ParserFileProcessingHookHandlers::onParserTestGlobals",
 		"SearchResultProvideThumbnail": "PageImages\\Hooks\\SearchResultProvideThumbnailHookHandler::onSearchResultProvideThumbnail",
 		"SpecialMobileEditWatchlist::images": "PageImages\\PageImages::onSpecialMobileEditWatchlistImages"
 	},
