@@ -186,14 +186,12 @@ class ParserFileProcessingHookHandlersTest extends MediaWikiIntegrationTestCase 
 		$handler = $this->getHandler( $candidates );
 		$handler->doParserAfterTidy( $parser, $html );
 		if ( $leadOnly ) {
-			$this->assertFalse(
-				// T301915
-				$parser->getOutput()->getPageProperty( PageImages::PROP_NAME_FREE ) ?? false,
+			$this->assertNull(
+				$parser->getOutput()->getPageProperty( PageImages::PROP_NAME_FREE ),
 				'Only lead images are returned.' );
 		} else {
 			$this->assertIsString(
-				// T301915
-				$parser->getOutput()->getPageProperty( PageImages::PROP_NAME_FREE ) ?? false,
+				$parser->getOutput()->getPageProperty( PageImages::PROP_NAME_FREE ),
 				'All images are returned'
 			);
 
