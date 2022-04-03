@@ -7,6 +7,7 @@ use ApiQuery;
 use ApiQueryBase;
 use MediaWiki\MediaWikiServices;
 use Title;
+use Wikimedia\ParamValidator\TypeDef\IntegerDef;
 
 /**
  * Expose image information for a page via a new prop=pageimages API.
@@ -235,9 +236,9 @@ class ApiQueryPageImages extends ApiQueryBase {
 			'limit' => [
 				ApiBase::PARAM_DFLT => 50,
 				ApiBase::PARAM_TYPE => 'limit',
-				ApiBase::PARAM_MIN => 1,
-				ApiBase::PARAM_MAX => 50,
-				ApiBase::PARAM_MAX2 => 100,
+				IntegerDef::PARAM_MIN => 1,
+				IntegerDef::PARAM_MAX => 50,
+				IntegerDef::PARAM_MAX2 => 100,
 			],
 			'license' => [
 				ApiBase::PARAM_TYPE => [ PageImages::LICENSE_FREE, PageImages::LICENSE_ANY ],
