@@ -113,7 +113,7 @@ class PageImageCandidate implements JsonSerializable {
 	 * @internal
 	 * @return array
 	 */
-	public function jsonSerialize() {
+	public function jsonSerialize(): array {
 		return [
 			'filename' => $this->getFileName(),
 			'fullwidth' => $this->getFullWidth(),
