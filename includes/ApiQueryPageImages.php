@@ -37,7 +37,7 @@ class ApiQueryPageImages extends ApiQueryBase {
 	 * (see {@see ApiPageSet::getGoodTitles}) union the set of "missing"
 	 * titles in the File namespace that might correspond to foreign files.
 	 * The latter are included because titles in the File namespace are
-	 * expected to be found with {@see wfFindFile}.
+	 * expected to be found with {@see \RepoGroup::findFile}.
 	 *
 	 * @return Title[] A map of page ID, which will be negative in the case
 	 *  of missing titles in the File namespace, to Title object
