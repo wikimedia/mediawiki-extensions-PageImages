@@ -41,7 +41,7 @@ class PageImageCandidate implements JsonSerializable {
 		$instance->fullWidth = $file->getWidth() ?? 0;
 		$instance->fullHeight = $file->getHeight() ?? 0;
 		if ( isset( $fileParams['handler']['width'] ) ) {
-			$instance->handlerWidth = $fileParams['handler']['width'] ?? 0;
+			$instance->handlerWidth = (int)( $fileParams['handler']['width'] ?? 0 );
 		}
 		return $instance;
 	}
