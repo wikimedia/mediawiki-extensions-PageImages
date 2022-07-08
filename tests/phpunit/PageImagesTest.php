@@ -59,7 +59,7 @@ class PageImagesTest extends MediaWikiIntegrationTestCase {
 			->method( 'addMeta' );
 
 		$skinTemplate = new SkinTemplate();
-		PageImages::onBeforePageDisplay( $outputPage, $skinTemplate );
+		( new PageImages() )->onBeforePageDisplay( $outputPage, $skinTemplate );
 	}
 
 	public static function provideFallbacks() {
@@ -83,7 +83,7 @@ class PageImagesTest extends MediaWikiIntegrationTestCase {
 			->with( $this->equalTo( 'og:image' ), $this->equalTo( $expected ) );
 
 		$skinTemplate = new SkinTemplate();
-		PageImages::onBeforePageDisplay( $outputPage, $skinTemplate );
+		( new PageImages() )->onBeforePageDisplay( $outputPage, $skinTemplate );
 	}
 
 	/**
