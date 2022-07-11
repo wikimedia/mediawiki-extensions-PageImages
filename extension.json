@@ -41,7 +41,8 @@
 			"class": "PageImages\\Hooks\\ParserFileProcessingHookHandlers"
 		},
 		"search": {
-			"class": "PageImages\\Hooks\\SearchResultProvideThumbnailHookHandler"
+			"class": "PageImages\\Hooks\\SearchResultProvideThumbnailHookHandler",
+			"services": [ "PageProps", "RepoGroup" ]
 		}
 	},
 	"JobClasses": {

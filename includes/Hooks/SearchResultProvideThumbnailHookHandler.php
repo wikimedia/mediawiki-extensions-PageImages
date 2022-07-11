@@ -2,7 +2,6 @@
 
 namespace PageImages\Hooks;
 
-use MediaWiki\MediaWikiServices;
 use MediaWiki\Page\PageIdentity;
 use MediaWiki\Rest\Hook\SearchResultProvideThumbnailHook;
 use MediaWiki\Search\Entity\SearchResultThumbnail;
@@ -126,20 +125,12 @@ class SearchResultProvideThumbnailHookHandler implements SearchResultProvideThum
 		}
 	}
 
-	public static function newFromGlobalState(): SearchResultProvideThumbnailHookHandler {
-		$services = MediaWikiServices::getInstance();
-		return new SearchResultProvideThumbnailHookHandler(
-			$services->getPageProps(),
-			$services->getRepoGroup()
-		);
-	}
-
 	/**
 	 * @param array[] $pageIdentities array that contain $pageId => PageIdentity.
 	 * @param array[] &$results Placeholder for result. $pageId => SearchResultThumbnail
 	 */
 	public function onSearchResultProvideThumbnail( array $pageIdentities, &$results ) {
-		$handler = self::newFromGlobalState();
+		$handler = new SearchResultProvideThumbnailHookHandler( $this->pageProps, $this->repoGroup );
 		$handler->doSearchResultProvideThumbnail( $pageIdentities, $results );
 	}
 }
