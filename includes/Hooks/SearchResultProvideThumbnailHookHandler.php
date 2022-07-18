@@ -114,7 +114,7 @@ class SearchResultProvideThumbnailHookHandler implements SearchResultProvideThum
 	 * @param array $pageIdentities array that contain $pageId => SearchResultPageIdentity.
 	 * @param array &$results Placeholder for result. $pageId => SearchResultThumbnail
 	 */
-	public function doSearchResultProvideThumbnail( array $pageIdentities, &$results ): void {
+	public function onSearchResultProvideThumbnail( array $pageIdentities, &$results ): void {
 		$pageIdTitles = array_map( static function ( PageIdentity $identity ) {
 			return Title::makeTitle( $identity->getNamespace(), $identity->getDBkey() );
 		}, $pageIdentities );
@@ -123,14 +123,5 @@ class SearchResultProvideThumbnailHookHandler implements SearchResultProvideThum
 		foreach ( $data as $pageId => $thumbnail ) {
 			$results[ $pageId ] = $thumbnail;
 		}
-	}
-
-	/**
-	 * @param array[] $pageIdentities array that contain $pageId => PageIdentity.
-	 * @param array[] &$results Placeholder for result. $pageId => SearchResultThumbnail
-	 */
-	public function onSearchResultProvideThumbnail( array $pageIdentities, &$results ) {
-		$handler = new SearchResultProvideThumbnailHookHandler( $this->pageProps, $this->repoGroup );
-		$handler->doSearchResultProvideThumbnail( $pageIdentities, $results );
 	}
 }
