@@ -257,6 +257,9 @@ class PageImages implements
 	 * @param Skin $skin Skin object used to generate the page. Ignored
 	 */
 	public function onBeforePageDisplay( $out, $skin ): void {
+		if ( !$out->getConfig()->get( 'PageImagesOpenGraph' ) ) {
+			return;
+		}
 		$imageFile = self::getPageImage( $out->getContext()->getTitle() );
 		if ( !$imageFile ) {
 			$fallback = $out->getConfig()->get( 'PageImagesOpenGraphFallbackImage' );
