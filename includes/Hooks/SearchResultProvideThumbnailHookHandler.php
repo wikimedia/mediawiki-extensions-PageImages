@@ -3,8 +3,8 @@
 namespace PageImages\Hooks;
 
 use MediaWiki\Page\PageIdentity;
-use MediaWiki\Rest\Hook\SearchResultProvideThumbnailHook;
 use MediaWiki\Search\Entity\SearchResultThumbnail;
+use MediaWiki\Search\Hook\SearchResultProvideThumbnailHook;
 use PageImages\PageImages;
 use PageProps;
 use RepoGroup;
