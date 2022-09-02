@@ -10,13 +10,14 @@ use Http;
 use MediaWiki\Hook\ParserAfterTidyHook;
 use MediaWiki\Hook\ParserModifyImageHTML;
 use MediaWiki\Hook\ParserTestGlobalsHook;
-use MediaWiki\MediaWikiServices;
 use PageImages\PageImageCandidate;
 use PageImages\PageImages;
 use Parser;
 use ParserOutput;
+use RepoGroup;
 use RuntimeException;
 use Title;
+use WANObjectCache;
 
 /**
  * Handlers for parser hooks.
@@ -42,35 +43,22 @@ class ParserFileProcessingHookHandlers implements
 {
 	private const CANDIDATE_REGEX = '/<!--MW-PAGEIMAGES-CANDIDATE-([0-9]+)-->/';
 
-	/**
-	 * ParserModifyImageHTML hook. Save candidate images, and mark them with a
-	 * comment so that we can later tell if they were in the lead section.
-	 *
-	 * @param Parser $parser
-	 * @param File $file
-	 * @param array $params
-	 * @param string &$html
-	 */
-	public function onParserModifyImageHTML(
-		Parser $parser,
-		File $file,
-		array $params,
-		string &$html
-	): void {
-		$handler = new self();
-		$handler->doParserModifyImageHTML( $parser, $file, $params, $html );
-	}
+	/** @var RepoGroup */
+	private $repoGroup;
+
+	/** @var WANObjectCache */
+	private $mainWANObjectCache;
 
 	/**
-	 * ParserAfterTidy hook handler. Remove candidate images which were not in
-	 * the lead section.
-	 *
-	 * @param Parser $parser
-	 * @param string &$text
+	 * @param RepoGroup $repoGroup
+	 * @param WANObjectCache $mainWANObjectCache
 	 */
-	public function onParserAfterTidy( $parser, &$text ) {
-		$handler = new self();
-		$handler->doParserAfterTidy( $parser, $text );
+	public function __construct(
+		RepoGroup $repoGroup,
+		WANObjectCache $mainWANObjectCache
+	) {
+		$this->repoGroup = $repoGroup;
+		$this->mainWANObjectCache = $mainWANObjectCache;
 	}
 
 	/**
@@ -92,17 +80,20 @@ class ParserFileProcessingHookHandlers implements
 	}
 
 	/**
+	 * ParserModifyImageHTML hook. Save candidate images, and mark them with a
+	 * comment so that we can later tell if they were in the lead section.
+	 *
 	 * @param Parser $parser
 	 * @param File $file
 	 * @param array $params
 	 * @param string &$html
 	 */
-	public function doParserModifyImageHTML(
+	public function onParserModifyImageHTML(
 		Parser $parser,
 		File $file,
 		array $params,
 		string &$html
-	) {
+	): void {
 		if ( !$this->processThisTitle( $parser->getTitle() ) ) {
 			return;
 		}
@@ -117,10 +108,13 @@ class ParserFileProcessingHookHandlers implements
 	}
 
 	/**
+	 * ParserAfterTidy hook handler. Remove candidate images which were not in
+	 * the lead section.
+	 *
 	 * @param Parser $parser
 	 * @param string &$text
 	 */
-	public function doParserAfterTidy( Parser $parser, &$text ) {
+	public function onParserAfterTidy( $parser, &$text ) {
 		global $wgPageImagesLeadSectionOnly;
 		$parserOutput = $parser->getOutput();
 		$allImages = $parserOutput->getExtensionData( 'pageImages' );
@@ -354,7 +348,7 @@ class ParserFileProcessingHookHandlers implements
 	 * @return bool
 	 */
 	protected function isImageFree( $fileName ) {
-		$file = MediaWikiServices::getInstance()->getRepoGroup()->findFile( $fileName );
+		$file = $this->repoGroup->findFile( $fileName );
 		if ( $file ) {
 			// Process copyright metadata from CommonsMetadata, if present.
 			// Image is considered free if the value is '0' or unset.
@@ -407,10 +401,8 @@ class ParserFileProcessingHookHandlers implements
 	protected function getDenylist() {
 		global $wgPageImagesDenylistExpiry;
 
-		$cache = MediaWikiServices::getInstance()->getMainWANObjectCache();
-
-		return $cache->getWithSetCallback(
-			$cache->makeKey( 'pageimages-denylist' ),
+		return $this->mainWANObjectCache->getWithSetCallback(
+			$this->mainWANObjectCache->makeKey( 'pageimages-denylist' ),
 			$wgPageImagesDenylistExpiry,
 			function () {
 				global $wgPageImagesDenylist;

@@ -11,6 +11,7 @@ use Parser;
 use ParserOptions;
 use RepoGroup;
 use Title;
+use WANObjectCache;
 use Wikimedia\TestingAccessWrapper;
 
 /**
@@ -103,7 +104,7 @@ class ParserFileProcessingHookHandlersTest extends MediaWikiIntegrationTestCase 
 
 	/**
 	 * @dataProvider provideDoParserAfterTidy
-	 * @covers \PageImages\Hooks\ParserFileProcessingHookHandlers::doParserAfterTidy
+	 * @covers \PageImages\Hooks\ParserFileProcessingHookHandlers::onParserAfterTidy
 	 */
 	public function testDoParserAfterTidy(
 		array $images,
@@ -113,7 +114,7 @@ class ParserFileProcessingHookHandlersTest extends MediaWikiIntegrationTestCase 
 		$parser = $this->getParser( $images );
 		$html = $this->getHtml( array_keys( $images ) );
 		$handler = $this->getHandler( $images );
-		$handler->doParserAfterTidy( $parser, $html );
+		$handler->onParserAfterTidy( $parser, $html );
 		$properties = $parser->getOutput()->getPageProperties();
 
 		if ( $expectedFreeFileName === null ) {
@@ -172,7 +173,7 @@ class ParserFileProcessingHookHandlersTest extends MediaWikiIntegrationTestCase 
 
 	/**
 	 * @dataProvider provideDoParserAfterTidy_lead
-	 * @covers \PageImages\Hooks\ParserFileProcessingHookHandlers::doParserAfterTidy
+	 * @covers \PageImages\Hooks\ParserFileProcessingHookHandlers::onParserAfterTidy
 	 */
 	public function testDoParserAfterTidy_lead( $leadOnly ) {
 		$this->setMwGlobals( 'wgPageImagesLeadSectionOnly', $leadOnly );
@@ -184,7 +185,7 @@ class ParserFileProcessingHookHandlersTest extends MediaWikiIntegrationTestCase 
 		$parser = $this->getParser( $candidates );
 		$html = $this->getHtml( array_keys( $candidates ), 1 );
 		$handler = $this->getHandler( $candidates );
-		$handler->doParserAfterTidy( $parser, $html );
+		$handler->onParserAfterTidy( $parser, $html );
 		if ( $leadOnly ) {
 			$this->assertNull(
 				$parser->getOutput()->getPageProperty( PageImages::PROP_NAME_FREE ),
@@ -211,6 +212,7 @@ class ParserFileProcessingHookHandlersTest extends MediaWikiIntegrationTestCase 
 	public function testGetScore( $image, $scoreFromTable, $position, $expected ) {
 		$mock = TestingAccessWrapper::newFromObject(
 			$this->getMockBuilder( ParserFileProcessingHookHandlers::class )
+				->setConstructorArgs( [ $this->getRepoGroup(), $this->createMock( WANObjectCache::class ) ] )
 				->onlyMethods( [ 'scoreFromTable', 'fetchFileMetadata', 'getRatio', 'getDenylist' ] )
 				->getMock()
 		);
@@ -277,7 +279,9 @@ class ParserFileProcessingHookHandlersTest extends MediaWikiIntegrationTestCase 
 	 */
 	public function testScoreFromTable( array $scores, $value, $expected ) {
 		/** @var ParserFileProcessingHookHandlers $handlerWrapper */
-		$handlerWrapper = TestingAccessWrapper::newFromObject( new ParserFileProcessingHookHandlers );
+		$handlerWrapper = TestingAccessWrapper::newFromObject(
+			new ParserFileProcessingHookHandlers( $this->getRepoGroup(), $this->createMock( WANObjectCache::class ) )
+		);
 
 		$score = $handlerWrapper->scoreFromTable( $value, $scores );
 		$this->assertEquals( $expected, $score );
@@ -333,14 +337,9 @@ class ParserFileProcessingHookHandlersTest extends MediaWikiIntegrationTestCase 
 	 * @covers \PageImages\Hooks\ParserFileProcessingHookHandlers::isImageFree
 	 */
 	public function testIsFreeImage( $fileName, $metadata, $expected ) {
-		$this->overrideMwServices( null, [
-			'RepoGroup' => function () {
-				return $this->getRepoGroup();
-			}
-		] );
-
 		$mock = TestingAccessWrapper::newFromObject(
 			$this->getMockBuilder( ParserFileProcessingHookHandlers::class )
+				->setConstructorArgs( [ $this->getRepoGroup(), $this->createMock( WANObjectCache::class ) ] )
 				->onlyMethods( [ 'fetchFileMetadata' ] )
 				->getMock()
 		);

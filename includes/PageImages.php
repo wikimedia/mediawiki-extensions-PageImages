@@ -11,6 +11,7 @@ use MediaWiki\Api\Hook\ApiOpenSearchSuggestHook;
 use MediaWiki\Hook\BeforePageDisplayHook;
 use MediaWiki\Hook\InfoActionHook;
 use MediaWiki\MediaWikiServices;
+use MediaWiki\User\UserOptionsLookup;
 use OutputPage;
 use Skin;
 use Title;
@@ -54,6 +55,16 @@ class PageImages implements
 	 * and cause them to be regenerated.
 	 */
 	public const PROP_NAME_FREE = 'page_image_free';
+
+	/** @var UserOptionsLookup */
+	private $userOptionsLookup;
+
+	/**
+	 * @param UserOptionsLookup $userOptionsLookup
+	 */
+	public function __construct( UserOptionsLookup $userOptionsLookup ) {
+		$this->userOptionsLookup = $userOptionsLookup;
+	}
 
 	/**
 	 * Get property name used in page_props table. When a page image
@@ -143,8 +154,7 @@ class PageImages implements
 			return;
 		}
 
-		$userOptionsLookup = MediaWikiServices::getInstance()->getUserOptionsLookup();
-		$thumbSetting = $userOptionsLookup->getOption( $context->getUser(), 'thumbsize' );
+		$thumbSetting = $this->userOptionsLookup->getOption( $context->getUser(), 'thumbsize' );
 		$thumbSize = $wgThumbLimits[$thumbSetting];
 
 		$thumb = $imageFile->transform( [ 'width' => $thumbSize ] );
