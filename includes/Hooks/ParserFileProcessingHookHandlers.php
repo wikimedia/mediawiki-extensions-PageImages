@@ -101,39 +101,16 @@ class ParserFileProcessingHookHandlers implements
 		Parser $parser,
 		File $file,
 		array $params,
-		&$html
+		string &$html
 	) {
-		$this->processFile( $parser, $file, $params, $html );
-	}
-
-	/**
-	 * @param Parser $parser
-	 * @param File|Title|null $file
-	 * @param array[] $handlerParams
-	 * @param string &$html
-	 */
-	private function processFile( Parser $parser, $file, $handlerParams, &$html ) {
-		if ( !$file || !$this->processThisTitle( $parser->getTitle() ) ) {
+		if ( !$this->processThisTitle( $parser->getTitle() ) ) {
 			return;
 		}
 
-		if ( !( $file instanceof File ) ) {
-			$file = MediaWikiServices::getInstance()->getRepoGroup()->findFile( $file );
-			// Non-image files (e.g. audio files) from a <gallery> can end here
-			if ( !$file || !$file->canRender() ) {
-				return;
-			}
-		}
-
-		if ( is_array( $handlerParams ) ) {
-			$myParams = $handlerParams;
-			$this->calcWidth( $myParams, $file );
-		} else {
-			$myParams = [];
-		}
+		$this->calcWidth( $params, $file );
 
 		$index = $this->addPageImageCandidateToParserOutput(
-			PageImageCandidate::newFromFileAndParams( $file, $myParams ),
+			PageImageCandidate::newFromFileAndParams( $file, $params ),
 			$parser->getOutput()
 		);
 		$html .= "<!--MW-PAGEIMAGES-CANDIDATE-$index-->";
