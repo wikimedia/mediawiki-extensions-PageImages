@@ -113,13 +113,14 @@ class SearchResultProvideThumbnailHookHandler implements SearchResultProvideThum
 	/**
 	 * @param array $pageIdentities array that contain $pageId => SearchResultPageIdentity.
 	 * @param array &$results Placeholder for result. $pageId => SearchResultThumbnail
+	 * @param int|null $size size of thumbnail height and width in points
 	 */
-	public function onSearchResultProvideThumbnail( array $pageIdentities, &$results ): void {
+	public function onSearchResultProvideThumbnail( array $pageIdentities, &$results, int $size = null ): void {
 		$pageIdTitles = array_map( static function ( PageIdentity $identity ) {
 			return Title::makeTitle( $identity->getNamespace(), $identity->getDBkey() );
 		}, $pageIdentities );
 
-		$data = $this->getThumbnails( $pageIdTitles, self::THUMBNAIL_SIZE );
+		$data = $this->getThumbnails( $pageIdTitles, $size ?? self::THUMBNAIL_SIZE );
 		foreach ( $data as $pageId => $thumbnail ) {
 			$results[ $pageId ] = $thumbnail;
 		}
