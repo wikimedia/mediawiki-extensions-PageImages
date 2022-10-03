@@ -5,10 +5,12 @@ namespace PageImages\Tests\Hooks;
 use LocalFile;
 use MediaWiki\Page\PageIdentity;
 use MediaWiki\Page\PageIdentityValue;
+use MediaWiki\Search\SearchResultThumbnailProvider;
 use MediaWikiIntegrationTestCase;
 use PageImages\Hooks\SearchResultProvideThumbnailHookHandler;
 use PageImages\PageImages;
 use PageProps;
+use PHPUnit\Framework\MockObject\Stub\ReturnCallback;
 use RepoGroup;
 use ThumbnailImage;
 
@@ -68,16 +70,22 @@ class SearchResultProvideThumbnailHookHandlerTest extends MediaWikiIntegrationTe
 	 * Creates mock object for LocalFile
 	 * @param int $size
 	 * @param string $thumbFilePath
+	 * @param string $filename
 	 * @return LocalFile
 	 */
-	private function getMockLocalFile( int $size, $thumbFilePath ): LocalFile {
+	private function getMockLocalFile( int $size, $thumbFilePath, $filename ): LocalFile {
 		$file = $this->getMockBuilder( LocalFile::class )
 			->disableOriginalConstructor()
 			->onlyMethods( [
+				'getName',
 				'transform',
 				'getMimeType'
 			] )
 			->getMock();
+
+		$file->expects( $this->once() )
+			->method( 'getName' )
+			->willReturn( $filename );
 
 		$file->expects( $this->once() )
 			->method( 'transform' )
@@ -123,44 +131,42 @@ class SearchResultProvideThumbnailHookHandlerTest extends MediaWikiIntegrationTe
 			->onlyMethods( [ 'findFile' ] )
 			->getMock();
 
-		$repoGroup->expects( $this->exactly( 4 ) )
+		$findFileCallback = function ( $filename ) {
+			return $this->getMockLocalFile(
+				SearchResultThumbnailProvider::THUMBNAIL_SIZE,
+				__FILE__,
+				$filename
+			);
+		};
+		$repoGroup->expects( $this->exactly( 2 ) )
 			->method( 'findFile' )
-			->withConsecutive( [ 'File1.jpg' ], [ 'File2_any.jpg' ], [ 'dbKey3' ], [ 'dbKey4' ] )
+			->withConsecutive( [ 'File1.jpg' ], [ 'File2_any.jpg' ] )
 			->willReturnOnConsecutiveCalls(
-				$this->getMockLocalFile(
-					SearchResultProvideThumbnailHookHandler::THUMBNAIL_SIZE,
-					__FILE__
-				),
-				null,
-				$this->getMockLocalFile(
-					SearchResultProvideThumbnailHookHandler::THUMBNAIL_SIZE,
-					false
-				),
+				new ReturnCallback( $findFileCallback ),
 				null
 			);
 
-		$handler = new SearchResultProvideThumbnailHookHandler( $pageProps, $repoGroup );
+		$provider = new SearchResultThumbnailProvider( $repoGroup, $this->createHookContainer() );
+		$handler = new SearchResultProvideThumbnailHookHandler( $provider, $pageProps, $repoGroup );
 
 		$results = [ 1 => null, 2 => null, 3 => null, 4 => null ];
 		$handler->onSearchResultProvideThumbnail( $pageIdentities, $results );
 
 		$this->assertNull( $results[ 2 ] );
+		$this->assertNull( $results[ 3 ] );
 		$this->assertNull( $results[ 4 ] );
 
 		$this->assertNotNull( $results[ 1 ] );
 		$this->assertSame( 'File1.jpg', $results[ 1 ]->getName() );
 		$this->assertSame(
-			SearchResultProvideThumbnailHookHandler::THUMBNAIL_SIZE,
+			SearchResultThumbnailProvider::THUMBNAIL_SIZE,
 			$results[ 1 ]->getWidth()
 		);
 		$this->assertSame(
-			SearchResultProvideThumbnailHookHandler::THUMBNAIL_SIZE,
+			SearchResultThumbnailProvider::THUMBNAIL_SIZE,
 			$results[ 1 ]->getHeight()
 		);
 		$this->assertGreaterThan( 0, $results[ 1 ]->getSize() );
 		$this->assertSame( 'https://example.org/test.url', $results[ 1 ]->getUrl() );
-
-		$this->assertNotNull( $results[ 3 ] );
-		$this->assertNull( $results[ 3 ]->getSize() );
 	}
 }

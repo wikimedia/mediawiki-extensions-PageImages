@@ -44,7 +44,7 @@
 		},
 		"search": {
 			"class": "PageImages\\Hooks\\SearchResultProvideThumbnailHookHandler",
-			"services": [ "PageProps", "RepoGroup" ]
+			"services": [ "SearchResultThumbnailProvider", "PageProps", "RepoGroup" ]
 		}
 	},
 	"JobClasses": {
