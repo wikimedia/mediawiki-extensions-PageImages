@@ -116,14 +116,13 @@ class SearchResultProvideThumbnailHookHandlerTest extends MediaWikiIntegrationTe
 			->method( 'getProperties' )
 			->with(
 				$this->anything(),
-				PageImages::getPropNames( PageImages::LICENSE_ANY )
+				PageImages::getPropNames( PageImages::LICENSE_FREE )
 			)->willReturn( [
 				1 => [
-					PageImages::getPropName( true ) => 'File1.jpg'
+					PageImages::getPropName( true ) => 'File1_free.jpg'
 				],
 				2 => [
 					PageImages::getPropName( true ) => 'File2_free.jpg',
-					PageImages::getPropName( false ) => 'File2_any.jpg'
 				] ] );
 
 		$repoGroup = $this->getMockBuilder( RepoGroup::class )
@@ -140,7 +139,7 @@ class SearchResultProvideThumbnailHookHandlerTest extends MediaWikiIntegrationTe
 		};
 		$repoGroup->expects( $this->exactly( 2 ) )
 			->method( 'findFile' )
-			->withConsecutive( [ 'File1.jpg' ], [ 'File2_any.jpg' ] )
+			->withConsecutive( [ 'File1_free.jpg' ], [ 'File2_free.jpg' ] )
 			->willReturnOnConsecutiveCalls(
 				new ReturnCallback( $findFileCallback ),
 				null
@@ -157,7 +156,7 @@ class SearchResultProvideThumbnailHookHandlerTest extends MediaWikiIntegrationTe
 		$this->assertNull( $results[ 4 ] );
 
 		$this->assertNotNull( $results[ 1 ] );
-		$this->assertSame( 'File1.jpg', $results[ 1 ]->getName() );
+		$this->assertSame( 'File1_free.jpg', $results[ 1 ]->getName() );
 		$this->assertSame(
 			SearchResultThumbnailProvider::THUMBNAIL_SIZE,
 			$results[ 1 ]->getWidth()
