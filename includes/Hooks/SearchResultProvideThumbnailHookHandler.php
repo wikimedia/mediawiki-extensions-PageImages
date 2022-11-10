@@ -52,7 +52,8 @@ class SearchResultProvideThumbnailHookHandler implements SearchResultProvideThum
 
 		$propValues = $this->pageProps->getProperties(
 			$nonFileIdentitiesByPageId,
-			PageImages::getPropNames( PageImages::LICENSE_ANY )
+			// T320661: only provide free images for search purposes
+			PageImages::getPropNames( PageImages::LICENSE_FREE )
 		);
 		$fileNames = array_map( static function ( $prop ) {
 			return $prop[ PageImages::getPropName( false ) ]
