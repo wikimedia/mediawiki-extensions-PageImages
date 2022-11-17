@@ -24,28 +24,21 @@ class SearchResultProvideThumbnailHookHandlerTest extends MediaWikiIntegrationTe
 	 * Creates mock object for LocalFile
 	 * @param int $size
 	 * @param LocalFile $file
-	 * @param string $thumbFilePath
 	 * @return ThumbnailImage
 	 */
 	private function getMockThumbnailImage(
 		int $size,
-		LocalFile $file,
-		$thumbFilePath
+		LocalFile $file
 	): ThumbnailImage {
 		$thumbnail = $this->getMockBuilder( ThumbnailImage::class )
 			->disableOriginalConstructor()
 			->onlyMethods( [
-				'getLocalCopyPath',
 				'getWidth',
 				'getHeight',
 				'getFile',
 				'getUrl'
 			] )
 			->getMock();
-
-			$thumbnail->expects( $this->once() )
-				->method( 'getLocalCopyPath' )
-				->willReturn( $thumbFilePath );
 
 			$thumbnail->expects( $this->once() )
 				->method( 'getUrl' )
@@ -69,11 +62,10 @@ class SearchResultProvideThumbnailHookHandlerTest extends MediaWikiIntegrationTe
 	/**
 	 * Creates mock object for LocalFile
 	 * @param int $size
-	 * @param string $thumbFilePath
 	 * @param string $filename
 	 * @return LocalFile
 	 */
-	private function getMockLocalFile( int $size, $thumbFilePath, $filename ): LocalFile {
+	private function getMockLocalFile( int $size, $filename ): LocalFile {
 		$file = $this->getMockBuilder( LocalFile::class )
 			->disableOriginalConstructor()
 			->onlyMethods( [
@@ -90,7 +82,7 @@ class SearchResultProvideThumbnailHookHandlerTest extends MediaWikiIntegrationTe
 		$file->expects( $this->once() )
 			->method( 'transform' )
 			->with( [ 'width' => $size , 'height' => $size ] )
-			->willReturn( $this->getMockThumbnailImage( $size, $file, $thumbFilePath ) );
+			->willReturn( $this->getMockThumbnailImage( $size, $file ) );
 
 		$file->expects( $this->once() )
 			->method( 'getMimeType' )
@@ -133,7 +125,6 @@ class SearchResultProvideThumbnailHookHandlerTest extends MediaWikiIntegrationTe
 		$findFileCallback = function ( $filename ) {
 			return $this->getMockLocalFile(
 				SearchResultThumbnailProvider::THUMBNAIL_SIZE,
-				__FILE__,
 				$filename
 			);
 		};
@@ -165,7 +156,6 @@ class SearchResultProvideThumbnailHookHandlerTest extends MediaWikiIntegrationTe
 			SearchResultThumbnailProvider::THUMBNAIL_SIZE,
 			$results[ 1 ]->getHeight()
 		);
-		$this->assertGreaterThan( 0, $results[ 1 ]->getSize() );
 		$this->assertSame( 'https://example.org/test.url', $results[ 1 ]->getUrl() );
 	}
 }
