@@ -7,7 +7,9 @@ use ApiMain;
 use FauxRequest;
 use File;
 use IContextSource;
+use MapCacheLRU;
 use MediaWiki\Api\Hook\ApiOpenSearchSuggestHook;
+use MediaWiki\Cache\CacheKeyHelper;
 use MediaWiki\Hook\BeforePageDisplayHook;
 use MediaWiki\Hook\InfoActionHook;
 use MediaWiki\MediaWikiServices;
@@ -59,6 +61,9 @@ class PageImages implements
 	/** @var UserOptionsLookup */
 	private $userOptionsLookup;
 
+	/** @var MapCacheLRU */
+	private static $cache = null;
+
 	/**
 	 * @param UserOptionsLookup $userOptionsLookup
 	 */
@@ -104,6 +109,13 @@ class PageImages implements
 	 * @return File|bool
 	 */
 	public static function getPageImage( Title $title ) {
+		$cacheKey = CacheKeyHelper::getKeyForPage( $title );
+		if ( self::$cache === null ) {
+			self::$cache = new MapCacheLRU( 100 );
+		}
+		if ( self::$cache->has( $cacheKey ) ) {
+			return self::$cache->get( $cacheKey );
+		}
 		// Do not query for special pages or other titles never in the database
 		if ( !$title->canExist() ) {
 			return false;
@@ -115,6 +127,7 @@ class PageImages implements
 
 		if ( !$title->exists() ) {
 			// No page id to select from
+			self::$cache->set( $cacheKey, false );
 			return false;
 		}
 
@@ -134,6 +147,7 @@ class PageImages implements
 			$file = MediaWikiServices::getInstance()->getRepoGroup()->findFile( $fileName );
 		}
 
+		self::$cache->set( $cacheKey, $file );
 		return $file;
 	}
 
