@@ -6,10 +6,10 @@ use DerivativeContext;
 use Exception;
 use File;
 use FormatMetadata;
-use Http;
 use MediaWiki\Hook\ParserAfterTidyHook;
 use MediaWiki\Hook\ParserModifyImageHTML;
 use MediaWiki\Hook\ParserTestGlobalsHook;
+use MediaWiki\Http\HttpRequestFactory;
 use PageImages\PageImageCandidate;
 use PageImages\PageImages;
 use Parser;
@@ -49,16 +49,22 @@ class ParserFileProcessingHookHandlers implements
 	/** @var WANObjectCache */
 	private $mainWANObjectCache;
 
+	/** @var HttpRequestFactory */
+	private $httpRequestFactory;
+
 	/**
 	 * @param RepoGroup $repoGroup
 	 * @param WANObjectCache $mainWANObjectCache
+	 * @param HttpRequestFactory $httpRequestFactory
 	 */
 	public function __construct(
 		RepoGroup $repoGroup,
-		WANObjectCache $mainWANObjectCache
+		WANObjectCache $mainWANObjectCache,
+		HttpRequestFactory $httpRequestFactory
 	) {
 		$this->repoGroup = $repoGroup;
 		$this->mainWANObjectCache = $mainWANObjectCache;
+		$this->httpRequestFactory = $httpRequestFactory;
 	}
 
 	/**
@@ -480,7 +486,7 @@ class ParserFileProcessingHookHandlers implements
 		global $wgFileExtensions;
 
 		$list = [];
-		$text = Http::get( $url, [ 'timeout' => 3 ], __METHOD__ );
+		$text = $this->httpRequestFactory->get( $url, [ 'timeout' => 3 ], __METHOD__ );
 		$regex = '/\[\[:([^|\#]*?\.(?:' . implode( '|', $wgFileExtensions ) . '))/i';
 
 		if ( $text && preg_match_all( $regex, $text, $matches ) ) {
