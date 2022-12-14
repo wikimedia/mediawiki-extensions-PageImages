@@ -3,6 +3,7 @@
 namespace PageImages\Tests\Hooks;
 
 use File;
+use MediaWiki\Http\HttpRequestFactory;
 use MediaWikiIntegrationTestCase;
 use PageImages\Hooks\ParserFileProcessingHookHandlers;
 use PageImages\PageImageCandidate;
@@ -212,7 +213,11 @@ class ParserFileProcessingHookHandlersTest extends MediaWikiIntegrationTestCase 
 	public function testGetScore( $image, $scoreFromTable, $position, $expected ) {
 		$mock = TestingAccessWrapper::newFromObject(
 			$this->getMockBuilder( ParserFileProcessingHookHandlers::class )
-				->setConstructorArgs( [ $this->getRepoGroup(), $this->createMock( WANObjectCache::class ) ] )
+				->setConstructorArgs( [
+					$this->getRepoGroup(),
+					$this->createMock( WANObjectCache::class ),
+					$this->createMock( HttpRequestFactory::class ),
+				] )
 				->onlyMethods( [ 'scoreFromTable', 'fetchFileMetadata', 'getRatio', 'getDenylist' ] )
 				->getMock()
 		);
@@ -280,7 +285,11 @@ class ParserFileProcessingHookHandlersTest extends MediaWikiIntegrationTestCase 
 	public function testScoreFromTable( array $scores, $value, $expected ) {
 		/** @var ParserFileProcessingHookHandlers $handlerWrapper */
 		$handlerWrapper = TestingAccessWrapper::newFromObject(
-			new ParserFileProcessingHookHandlers( $this->getRepoGroup(), $this->createMock( WANObjectCache::class ) )
+			new ParserFileProcessingHookHandlers(
+				$this->getRepoGroup(),
+				$this->createMock( WANObjectCache::class ),
+				$this->createMock( HttpRequestFactory::class )
+			)
 		);
 
 		$score = $handlerWrapper->scoreFromTable( $value, $scores );
@@ -339,7 +348,11 @@ class ParserFileProcessingHookHandlersTest extends MediaWikiIntegrationTestCase 
 	public function testIsFreeImage( $fileName, $metadata, $expected ) {
 		$mock = TestingAccessWrapper::newFromObject(
 			$this->getMockBuilder( ParserFileProcessingHookHandlers::class )
-				->setConstructorArgs( [ $this->getRepoGroup(), $this->createMock( WANObjectCache::class ) ] )
+				->setConstructorArgs( [
+					$this->getRepoGroup(),
+					$this->createMock( WANObjectCache::class ),
+					$this->createMock( HttpRequestFactory::class ),
+				] )
 				->onlyMethods( [ 'fetchFileMetadata' ] )
 				->getMock()
 		);

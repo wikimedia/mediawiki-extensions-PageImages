@@ -40,7 +40,7 @@
 		},
 		"parser": {
 			"class": "PageImages\\Hooks\\ParserFileProcessingHookHandlers",
-			"services": [ "RepoGroup", "MainWANObjectCache" ]
+			"services": [ "RepoGroup", "MainWANObjectCache", "HttpRequestFactory" ]
 		},
 		"search": {
 			"class": "PageImages\\Hooks\\SearchResultProvideThumbnailHookHandler",
