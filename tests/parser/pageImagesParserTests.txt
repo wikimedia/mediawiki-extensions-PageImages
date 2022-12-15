@@ -30,6 +30,7 @@ property[page_image_free]=Foobar.jpg
 PageImages with best excluded by wgPageImagesLeadSectionOnly
 !! options
 property=page_image_free
+disabled
 !! wikitext
 [[File:Thumb.png]]
 
