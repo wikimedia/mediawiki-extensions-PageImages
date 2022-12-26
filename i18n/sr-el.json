@@ -2,9 +2,10 @@
 	"@metadata": {
 		"authors": [
 			"Milicevic01",
-			"Zoranzoki21"
+			"Zoranzoki21",
+			"Kizule"
 		]
 	},
-	"pageimages-desc": "Sakuplja informacije o slikama koje se nalaze na stranici",
-	"pageimages-info-label": "Slika na stranici"
+	"pageimages-desc": "Sakuplja informacije o slikama koje se koriste na stranici",
+	"pageimages-info-label": "Slika stranice"
 }
