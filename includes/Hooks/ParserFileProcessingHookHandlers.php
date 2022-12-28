@@ -10,6 +10,7 @@ use MediaWiki\Hook\ParserAfterTidyHook;
 use MediaWiki\Hook\ParserModifyImageHTML;
 use MediaWiki\Hook\ParserTestGlobalsHook;
 use MediaWiki\Http\HttpRequestFactory;
+use MediaWiki\Page\PageReference;
 use PageImages\PageImageCandidate;
 use PageImages\PageImages;
 use Parser;
@@ -100,7 +101,8 @@ class ParserFileProcessingHookHandlers implements
 		array $params,
 		string &$html
 	): void {
-		if ( !$this->processThisTitle( $parser->getTitle() ) ) {
+		$page = $parser->getPage();
+		if ( !$page || !$this->processThisTitle( $page ) ) {
 			return;
 		}
 
@@ -231,11 +233,11 @@ class ParserFileProcessingHookHandlers implements
 	/**
 	 * Returns true if data for this title should be saved
 	 *
-	 * @param Title $title
+	 * @param PageReference $pageReference
 	 *
 	 * @return bool
 	 */
-	private function processThisTitle( Title $title ) {
+	private function processThisTitle( PageReference $pageReference ) {
 		global $wgPageImagesNamespaces;
 		static $flipped = false;
 
@@ -243,7 +245,7 @@ class ParserFileProcessingHookHandlers implements
 			$flipped = array_flip( $wgPageImagesNamespaces );
 		}
 
-		return isset( $flipped[$title->getNamespace()] );
+		return isset( $flipped[$pageReference->getNamespace()] );
 	}
 
 	/**
