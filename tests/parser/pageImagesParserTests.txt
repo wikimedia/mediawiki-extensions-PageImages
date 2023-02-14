@@ -4,10 +4,12 @@
 PageImages with one image
 !! options
 property=page_image_free
+!! config
+wgParserEnableLegacyMediaDOM=false
 !! wikitext
 [[File:Foobar.jpg]]
 !! html
-<p><a href="/wiki/File:Foobar.jpg" class="image"><img alt="Foobar.jpg" src="http://example.com/images/3/3a/Foobar.jpg" decoding="async" width="1941" height="220" /></a>
+<p><span class="mw-default-size" typeof="mw:File"><a href="/wiki/File:Foobar.jpg" class="mw-file-description"><img src="http://example.com/images/3/3a/Foobar.jpg" decoding="async" width="1941" height="220" /></a></span>
 </p>
 property[page_image_free]=Foobar.jpg
 !! end
@@ -16,12 +18,14 @@ property[page_image_free]=Foobar.jpg
 PageImages with two images
 !! options
 property=page_image_free
+!! config
+wgParserEnableLegacyMediaDOM=false
 !! wikitext
 [[File:Thumb.png]]
 [[File:Foobar.jpg]]
 !! html
-<p><a href="/wiki/File:Thumb.png" class="image"><img alt="Thumb.png" src="http://example.com/images/e/ea/Thumb.png" decoding="async" width="135" height="135" /></a>
-<a href="/wiki/File:Foobar.jpg" class="image"><img alt="Foobar.jpg" src="http://example.com/images/3/3a/Foobar.jpg" decoding="async" width="1941" height="220" /></a>
+<p><span class="mw-default-size" typeof="mw:File"><a href="/wiki/File:Thumb.png" class="mw-file-description"><img src="http://example.com/images/e/ea/Thumb.png" decoding="async" width="135" height="135" /></a></span>
+<span class="mw-default-size" typeof="mw:File"><a href="/wiki/File:Foobar.jpg" class="mw-file-description"><img src="http://example.com/images/3/3a/Foobar.jpg" decoding="async" width="1941" height="220" /></a></span>
 </p>
 property[page_image_free]=Foobar.jpg
 !! end
