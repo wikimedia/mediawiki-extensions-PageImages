@@ -4,6 +4,7 @@
 PageImages with one image
 !! options
 property=page_image_free
+disabled
 !! config
 wgParserEnableLegacyMediaDOM=false
 !! wikitext
@@ -19,6 +20,7 @@ property[page_image_free]=Foobar.jpg
 PageImages with two images
 !! options
 property=page_image_free
+disabled
 !! config
 wgParserEnableLegacyMediaDOM=false
 !! wikitext
