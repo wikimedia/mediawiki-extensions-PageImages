@@ -7,7 +7,7 @@ use Exception;
 use File;
 use FormatMetadata;
 use MediaWiki\Hook\ParserAfterTidyHook;
-use MediaWiki\Hook\ParserModifyImageHTML;
+use MediaWiki\Hook\ParserModifyImageHTMLHook;
 use MediaWiki\Hook\ParserTestGlobalsHook;
 use MediaWiki\Http\HttpRequestFactory;
 use MediaWiki\Page\PageReference;
@@ -39,7 +39,7 @@ use WANObjectCache;
  */
 class ParserFileProcessingHookHandlers implements
 	ParserAfterTidyHook,
-	ParserModifyImageHTML,
+	ParserModifyImageHTMLHook,
 	ParserTestGlobalsHook
 {
 	private const CANDIDATE_REGEX = '/<!--MW-PAGEIMAGES-CANDIDATE-([0-9]+)-->/';
