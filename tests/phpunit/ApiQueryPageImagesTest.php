@@ -94,7 +94,7 @@ class ApiQueryPageImagesTest extends TestCase {
 		$this->assertEquals( $expected, $queryPageImages->getTitles() );
 	}
 
-	public function provideGetTitles() {
+	public static function provideGetTitles() {
 		return [
 			[
 				[ Title::makeTitle( NS_MAIN, 'Foo' ) ],
@@ -177,7 +177,7 @@ class ApiQueryPageImagesTest extends TestCase {
 		$mock->execute();
 	}
 
-	public function provideExecute() {
+	public static function provideExecute() {
 		return [
 			[
 				[ 'prop' => [ 'thumbnail' ], 'thumbsize' => 100, 'limit' => 10,

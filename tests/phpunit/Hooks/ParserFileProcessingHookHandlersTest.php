@@ -131,7 +131,7 @@ class ParserFileProcessingHookHandlersTest extends MediaWikiIntegrationTestCase 
 		}
 	}
 
-	public function provideDoParserAfterTidy() {
+	public static function provideDoParserAfterTidy() {
 		return [
 			// both images are non-free
 			[
@@ -232,7 +232,7 @@ class ParserFileProcessingHookHandlersTest extends MediaWikiIntegrationTestCase 
 		$this->assertSame( $expected, $score );
 	}
 
-	public function provideGetScore() {
+	public static function provideGetScore() {
 		return [
 			[
 				[ 'filename' => 'A.jpg', 'handler' => [ 'width' => 100 ] ],
@@ -296,7 +296,7 @@ class ParserFileProcessingHookHandlersTest extends MediaWikiIntegrationTestCase 
 		$this->assertEquals( $expected, $score );
 	}
 
-	public function provideScoreFromTable() {
+	public static function provideScoreFromTable() {
 		global $wgPageImagesScores;
 
 		return [
@@ -362,7 +362,7 @@ class ParserFileProcessingHookHandlersTest extends MediaWikiIntegrationTestCase 
 		$this->assertSame( $expected, $mock->isImageFree( $fileName ) );
 	}
 
-	public function provideIsFreeImage() {
+	public static function provideIsFreeImage() {
 		return [
 			[ 'A.jpg', [], true ],
 			[ 'A.jpg', [ 'NonFree' => [ 'value' => '0' ] ], true ],
