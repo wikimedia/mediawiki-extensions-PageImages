@@ -12,6 +12,7 @@ use Parser;
 use ParserOptions;
 use RepoGroup;
 use Title;
+use TitleFactory;
 use WANObjectCache;
 use Wikimedia\Rdbms\IConnectionProvider;
 use Wikimedia\TestingAccessWrapper;
@@ -219,6 +220,7 @@ class ParserFileProcessingHookHandlersTest extends MediaWikiIntegrationTestCase 
 					$this->createMock( WANObjectCache::class ),
 					$this->createMock( HttpRequestFactory::class ),
 					$this->createMock( IConnectionProvider::class ),
+					$this->createMock( TitleFactory::class ),
 				] )
 				->onlyMethods( [ 'scoreFromTable', 'fetchFileMetadata', 'getRatio', 'getDenylist' ] )
 				->getMock()
@@ -291,7 +293,8 @@ class ParserFileProcessingHookHandlersTest extends MediaWikiIntegrationTestCase 
 				$this->getRepoGroup(),
 				$this->createMock( WANObjectCache::class ),
 				$this->createMock( HttpRequestFactory::class ),
-				$this->createMock( IConnectionProvider::class )
+				$this->createMock( IConnectionProvider::class ),
+				$this->createMock( TitleFactory::class )
 			)
 		);
 
@@ -356,6 +359,7 @@ class ParserFileProcessingHookHandlersTest extends MediaWikiIntegrationTestCase 
 					$this->createMock( WANObjectCache::class ),
 					$this->createMock( HttpRequestFactory::class ),
 					$this->createMock( IConnectionProvider::class ),
+					$this->createMock( TitleFactory::class ),
 				] )
 				->onlyMethods( [ 'fetchFileMetadata' ] )
 				->getMock()
