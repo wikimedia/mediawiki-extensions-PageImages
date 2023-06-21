@@ -19,6 +19,7 @@ use RepoGroup;
 use RuntimeException;
 use Title;
 use WANObjectCache;
+use Wikimedia\Rdbms\IConnectionProvider;
 
 /**
  * Handlers for parser hooks.
@@ -53,19 +54,25 @@ class ParserFileProcessingHookHandlers implements
 	/** @var HttpRequestFactory */
 	private $httpRequestFactory;
 
+	/** @var IConnectionProvider */
+	private $connectionProvider;
+
 	/**
 	 * @param RepoGroup $repoGroup
 	 * @param WANObjectCache $mainWANObjectCache
 	 * @param HttpRequestFactory $httpRequestFactory
+	 * @param IConnectionProvider $connectionProvider
 	 */
 	public function __construct(
 		RepoGroup $repoGroup,
 		WANObjectCache $mainWANObjectCache,
-		HttpRequestFactory $httpRequestFactory
+		HttpRequestFactory $httpRequestFactory,
+		IConnectionProvider $connectionProvider
 	) {
 		$this->repoGroup = $repoGroup;
 		$this->mainWANObjectCache = $mainWANObjectCache;
 		$this->httpRequestFactory = $httpRequestFactory;
+		$this->connectionProvider = $connectionProvider;
 	}
 
 	/**
@@ -444,35 +451,29 @@ class ParserFileProcessingHookHandlers implements
 	/**
 	 * Returns list of images linked by the given denylist page
 	 *
-	 * @param string|bool $dbName Database name or false for current database
+	 * @param string|false $dbName Database name or false for current database
 	 * @param string $page
 	 *
 	 * @return string[]
 	 */
 	private function getDbDenylist( $dbName, $page ) {
-		$dbr = wfGetDB( DB_REPLICA, [], $dbName );
 		$title = Title::newFromText( $page );
-		$list = [];
 
-		$id = $dbr->selectField(
-			'page',
-			'page_id',
-			[ 'page_namespace' => $title->getNamespace(), 'page_title' => $title->getDBkey() ],
-			__METHOD__
-		);
-
-		if ( $id ) {
-			$res = $dbr->select( 'pagelinks',
-				'pl_title',
-				[ 'pl_from' => $id, 'pl_namespace' => NS_FILE ],
-				__METHOD__
-			);
-			foreach ( $res as $row ) {
-				$list[] = $row->pl_title;
-			}
+		$dbr = $this->connectionProvider->getReplicaDatabase( $dbName );
+		$id = $dbr->newSelectQueryBuilder()
+			->select( 'page_id' )
+			->from( 'page' )
+			->where( [ 'page_namespace' => $title->getNamespace(), 'page_title' => $title->getDBkey() ] )
+			->caller( __METHOD__ )->fetchField();
+		if ( !$id ) {
+			return [];
 		}
 
-		return $list;
+		return $dbr->newSelectQueryBuilder()
+			->select( 'pl_title' )
+			->from( 'pagelinks' )
+			->where( [ 'pl_from' => (int)$id, 'pl_namespace' => NS_FILE ] )
+			->caller( __METHOD__ )->fetchFieldValues();
 	}
 
 	/**
