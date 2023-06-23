@@ -5,7 +5,6 @@
 			"Umherirrender"
 		]
 	},
-	"apihelp-query+pageimages-description": "{{doc-apihelp-description|query+pageimages}}",
 	"apihelp-query+pageimages-summary": "{{doc-apihelp-summary|query+pageimages}}",
 	"apihelp-query+pageimages-example-1": "{{doc-apihelp-example|query+pageimages}}",
 	"apihelp-query+pageimages-param-prop": "{{doc-apihelp-param|query+pageimages|prop}}",
