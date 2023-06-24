@@ -17,7 +17,7 @@ use Parser;
 use ParserOutput;
 use RepoGroup;
 use RuntimeException;
-use Title;
+use TitleFactory;
 use WANObjectCache;
 use Wikimedia\Rdbms\IConnectionProvider;
 
@@ -57,22 +57,28 @@ class ParserFileProcessingHookHandlers implements
 	/** @var IConnectionProvider */
 	private $connectionProvider;
 
+	/** @var TitleFactory */
+	private $titleFactory;
+
 	/**
 	 * @param RepoGroup $repoGroup
 	 * @param WANObjectCache $mainWANObjectCache
 	 * @param HttpRequestFactory $httpRequestFactory
 	 * @param IConnectionProvider $connectionProvider
+	 * @param TitleFactory $titleFactory
 	 */
 	public function __construct(
 		RepoGroup $repoGroup,
 		WANObjectCache $mainWANObjectCache,
 		HttpRequestFactory $httpRequestFactory,
-		IConnectionProvider $connectionProvider
+		IConnectionProvider $connectionProvider,
+		TitleFactory $titleFactory
 	) {
 		$this->repoGroup = $repoGroup;
 		$this->mainWANObjectCache = $mainWANObjectCache;
 		$this->httpRequestFactory = $httpRequestFactory;
 		$this->connectionProvider = $connectionProvider;
+		$this->titleFactory = $titleFactory;
 	}
 
 	/**
@@ -457,7 +463,10 @@ class ParserFileProcessingHookHandlers implements
 	 * @return string[]
 	 */
 	private function getDbDenylist( $dbName, $page ) {
-		$title = Title::newFromText( $page );
+		$title = $this->titleFactory->newFromText( $page );
+		if ( !$title || !$title->canExist() ) {
+			return [];
+		}
 
 		$dbr = $this->connectionProvider->getReplicaDatabase( $dbName );
 		$id = $dbr->newSelectQueryBuilder()
@@ -494,7 +503,7 @@ class ParserFileProcessingHookHandlers implements
 
 		if ( $text && preg_match_all( $regex, $text, $matches ) ) {
 			foreach ( $matches[1] as $s ) {
-				$t = Title::makeTitleSafe( NS_FILE, $s );
+				$t = $this->titleFactory->makeTitleSafe( NS_FILE, $s );
 
 				if ( $t ) {
 					$list[] = $t->getDBkey();
