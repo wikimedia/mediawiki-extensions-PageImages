@@ -9,7 +9,6 @@
 			"Wladek92"
 		]
 	},
-	"apihelp-query+pageimages-description": "Renvoie des informations sur les images de la page, comme les vignettes et la présence de photos.",
 	"apihelp-query+pageimages-summary": "Renvoie des informations concernant les images sur la page, comme les vignettes et la présence de photos.",
 	"apihelp-query+pageimages-example-1": "Obtenir le nom et la vignette de <kbd>100</kbd> pixels d’une image sur la page <kbd>Albert Einstein</kbd>.",
 	"apihelp-query+pageimages-param-prop": "Quelles informations renvoyer :\n; thumbnail\n: URL et dimensions de la vignette d’image associée avec la page, s’il y en a une.\n; original\n: URL et dimensions de l’image associée avec la page, s’il y en a une.\n; name\n: Titre de l’image.",

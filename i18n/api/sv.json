@@ -8,7 +8,6 @@
 			"WikiPhoenix"
 		]
 	},
-	"apihelp-query+pageimages-description": "Returnerar information om bilder på sidan, så som miniatyrer och närvaro av fotografier.",
 	"apihelp-query+pageimages-summary": "Returnera information om bilderna på sedan bilder som miniatyrbilder och förekomest av bilder.",
 	"apihelp-query+pageimages-example-1": "Hämta namn och <kbd>100</kbd>-pixel miniatyrbild av en bild på <kbd>Albert Einstein</kbd>.",
 	"apihelp-query+pageimages-param-prop": "Vilken information som ska returneras:\n;thumbnail:URL och dimensioner av bild associerad med sidan, om någon.\n;name:Bildtitel",

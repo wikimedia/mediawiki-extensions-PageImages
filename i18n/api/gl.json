@@ -5,7 +5,6 @@
 			"Elisardojm"
 		]
 	},
-	"apihelp-query+pageimages-description": "Devolve información sobre as imaxes na páxina, coma miniaturas e presencia de fotos.",
 	"apihelp-query+pageimages-summary": "Devolve información sobre as imaxes na páxina, coma miniaturas e presencia de fotos.",
 	"apihelp-query+pageimages-example-1": "Obter o nome e unha miniatura de <kbd>100</kbd> píxeles dunha imaxe na páxina de <kbd>Albert Einstein</kbd>.",
 	"apihelp-query+pageimages-param-prop": "Que información devolver:\n;thumbnail:URL e dimensións da miniatura da imaxe asociada coa páxina, se hai.\n;originalːURL e dimensións orixinais da imaxe asociada coa páxina, se hai.\n;name:Título da imaxe.",
