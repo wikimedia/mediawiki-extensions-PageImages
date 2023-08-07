@@ -16,5 +16,5 @@
 	"apihelp-query+pageimages-param-limit": "Egenskaper av hur många sidor som ska returneras.",
 	"apihelp-query+pageimages-param-license": "Begränsa sidbilder till en bestämd licenstyp",
 	"apihelp-query+pageimages-paramvalue-license-free": "endast fria bilder",
-	"apihelp-query+pageimages-paramvalue-license-any": "bästa bilden, oavsett om den är ledig eller inte."
+	"apihelp-query+pageimages-paramvalue-license-any": "Bästa bilden, oavsett om den är ledig eller inte."
 }
