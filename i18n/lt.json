@@ -1,9 +1,10 @@
 {
 	"@metadata": {
 		"authors": [
-			"Eitvys200"
+			"Eitvys200",
+			"Nokeoo"
 		]
 	},
-	"apihelp-query+pageimages-param-license": "Apriboti puslapio paveikslėlius tam tikru licencijos tipu",
-	"apihelp-query+pageimages-paramvalue-license-free": "tik nemokami paveikslėliai"
+	"pageimages-desc": "Renka informaciją apie puslapyje naudojamus paveikslėlius",
+	"pageimages-info-label": "Puslapio paveikslėlis"
 }
