@@ -31,7 +31,7 @@
 		"ParserModifyImageHTML": "parser",
 		"ParserTestGlobals": "parser",
 		"SearchResultProvideThumbnail": "search",
-		"SpecialMobileEditWatchlist::images": "PageImages\\PageImages::onSpecialMobileEditWatchlistImages"
+		"SpecialMobileEditWatchlist::images": "mobile"
 	},
 	"HookHandlers": {
 		"main": {
@@ -45,6 +45,9 @@
 		"search": {
 			"class": "PageImages\\Hooks\\SearchResultProvideThumbnailHookHandler",
 			"services": [ "SearchResultThumbnailProvider", "PageProps", "RepoGroup" ]
+		},
+		"mobile": {
+			"class": "PageImages\\Hooks\\MobileFrontendHookHandlers"
 		}
 	},
 	"JobClasses": {
