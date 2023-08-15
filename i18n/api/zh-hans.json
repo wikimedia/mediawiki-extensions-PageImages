@@ -16,7 +16,7 @@
 	"apihelp-query+pageimages-param-thumbsize": "缩略图的最大宽度（像素）。",
 	"apihelp-query+pageimages-param-langcode": "如果支持多种语言，则图像将要呈现的语言代码",
 	"apihelp-query+pageimages-param-limit": "返回的页面数的属性。",
-	"apihelp-query+pageimages-param-license": "限制页面图片至特定的许可协议类型",
+	"apihelp-query+pageimages-param-license": "限制页面图像为特定的许可协议类型：",
 	"apihelp-query+pageimages-paramvalue-license-free": "仅限自由图片",
 	"apihelp-query+pageimages-paramvalue-license-any": "最佳图片，无论自由与否。"
 }
