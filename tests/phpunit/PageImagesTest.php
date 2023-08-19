@@ -3,6 +3,7 @@
 namespace PageImages\Tests;
 
 use IContextSource;
+use MediaWiki\Request\FauxRequest;
 use MediaWiki\Title\Title;
 use MediaWikiIntegrationTestCase;
 use OutputPage;
@@ -110,7 +111,7 @@ class PageImagesTest extends MediaWikiIntegrationTestCase {
 		$context = $this->createMock( IContextSource::class );
 		$context->method( 'getTitle' )
 			->willReturn( $this->newTitle() );
-		$fauxRequest = new \FauxRequest();
+		$fauxRequest = new FauxRequest();
 		$config = new \HashConfig( $config );
 		$context->method( 'getRequest' )
 			->willReturn( $fauxRequest );

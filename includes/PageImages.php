@@ -4,7 +4,6 @@ namespace PageImages;
 
 use ApiBase;
 use ApiMain;
-use FauxRequest;
 use File;
 use IContextSource;
 use MapCacheLRU;
@@ -13,6 +12,7 @@ use MediaWiki\Cache\CacheKeyHelper;
 use MediaWiki\Hook\BeforePageDisplayHook;
 use MediaWiki\Hook\InfoActionHook;
 use MediaWiki\MediaWikiServices;
+use MediaWiki\Request\FauxRequest;
 use MediaWiki\Title\Title;
 use MediaWiki\User\UserOptionsLookup;
 use OutputPage;
