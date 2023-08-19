@@ -4,6 +4,7 @@ namespace PageImages\Tests\Hooks;
 
 use File;
 use MediaWiki\Http\HttpRequestFactory;
+use MediaWiki\Title\Title;
 use MediaWikiIntegrationTestCase;
 use PageImages\Hooks\ParserFileProcessingHookHandlers;
 use PageImages\PageImageCandidate;
@@ -11,7 +12,6 @@ use PageImages\PageImages;
 use Parser;
 use ParserOptions;
 use RepoGroup;
-use Title;
 use TitleFactory;
 use WANObjectCache;
 use Wikimedia\Rdbms\IConnectionProvider;

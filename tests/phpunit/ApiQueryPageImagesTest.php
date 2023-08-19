@@ -2,10 +2,10 @@
 
 namespace PageImages\Tests;
 
+use MediaWiki\Title\Title;
 use PageImages\ApiQueryPageImages;
 use PageImages\PageImages;
 use PHPUnit\Framework\TestCase;
-use Title;
 use Wikimedia\ParamValidator\ParamValidator;
 use Wikimedia\ParamValidator\TypeDef\IntegerDef;
 use Wikimedia\Rdbms\FakeResultWrapper;
