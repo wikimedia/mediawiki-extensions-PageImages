@@ -3,11 +3,11 @@
 namespace PageImages\Tests;
 
 use IContextSource;
+use MediaWiki\Title\Title;
 use MediaWikiIntegrationTestCase;
 use OutputPage;
 use PageImages\PageImages;
 use SkinTemplate;
-use Title;
 
 /**
  * @covers \PageImages\PageImages
