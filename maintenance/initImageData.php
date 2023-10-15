@@ -81,7 +81,11 @@ class InitImageData extends Maintenance {
 			foreach ( $res as $row ) {
 				$pageIds[] = $row->page_id;
 			}
-			$job = new InitImageDataJob( Title::newMainPage(), [ 'page_ids' => $pageIds ] );
+			$job = new InitImageDataJob(
+				Title::newMainPage(),
+				[ 'page_ids' => $pageIds ],
+				$this->getServiceContainer()->getDBLoadBalancerFactory()
+			);
 			if ( $queue === null ) {
 				$job->run();
 			} else {

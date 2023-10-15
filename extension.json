@@ -63,7 +63,12 @@
 		}
 	},
 	"JobClasses": {
-		"InitImageDataJob": "PageImages\\Job\\InitImageDataJob"
+		"InitImageDataJob": {
+			"class": "PageImages\\Job\\InitImageDataJob",
+			"services": [
+				"DBLoadBalancerFactory"
+			]
+		}
 	},
 	"config": {
 		"PageImagesScores": {
