@@ -18,6 +18,7 @@ use MediaWiki\User\UserOptionsLookup;
 use OutputPage;
 use RepoGroup;
 use Skin;
+use Wikimedia\Rdbms\IConnectionProvider;
 
 /**
  * @license WTFPL
@@ -59,6 +60,9 @@ class PageImages implements
 	 */
 	public const PROP_NAME_FREE = 'page_image_free';
 
+	/** @var IConnectionProvider */
+	private $dbProvider;
+
 	/** @var RepoGroup */
 	private $repoGroup;
 
@@ -74,19 +78,23 @@ class PageImages implements
 	private static function factory() {
 		$services = MediaWikiServices::getInstance();
 		return new self(
+			$services->getDBLoadBalancerFactory(),
 			$services->getRepoGroup(),
 			$services->getUserOptionsLookup()
 		);
 	}
 
 	/**
+	 * @param IConnectionProvider $dbProvider
 	 * @param RepoGroup $repoGroup
 	 * @param UserOptionsLookup $userOptionsLookup
 	 */
 	public function __construct(
+		IConnectionProvider $dbProvider,
 		RepoGroup $repoGroup,
 		UserOptionsLookup $userOptionsLookup
 	) {
+		$this->dbProvider = $dbProvider;
 		$this->repoGroup = $repoGroup;
 		$this->userOptionsLookup = $userOptionsLookup;
 	}
@@ -170,7 +178,7 @@ class PageImages implements
 			return null;
 		}
 
-		$dbr = wfGetDB( DB_REPLICA );
+		$dbr = $this->dbProvider->getReplicaDatabase();
 		$fileName = $dbr->selectField( 'page_props',
 			'pp_value',
 			[
