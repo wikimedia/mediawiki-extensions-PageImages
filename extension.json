@@ -9,7 +9,12 @@
 		"MediaWiki": ">= 1.41"
 	},
 	"APIPropModules": {
-		"pageimages": "PageImages\\ApiQueryPageImages"
+		"pageimages": {
+			"class": "PageImages\\ApiQueryPageImages",
+			"services": [
+				"RepoGroup"
+			]
+		}
 	},
 	"MessagesDirs": {
 		"PageImages": [
