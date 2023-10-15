@@ -21,18 +21,25 @@ use SkinTemplate;
  */
 class PageImagesTest extends MediaWikiIntegrationTestCase {
 
+	private function newPageImages() {
+		return new PageImages(
+			$this->getServiceContainer()->getUserOptionsLookup()
+		);
+	}
+
 	public function testPagePropertyNames() {
 		$this->assertSame( 'page_image', PageImages::PROP_NAME );
 		$this->assertSame( 'page_image_free', PageImages::PROP_NAME_FREE );
 	}
 
 	public function testConstructor() {
-		$pageImages = new PageImages( $this->getServiceContainer()->getUserOptionsLookup() );
+		$pageImages = $this->newPageImages();
 		$this->assertInstanceOf( PageImages::class, $pageImages );
 	}
 
 	public function testGivenNonExistingPageGetPageImageReturnsFalse() {
 		$title = $this->newTitle();
+		$this->assertFalse( $this->newPageImages()->getPageImageInternal( $title ) );
 		$this->assertFalse( PageImages::getPageImage( $title ) );
 	}
 
@@ -60,8 +67,7 @@ class PageImagesTest extends MediaWikiIntegrationTestCase {
 			->method( 'addMeta' );
 
 		$skinTemplate = new SkinTemplate();
-		( new PageImages( $this->getServiceContainer()->getUserOptionsLookup() ) )
-			->onBeforePageDisplay( $outputPage, $skinTemplate );
+		$this->newPageImages()->onBeforePageDisplay( $outputPage, $skinTemplate );
 	}
 
 	public function testGivenNonExistingPageOnBeforePageDisplayDoesNotAddMeta() {
@@ -73,8 +79,7 @@ class PageImagesTest extends MediaWikiIntegrationTestCase {
 			->method( 'addMeta' );
 
 		$skinTemplate = new SkinTemplate();
-		( new PageImages( $this->getServiceContainer()->getUserOptionsLookup() ) )
-			->onBeforePageDisplay( $outputPage, $skinTemplate );
+		$this->newPageImages()->onBeforePageDisplay( $outputPage, $skinTemplate );
 	}
 
 	public static function provideFallbacks() {
@@ -99,8 +104,7 @@ class PageImagesTest extends MediaWikiIntegrationTestCase {
 			->with( $this->equalTo( 'og:image' ), $this->equalTo( $expected ) );
 
 		$skinTemplate = new SkinTemplate();
-		( new PageImages( $this->getServiceContainer()->getUserOptionsLookup() ) )
-			->onBeforePageDisplay( $outputPage, $skinTemplate );
+		$this->newPageImages()->onBeforePageDisplay( $outputPage, $skinTemplate );
 	}
 
 	/**
