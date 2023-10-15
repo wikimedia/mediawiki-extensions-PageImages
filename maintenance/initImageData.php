@@ -6,7 +6,6 @@ if ( $IP === false ) {
 }
 require_once "$IP/maintenance/Maintenance.php";
 
-use MediaWiki\MediaWikiServices;
 use MediaWiki\Title\Title;
 use PageImages\Job\InitImageDataJob;
 
@@ -44,7 +43,7 @@ class InitImageData extends Maintenance {
 		$queue = null;
 		$maxPressure = $this->getOption( 'queue-pressure', 0 );
 		if ( $maxPressure > 0 ) {
-			$queue = MediaWikiServices::getInstance()->getJobQueueGroup();
+			$queue = $this->getServiceContainer()->getJobQueueGroup();
 		}
 
 		do {
