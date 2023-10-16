@@ -2,6 +2,7 @@
 
 namespace PageImages\Tests;
 
+use MediaWiki\MediaWikiServices;
 use MediaWiki\Title\Title;
 use PageImages\ApiQueryPageImages;
 use PageImages\PageImages;
@@ -46,7 +47,7 @@ class ApiQueryPageImagesTest extends TestCase {
 			->method( 'getMain' )
 			->willReturn( $main );
 
-		return new ApiQueryPageImages( $query, '' );
+		return new ApiQueryPageImages( $query, '', MediaWikiServices::getInstance()->getRepoGroup() );
 	}
 
 	public function testConstructor() {
