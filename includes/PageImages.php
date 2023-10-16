@@ -16,6 +16,7 @@ use MediaWiki\Request\FauxRequest;
 use MediaWiki\Title\Title;
 use MediaWiki\User\UserOptionsLookup;
 use OutputPage;
+use RepoGroup;
 use Skin;
 
 /**
@@ -58,6 +59,9 @@ class PageImages implements
 	 */
 	public const PROP_NAME_FREE = 'page_image_free';
 
+	/** @var RepoGroup */
+	private $repoGroup;
+
 	/** @var UserOptionsLookup */
 	private $userOptionsLookup;
 
@@ -68,15 +72,22 @@ class PageImages implements
 	 * @return PageImages
 	 */
 	private static function factory() {
+		$services = MediaWikiServices::getInstance();
 		return new self(
-			MediaWikiServices::getInstance()->getUserOptionsLookup()
+			$services->getRepoGroup(),
+			$services->getUserOptionsLookup()
 		);
 	}
 
 	/**
+	 * @param RepoGroup $repoGroup
 	 * @param UserOptionsLookup $userOptionsLookup
 	 */
-	public function __construct( UserOptionsLookup $userOptionsLookup ) {
+	public function __construct(
+		RepoGroup $repoGroup,
+		UserOptionsLookup $userOptionsLookup
+	) {
+		$this->repoGroup = $repoGroup;
 		$this->userOptionsLookup = $userOptionsLookup;
 	}
 
@@ -149,7 +160,7 @@ class PageImages implements
 		}
 
 		if ( $title->inNamespace( NS_FILE ) ) {
-			return MediaWikiServices::getInstance()->getRepoGroup()->findFile( $title );
+			return $this->repoGroup->findFile( $title );
 		}
 
 		$pageId = $title->getArticleID();
@@ -174,7 +185,7 @@ class PageImages implements
 			return false;
 		}
 
-		return MediaWikiServices::getInstance()->getRepoGroup()->findFile( $fileName );
+		return $this->repoGroup->findFile( $fileName );
 	}
 
 	/**

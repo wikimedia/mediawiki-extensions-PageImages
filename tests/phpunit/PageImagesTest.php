@@ -22,8 +22,10 @@ use SkinTemplate;
 class PageImagesTest extends MediaWikiIntegrationTestCase {
 
 	private function newPageImages() {
+		$services = $this->getServiceContainer();
 		return new PageImages(
-			$this->getServiceContainer()->getUserOptionsLookup()
+			$services->getRepoGroup(),
+			$services->getUserOptionsLookup()
 		);
 	}
 
