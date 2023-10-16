@@ -42,7 +42,7 @@ class PageImagesTest extends MediaWikiIntegrationTestCase {
 
 	public function testGivenNonExistingPageGetPageImageReturnsFalse() {
 		$title = $this->newTitle();
-		$this->assertFalse( $this->newPageImages()->getPageImageInternal( $title ) );
+		$this->assertNull( $this->newPageImages()->getPageImageInternal( $title ) );
 		$this->assertFalse( PageImages::getPageImage( $title ) );
 	}
 
