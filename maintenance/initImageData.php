@@ -58,7 +58,8 @@ class InitImageData extends Maintenance {
 				'LEFT JOIN', 'page_id = il_from',
 			] ];
 
-			$dbr = wfGetDB( DB_REPLICA );
+			$dbr = $this->getServiceContainer()->getDBLoadBalancerFactory()
+				->getReplicaDatabase();
 			if ( $this->hasOption( 'namespaces' ) ) {
 				$ns = explode( ',', $this->getOption( 'namespaces' ) );
 				$conds['page_namespace'] = $ns;

@@ -24,6 +24,7 @@ class PageImagesTest extends MediaWikiIntegrationTestCase {
 	private function newPageImages() {
 		$services = $this->getServiceContainer();
 		return new PageImages(
+			$services->getDBLoadBalancerFactory(),
 			$services->getRepoGroup(),
 			$services->getUserOptionsLookup()
 		);
