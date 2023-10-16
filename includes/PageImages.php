@@ -65,6 +65,15 @@ class PageImages implements
 	private static $cache = null;
 
 	/**
+	 * @return PageImages
+	 */
+	private static function factory() {
+		return new self(
+			MediaWikiServices::getInstance()->getUserOptionsLookup()
+		);
+	}
+
+	/**
 	 * @param UserOptionsLookup $userOptionsLookup
 	 */
 	public function __construct( UserOptionsLookup $userOptionsLookup ) {
@@ -108,11 +117,21 @@ class PageImages implements
 	 * @return File|bool
 	 */
 	public static function getPageImage( Title $title ) {
+		return self::factory()->getPageImageInternal( $title );
+	}
+
+	/**
+	 * Return page image for a given title
+	 *
+	 * @param Title $title Title to get page image for
+	 * @return File|bool
+	 */
+	public function getPageImageInternal( Title $title ) {
 		self::$cache ??= new MapCacheLRU( 100 );
 
 		$file = self::$cache->getWithSetCallback(
 			CacheKeyHelper::getKeyForPage( $title ),
-			fn() => self::fetchPageImage( $title )
+			fn() => $this->fetchPageImage( $title )
 		);
 
 		// Cast any cacheable null to false
@@ -123,7 +142,7 @@ class PageImages implements
 	 * @param Title $title Title to get page image for
 	 * @return File|null|bool
 	 */
-	private static function fetchPageImage( Title $title ) {
+	private function fetchPageImage( Title $title ) {
 		if ( !$title->canExist() ) {
 			// Optimization: Do not query for special pages or other titles never in the database
 			return false;
@@ -169,7 +188,7 @@ class PageImages implements
 	public function onInfoAction( $context, &$pageInfo ) {
 		global $wgThumbLimits;
 
-		$imageFile = self::getPageImage( $context->getTitle() );
+		$imageFile = $this->getPageImageInternal( $context->getTitle() );
 		if ( !$imageFile ) {
 			// The page has no image
 			return;
@@ -260,7 +279,7 @@ class PageImages implements
 		if ( !$out->getConfig()->get( 'PageImagesOpenGraph' ) ) {
 			return;
 		}
-		$imageFile = self::getPageImage( $out->getContext()->getTitle() );
+		$imageFile = $this->getPageImageInternal( $out->getContext()->getTitle() );
 		if ( !$imageFile ) {
 			$fallback = $out->getConfig()->get( 'PageImagesOpenGraphFallbackImage' );
 			if ( $fallback ) {
