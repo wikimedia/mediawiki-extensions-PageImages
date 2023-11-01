@@ -54,7 +54,8 @@
 				"MainWANObjectCache",
 				"HttpRequestFactory",
 				"DBLoadBalancerFactory",
-				"TitleFactory"
+				"TitleFactory",
+				"LinksMigration"
 			]
 		},
 		"search": {

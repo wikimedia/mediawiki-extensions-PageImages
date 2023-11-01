@@ -4,6 +4,7 @@ namespace PageImages\Tests\Hooks;
 
 use File;
 use MediaWiki\Http\HttpRequestFactory;
+use MediaWiki\Linker\LinksMigration;
 use MediaWiki\Title\Title;
 use MediaWikiIntegrationTestCase;
 use PageImages\Hooks\ParserFileProcessingHookHandlers;
@@ -221,6 +222,7 @@ class ParserFileProcessingHookHandlersTest extends MediaWikiIntegrationTestCase 
 					$this->createMock( HttpRequestFactory::class ),
 					$this->createMock( IConnectionProvider::class ),
 					$this->createMock( TitleFactory::class ),
+					$this->createMock( LinksMigration::class ),
 				] )
 				->onlyMethods( [ 'scoreFromTable', 'fetchFileMetadata', 'getRatio', 'getDenylist' ] )
 				->getMock()
@@ -294,7 +296,8 @@ class ParserFileProcessingHookHandlersTest extends MediaWikiIntegrationTestCase 
 				$this->createMock( WANObjectCache::class ),
 				$this->createMock( HttpRequestFactory::class ),
 				$this->createMock( IConnectionProvider::class ),
-				$this->createMock( TitleFactory::class )
+				$this->createMock( TitleFactory::class ),
+				$this->createMock( LinksMigration::class )
 			)
 		);
 
@@ -360,6 +363,7 @@ class ParserFileProcessingHookHandlersTest extends MediaWikiIntegrationTestCase 
 					$this->createMock( HttpRequestFactory::class ),
 					$this->createMock( IConnectionProvider::class ),
 					$this->createMock( TitleFactory::class ),
+					$this->createMock( LinksMigration::class ),
 				] )
 				->onlyMethods( [ 'fetchFileMetadata' ] )
 				->getMock()

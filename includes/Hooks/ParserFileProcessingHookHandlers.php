@@ -10,6 +10,7 @@ use MediaWiki\Hook\ParserAfterTidyHook;
 use MediaWiki\Hook\ParserModifyImageHTMLHook;
 use MediaWiki\Hook\ParserTestGlobalsHook;
 use MediaWiki\Http\HttpRequestFactory;
+use MediaWiki\Linker\LinksMigration;
 use MediaWiki\Page\PageReference;
 use PageImages\PageImageCandidate;
 use PageImages\PageImages;
@@ -59,6 +60,7 @@ class ParserFileProcessingHookHandlers implements
 
 	/** @var TitleFactory */
 	private $titleFactory;
+	private LinksMigration $linksMigration;
 
 	/**
 	 * @param RepoGroup $repoGroup
@@ -66,19 +68,22 @@ class ParserFileProcessingHookHandlers implements
 	 * @param HttpRequestFactory $httpRequestFactory
 	 * @param IConnectionProvider $connectionProvider
 	 * @param TitleFactory $titleFactory
+	 * @param LinksMigration $linksMigration
 	 */
 	public function __construct(
 		RepoGroup $repoGroup,
 		WANObjectCache $mainWANObjectCache,
 		HttpRequestFactory $httpRequestFactory,
 		IConnectionProvider $connectionProvider,
-		TitleFactory $titleFactory
+		TitleFactory $titleFactory,
+		LinksMigration $linksMigration
 	) {
 		$this->repoGroup = $repoGroup;
 		$this->mainWANObjectCache = $mainWANObjectCache;
 		$this->httpRequestFactory = $httpRequestFactory;
 		$this->connectionProvider = $connectionProvider;
 		$this->titleFactory = $titleFactory;
+		$this->linksMigration = $linksMigration;
 	}
 
 	/**
@@ -164,7 +169,7 @@ class ParserFileProcessingHookHandlers implements
 			$text, -1, $count, PREG_OFFSET_CAPTURE
 		);
 
-		list( $bestImageName, $freeImageName ) = $this->findBestImages( $images );
+		[ $bestImageName, $freeImageName ] = $this->findBestImages( $images );
 
 		if ( $freeImageName ) {
 			$parserOutput->setPageProperty( PageImages::getPropName( true ), $freeImageName );
@@ -477,11 +482,15 @@ class ParserFileProcessingHookHandlers implements
 		if ( !$id ) {
 			return [];
 		}
+		[ $blNamespace, $blTitle ] = $this->linksMigration->getTitleFields( 'pagelinks' );
+		$queryInfo = $this->linksMigration->getQueryInfo( 'pagelinks' );
 
 		return $dbr->newSelectQueryBuilder()
-			->select( 'pl_title' )
-			->from( 'pagelinks' )
-			->where( [ 'pl_from' => (int)$id, 'pl_namespace' => NS_FILE ] )
+			->select( $blTitle )
+			->tables( $queryInfo['tables'] )
+			->joinConds( $queryInfo['joins'] )
+			->fields( $queryInfo['fields'] )
+			->where( [ 'pl_from' => (int)$id, $blNamespace => NS_FILE ] )
 			->caller( __METHOD__ )->fetchFieldValues();
 	}
 
