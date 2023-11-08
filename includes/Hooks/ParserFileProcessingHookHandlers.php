@@ -489,7 +489,6 @@ class ParserFileProcessingHookHandlers implements
 			->select( $blTitle )
 			->tables( $queryInfo['tables'] )
 			->joinConds( $queryInfo['joins'] )
-			->fields( $queryInfo['fields'] )
 			->where( [ 'pl_from' => (int)$id, $blNamespace => NS_FILE ] )
 			->caller( __METHOD__ )->fetchFieldValues();
 	}
