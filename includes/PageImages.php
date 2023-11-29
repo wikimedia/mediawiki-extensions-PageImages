@@ -14,7 +14,7 @@ use MediaWiki\Hook\InfoActionHook;
 use MediaWiki\MediaWikiServices;
 use MediaWiki\Request\FauxRequest;
 use MediaWiki\Title\Title;
-use MediaWiki\User\UserOptionsLookup;
+use MediaWiki\User\Options\UserOptionsLookup;
 use OutputPage;
 use RepoGroup;
 use Skin;
