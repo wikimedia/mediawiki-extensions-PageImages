@@ -75,7 +75,7 @@ class PageImages implements
 	/**
 	 * @return PageImages
 	 */
-	private static function factory() {
+	private static function factory(): self {
 		$services = MediaWikiServices::getInstance();
 		return new self(
 			$services->getDBLoadBalancerFactory(),
@@ -133,19 +133,20 @@ class PageImages implements
 	 * Return page image for a given title
 	 *
 	 * @param Title $title Title to get page image for
-	 * @return File|bool
+	 * @return File|false
 	 */
 	public static function getPageImage( Title $title ) {
-		return self::factory()->getPageImageInternal( $title );
+		// Cast any cacheable null to false
+		return self::factory()->getPageImageInternal( $title ) ?? false;
 	}
 
 	/**
 	 * Return page image for a given title
 	 *
 	 * @param Title $title Title to get page image for
-	 * @return File|bool
+	 * @return File|null
 	 */
-	public function getPageImageInternal( Title $title ) {
+	public function getPageImageInternal( Title $title ): ?File {
 		self::$cache ??= new MapCacheLRU( 100 );
 
 		$file = self::$cache->getWithSetCallback(
@@ -153,13 +154,13 @@ class PageImages implements
 			fn() => $this->fetchPageImage( $title )
 		);
 
-		// Cast any cacheable null to false
-		return $file ?? false;
+		// Cast false to null
+		return $file ?: null;
 	}
 
 	/**
 	 * @param Title $title Title to get page image for
-	 * @return File|null|bool
+	 * @return File|null|false
 	 */
 	private function fetchPageImage( Title $title ) {
 		if ( !$title->canExist() ) {
@@ -189,7 +190,7 @@ class PageImages implements
 			[ 'ORDER BY' => 'pp_propname' ]
 		);
 		if ( !$fileName ) {
-			// Allow caching, cast null to false later
+			// Return not found without caching.
 			return false;
 		}
 
