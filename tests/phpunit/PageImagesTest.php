@@ -3,10 +3,11 @@
 namespace PageImages\Tests;
 
 use IContextSource;
+use MediaWiki\Config\HashConfig;
+use MediaWiki\Output\OutputPage;
 use MediaWiki\Request\FauxRequest;
 use MediaWiki\Title\Title;
 use MediaWikiIntegrationTestCase;
-use OutputPage;
 use PageImages\PageImages;
 use SkinTemplate;
 
@@ -119,7 +120,7 @@ class PageImagesTest extends MediaWikiIntegrationTestCase {
 		$context->method( 'getTitle' )
 			->willReturn( $this->newTitle() );
 		$fauxRequest = new FauxRequest();
-		$config = new \HashConfig( $config );
+		$config = new HashConfig( $config );
 		$context->method( 'getRequest' )
 			->willReturn( $fauxRequest );
 		$context->method( 'getConfig' )

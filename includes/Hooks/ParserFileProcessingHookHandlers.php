@@ -12,13 +12,13 @@ use MediaWiki\Hook\ParserTestGlobalsHook;
 use MediaWiki\Http\HttpRequestFactory;
 use MediaWiki\Linker\LinksMigration;
 use MediaWiki\Page\PageReference;
+use MediaWiki\Parser\ParserOutput;
+use MediaWiki\Title\TitleFactory;
 use PageImages\PageImageCandidate;
 use PageImages\PageImages;
 use Parser;
-use ParserOutput;
 use RepoGroup;
 use RuntimeException;
-use TitleFactory;
 use WANObjectCache;
 use Wikimedia\Rdbms\IConnectionProvider;
 

@@ -2,6 +2,7 @@
 
 namespace PageImages\Tests;
 
+use MediaWiki\Config\HashConfig;
 use MediaWiki\MediaWikiServices;
 use MediaWiki\Title\Title;
 use PageImages\ApiQueryPageImages;
@@ -24,7 +25,7 @@ use Wikimedia\TestingAccessWrapper;
 class ApiQueryPageImagesTest extends TestCase {
 
 	private function newInstance() {
-		$config = new \HashConfig( [
+		$config = new HashConfig( [
 			'PageImagesAPIDefaultLicense' => 'free'
 		] );
 
