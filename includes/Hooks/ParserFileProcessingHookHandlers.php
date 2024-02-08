@@ -46,30 +46,13 @@ class ParserFileProcessingHookHandlers implements
 {
 	private const CANDIDATE_REGEX = '/<!--MW-PAGEIMAGES-CANDIDATE-([0-9]+)-->/';
 
-	/** @var RepoGroup */
-	private $repoGroup;
-
-	/** @var WANObjectCache */
-	private $mainWANObjectCache;
-
-	/** @var HttpRequestFactory */
-	private $httpRequestFactory;
-
-	/** @var IConnectionProvider */
-	private $connectionProvider;
-
-	/** @var TitleFactory */
-	private $titleFactory;
+	private RepoGroup $repoGroup;
+	private WANObjectCache $mainWANObjectCache;
+	private HttpRequestFactory $httpRequestFactory;
+	private IConnectionProvider $connectionProvider;
+	private TitleFactory $titleFactory;
 	private LinksMigration $linksMigration;
 
-	/**
-	 * @param RepoGroup $repoGroup
-	 * @param WANObjectCache $mainWANObjectCache
-	 * @param HttpRequestFactory $httpRequestFactory
-	 * @param IConnectionProvider $connectionProvider
-	 * @param TitleFactory $titleFactory
-	 * @param LinksMigration $linksMigration
-	 */
 	public function __construct(
 		RepoGroup $repoGroup,
 		WANObjectCache $mainWANObjectCache,
@@ -193,7 +176,7 @@ class ParserFileProcessingHookHandlers implements
 	 * Find the best images out of an array of candidates
 	 *
 	 * @param PageImageCandidate[] $images
-	 * @return array The best image, and the best free image
+	 * @return array{string|false,string|false} The best image, and the best free image
 	 */
 	private function findBestImages( array $images ) {
 		if ( !count( $images ) ) {
@@ -400,9 +383,9 @@ class ParserFileProcessingHookHandlers implements
 	}
 
 	/**
-	 * Returns width/height ratio of an image as displayed or 0 is not available
+	 * Returns width/height ratio of an image as displayed or 0 if not available
 	 *
-	 * @param PageImageCandidate $image Array representing the image to get the aspect ratio from
+	 * @param PageImageCandidate $image
 	 *
 	 * @return float|int
 	 */
