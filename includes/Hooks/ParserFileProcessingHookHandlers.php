@@ -196,7 +196,7 @@ class ParserFileProcessingHookHandlers implements
 	 * @return array The best image, and the best free image
 	 */
 	private function findBestImages( array $images ) {
-		if ( !count( $images ) ) {
+		if ( !$images ) {
 			return [ false, false ];
 		}
 
@@ -206,13 +206,9 @@ class ParserFileProcessingHookHandlers implements
 		$counter = 0;
 
 		foreach ( $images as $image ) {
+			$score = $this->getScore( $image, $counter++ );
 			$fileName = $image->getFileName();
-
-			if ( !isset( $scores[$fileName] ) ) {
-				$scores[$fileName] = -1;
-			}
-
-			$scores[$fileName] = max( $scores[$fileName], $this->getScore( $image, $counter++ ) );
+			$scores[$fileName] = max( $scores[$fileName] ?? -1, $score );
 		}
 
 		$bestImageName = false;
@@ -257,11 +253,8 @@ class ParserFileProcessingHookHandlers implements
 	 */
 	private function processThisTitle( PageReference $pageReference ) {
 		global $wgPageImagesNamespaces;
-		static $flipped = false;
-
-		if ( $flipped === false ) {
-			$flipped = array_flip( $wgPageImagesNamespaces );
-		}
+		static $flipped = null;
+		$flipped ??= array_flip( $wgPageImagesNamespaces );
 
 		return isset( $flipped[$pageReference->getNamespace()] );
 	}
@@ -307,9 +300,8 @@ class ParserFileProcessingHookHandlers implements
 	protected function getScore( PageImageCandidate $image, $position ) {
 		global $wgPageImagesScores;
 
-		$classes = preg_split( '/\s+/', $image->getFrameClass(), -1, PREG_SPLIT_NO_EMPTY );
-		if ( in_array( 'notpageimage', $classes ) ) {
-			// Exclude images with class=nopageimage
+		// Exclude images with class="notpageimage"
+		if ( preg_match( '/(?:^|\s)notpageimage(?=\s|$)/', $image->getFrameClass() ) ) {
 			return -1000;
 		}
 
@@ -409,12 +401,7 @@ class ParserFileProcessingHookHandlers implements
 	protected function getRatio( PageImageCandidate $image ) {
 		$width = $image->getFullWidth();
 		$height = $image->getFullHeight();
-
-		if ( !$width || !$height ) {
-			return 0;
-		}
-
-		return $width / $height;
+		return $width > 0 && $height > 0 ? $width / $height : 0;
 	}
 
 	/**
