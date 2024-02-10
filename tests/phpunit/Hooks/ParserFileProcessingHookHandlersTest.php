@@ -68,16 +68,12 @@ class ParserFileProcessingHookHandlersTest extends MediaWikiIntegrationTestCase 
 	 * @return RepoGroup
 	 */
 	private function getRepoGroup() {
-		$file = $this->getMockBuilder( File::class )
-			->disableOriginalConstructor()
-			->getMock();
+		$file = $this->createMock( File::class );
 		// ugly hack to avoid all the unmockable crap in FormatMetadata
 		$file->method( 'isDeleted' )
 			->willReturn( true );
 
-		$repoGroup = $this->getMockBuilder( RepoGroup::class )
-			->disableOriginalConstructor()
-			->getMock();
+		$repoGroup = $this->createMock( RepoGroup::class );
 		$repoGroup->method( 'findFile' )
 			->willReturn( $file );
 

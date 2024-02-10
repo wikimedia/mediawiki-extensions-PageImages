@@ -34,16 +34,12 @@ class ApiQueryPageImagesTest extends TestCase {
 		$context->method( 'getConfig' )
 			->willReturn( $config );
 
-		$main = $this->getMockBuilder( \ApiMain::class )
-			->disableOriginalConstructor()
-			->getMock();
+		$main = $this->createMock( \ApiMain::class );
 		$main->expects( $this->once() )
 			->method( 'getContext' )
 			->willReturn( $context );
 
-		$query = $this->getMockBuilder( \ApiQuery::class )
-			->disableOriginalConstructor()
-			->getMock();
+		$query = $this->createMock( \ApiQuery::class );
 		$query->expects( $this->once() )
 			->method( 'getMain' )
 			->willReturn( $main );
@@ -84,9 +80,7 @@ class ApiQueryPageImagesTest extends TestCase {
 	 * @dataProvider provideGetTitles
 	 */
 	public function testGetTitles( $titles, $missingTitlesByNamespace, $expected ) {
-		$pageSet = $this->getMockBuilder( \ApiPageSet::class )
-			->disableOriginalConstructor()
-			->getMock();
+		$pageSet = $this->createMock( \ApiPageSet::class );
 		$pageSet->method( 'getGoodTitles' )
 			->willReturn( $titles );
 		$pageSet->method( 'getMissingTitlesByNamespace' )
