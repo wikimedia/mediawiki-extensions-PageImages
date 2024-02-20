@@ -170,11 +170,7 @@ class ParserFileProcessingHookHandlers implements
 				$parserOutput->setIndicator( $id, $stripped );
 			}
 		}
-		// Strip comments from TOC data
-		$tocData = $parserOutput->getTOCData();
-		foreach ( ( $tocData ? $tocData->getSections() : [] ) as $section ) {
-			$section->line = trim( preg_replace( self::CANDIDATE_REGEX, '', $section->line ) );
-		}
+		// We may have comments in TOC data - Parser::cleanupTocLine strips them for us.
 	}
 
 	/**
