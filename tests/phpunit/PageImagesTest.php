@@ -105,7 +105,7 @@ class PageImagesTest extends MediaWikiIntegrationTestCase {
 		] );
 		$outputPage->expects( $this->once() )
 			->method( 'addMeta' )
-			->with( $this->equalTo( 'og:image' ), $this->equalTo( $expected ) );
+			->with( 'og:image', $expected );
 
 		$skinTemplate = new SkinTemplate();
 		$this->newPageImages()->onBeforePageDisplay( $outputPage, $skinTemplate );

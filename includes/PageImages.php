@@ -151,7 +151,7 @@ class PageImages implements
 
 		$file = self::$cache->getWithSetCallback(
 			CacheKeyHelper::getKeyForPage( $title ),
-			fn() => $this->fetchPageImage( $title )
+			fn () => $this->fetchPageImage( $title )
 		);
 
 		// Cast false to null
