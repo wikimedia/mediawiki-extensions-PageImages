@@ -80,6 +80,9 @@
 			]
 		}
 	},
+	"ServiceWiringFiles": [
+		"includes/ServiceWiring.php"
+	],
 	"config": {
 		"PageImagesScores": {
 			"description": "Images <120px are usually from maintenance or stub templates; >600px are panoramas, less suitable.",
