@@ -36,8 +36,6 @@ class InitImageData extends Maintenance {
 	 * Do the actual work of filling out page images
 	 */
 	public function execute() {
-		global $wgPageImagesNamespaces;
-
 		$lastId = $this->getOption( 'start', 0 );
 		$isQuiet = $this->getOption( 'quiet', false );
 		$queue = null;
@@ -64,7 +62,7 @@ class InitImageData extends Maintenance {
 				$ns = explode( ',', $this->getOption( 'namespaces' ) );
 				$conds['page_namespace'] = $ns;
 			} else {
-				$conds['page_namespace'] = $wgPageImagesNamespaces;
+				$conds['page_namespace'] = $this->getServiceContainer()->getMainConfig()->get( 'PageImagesNamespaces' );
 			}
 			if ( $this->hasOption( 'earlier-than' ) ) {
 				$conds[] = 'page_touched < '

@@ -25,6 +25,7 @@ class PageImagesTest extends MediaWikiIntegrationTestCase {
 	private function newPageImages() {
 		$services = $this->getServiceContainer();
 		return new PageImages(
+			$services->getMainConfig(),
 			$services->getDBLoadBalancerFactory(),
 			$services->getRepoGroup(),
 			$services->getUserOptionsLookup()
@@ -98,7 +99,7 @@ class PageImagesTest extends MediaWikiIntegrationTestCase {
 	 * @dataProvider provideFallbacks
 	 */
 	public function testGivenFallbackImageOnBeforePageDisplayAddMeta( $expected, $fallback ) {
-		$this->setMwGlobals( [ 'wgCanonicalServer' => 'http://wiki.test' ] );
+		$this->overrideConfigValue( 'CanonicalServer', 'http://wiki.test' );
 		$outputPage = $this->mockOutputPage( [
 			'PageImagesOpenGraph' => true,
 			'PageImagesOpenGraphFallbackImage' => $fallback

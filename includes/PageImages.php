@@ -9,8 +9,10 @@ use IContextSource;
 use MapCacheLRU;
 use MediaWiki\Api\Hook\ApiOpenSearchSuggestHook;
 use MediaWiki\Cache\CacheKeyHelper;
+use MediaWiki\Config\Config;
 use MediaWiki\Hook\BeforePageDisplayHook;
 use MediaWiki\Hook\InfoActionHook;
+use MediaWiki\MainConfigNames;
 use MediaWiki\MediaWikiServices;
 use MediaWiki\Output\OutputPage;
 use MediaWiki\Request\FauxRequest;
@@ -60,6 +62,9 @@ class PageImages implements
 	 */
 	public const PROP_NAME_FREE = 'page_image_free';
 
+	/** @var Config */
+	private $config;
+
 	/** @var IConnectionProvider */
 	private $dbProvider;
 
@@ -78,6 +83,7 @@ class PageImages implements
 	private static function factory(): self {
 		$services = MediaWikiServices::getInstance();
 		return new self(
+			$services->getMainConfig(),
 			$services->getDBLoadBalancerFactory(),
 			$services->getRepoGroup(),
 			$services->getUserOptionsLookup()
@@ -85,15 +91,18 @@ class PageImages implements
 	}
 
 	/**
+	 * @param Config $config
 	 * @param IConnectionProvider $dbProvider
 	 * @param RepoGroup $repoGroup
 	 * @param UserOptionsLookup $userOptionsLookup
 	 */
 	public function __construct(
+		Config $config,
 		IConnectionProvider $dbProvider,
 		RepoGroup $repoGroup,
 		UserOptionsLookup $userOptionsLookup
 	) {
+		$this->config = $config;
 		$this->dbProvider = $dbProvider;
 		$this->repoGroup = $repoGroup;
 		$this->userOptionsLookup = $userOptionsLookup;
@@ -206,8 +215,6 @@ class PageImages implements
 	 * @param array[] &$pageInfo Auxillary information about the page.
 	 */
 	public function onInfoAction( $context, &$pageInfo ) {
-		global $wgThumbLimits;
-
 		$imageFile = $this->getPageImageInternal( $context->getTitle() );
 		if ( !$imageFile ) {
 			// The page has no image
@@ -215,7 +222,7 @@ class PageImages implements
 		}
 
 		$thumbSetting = $this->userOptionsLookup->getOption( $context->getUser(), 'thumbsize' );
-		$thumbSize = $wgThumbLimits[$thumbSetting];
+		$thumbSize = $this->config->get( MainConfigNames::ThumbLimits )[$thumbSetting];
 
 		$thumb = $imageFile->transform( [ 'width' => $thumbSize ] );
 		if ( !$thumb ) {
@@ -240,9 +247,7 @@ class PageImages implements
 	 * @param array[] &$results Array of results to add page images too
 	 */
 	public function onApiOpenSearchSuggest( &$results ) {
-		global $wgPageImagesExpandOpenSearchXml;
-
-		if ( !$wgPageImagesExpandOpenSearchXml || !count( $results ) ) {
+		if ( !$this->config->get( 'PageImagesExpandOpenSearchXml' ) || !count( $results ) ) {
 			return;
 		}
 
