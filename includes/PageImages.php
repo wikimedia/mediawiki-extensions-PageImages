@@ -189,15 +189,16 @@ class PageImages implements
 		}
 
 		$dbr = $this->dbProvider->getReplicaDatabase();
-		$fileName = $dbr->selectField( 'page_props',
-			'pp_value',
-			[
+		$fileName = $dbr->newSelectQueryBuilder()
+			->select( 'pp_value' )
+			->from( 'page_props' )
+			->where( [
 				'pp_page' => $pageId,
 				'pp_propname' => [ self::PROP_NAME, self::PROP_NAME_FREE ]
-			],
-			__METHOD__,
-			[ 'ORDER BY' => 'pp_propname' ]
-		);
+			] )
+			->orderBy( 'pp_propname' )
+			->caller( __METHOD__ )
+			->fetchField();
 		if ( !$fileName ) {
 			// Return not found without caching.
 			return false;
