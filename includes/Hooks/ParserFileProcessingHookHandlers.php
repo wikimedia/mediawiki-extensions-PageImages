@@ -2,11 +2,11 @@
 
 namespace PageImages\Hooks;
 
-use DerivativeContext;
 use Exception;
 use File;
 use FormatMetadata;
 use MediaWiki\Config\Config;
+use MediaWiki\Context\DerivativeContext;
 use MediaWiki\Hook\ParserAfterTidyHook;
 use MediaWiki\Hook\ParserModifyImageHTMLHook;
 use MediaWiki\Hook\ParserTestGlobalsHook;
@@ -14,11 +14,11 @@ use MediaWiki\Http\HttpRequestFactory;
 use MediaWiki\Linker\LinksMigration;
 use MediaWiki\MainConfigNames;
 use MediaWiki\Page\PageReference;
+use MediaWiki\Parser\Parser;
 use MediaWiki\Parser\ParserOutput;
 use MediaWiki\Title\TitleFactory;
 use PageImages\PageImageCandidate;
 use PageImages\PageImages;
-use Parser;
 use RepoGroup;
 use RuntimeException;
 use WANObjectCache;

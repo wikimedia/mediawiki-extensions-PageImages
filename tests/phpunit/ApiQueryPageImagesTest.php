@@ -3,6 +3,7 @@
 namespace PageImages\Tests;
 
 use MediaWiki\Config\HashConfig;
+use MediaWiki\Context\IContextSource;
 use MediaWiki\Page\PageReferenceValue;
 use MediaWikiIntegrationTestCase;
 use PageImages\ApiQueryPageImages;
@@ -28,7 +29,7 @@ class ApiQueryPageImagesTest extends MediaWikiIntegrationTestCase {
 			'PageImagesAPIDefaultLicense' => 'free'
 		] );
 
-		$context = $this->createMock( \IContextSource::class );
+		$context = $this->createMock( IContextSource::class );
 
 		$context->method( 'getConfig' )
 			->willReturn( $config );

@@ -2,8 +2,8 @@
 
 namespace PageImages\Tests;
 
-use IContextSource;
 use MediaWiki\Config\HashConfig;
+use MediaWiki\Context\IContextSource;
 use MediaWiki\Output\OutputPage;
 use MediaWiki\Request\FauxRequest;
 use MediaWiki\Title\Title;
