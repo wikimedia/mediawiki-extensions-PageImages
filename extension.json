@@ -6,7 +6,7 @@
 	"license-name": "WTFPL",
 	"type": "api",
 	"requires": {
-		"MediaWiki": ">= 1.42.0"
+		"MediaWiki": ">= 1.43"
 	},
 	"APIPropModules": {
 		"pageimages": {
