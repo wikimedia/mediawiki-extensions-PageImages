@@ -21,7 +21,7 @@ use PageImages\PageImageCandidate;
 use PageImages\PageImages;
 use RepoGroup;
 use RuntimeException;
-use WANObjectCache;
+use Wikimedia\ObjectCache\WANObjectCache;
 use Wikimedia\Rdbms\IConnectionProvider;
 
 /**

@@ -2,6 +2,9 @@
 
 namespace PageImages\Tests;
 
+use MediaWiki\Api\ApiMain;
+use MediaWiki\Api\ApiPageSet;
+use MediaWiki\Api\ApiQuery;
 use MediaWiki\Config\HashConfig;
 use MediaWiki\Context\IContextSource;
 use MediaWiki\Page\PageReferenceValue;
@@ -34,12 +37,12 @@ class ApiQueryPageImagesTest extends MediaWikiIntegrationTestCase {
 		$context->method( 'getConfig' )
 			->willReturn( $config );
 
-		$main = $this->createMock( \ApiMain::class );
+		$main = $this->createMock( ApiMain::class );
 		$main->expects( $this->once() )
 			->method( 'getContext' )
 			->willReturn( $context );
 
-		$query = $this->createMock( \ApiQuery::class );
+		$query = $this->createMock( ApiQuery::class );
 		$query->expects( $this->once() )
 			->method( 'getMain' )
 			->willReturn( $main );
@@ -92,7 +95,7 @@ class ApiQueryPageImagesTest extends MediaWikiIntegrationTestCase {
 			$expected[$id] = PageReferenceValue::localReference( $titleValue->getNamespace(), $titleValue->getDBkey() );
 		}
 
-		$pageSet = $this->createMock( \ApiPageSet::class );
+		$pageSet = $this->createMock( ApiPageSet::class );
 		$pageSet->method( 'getGoodPages' )
 			->willReturn( $titles );
 		$pageSet->method( 'getMissingTitlesByNamespace' )

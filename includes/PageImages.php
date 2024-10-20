@@ -2,10 +2,10 @@
 
 namespace PageImages;
 
-use ApiBase;
-use ApiMain;
 use File;
 use MapCacheLRU;
+use MediaWiki\Api\ApiBase;
+use MediaWiki\Api\ApiMain;
 use MediaWiki\Api\Hook\ApiOpenSearchSuggestHook;
 use MediaWiki\Cache\CacheKeyHelper;
 use MediaWiki\Config\Config;

@@ -8,15 +8,15 @@ use MediaWiki\Config\HashConfig;
 use MediaWiki\Http\HttpRequestFactory;
 use MediaWiki\Linker\LinksMigration;
 use MediaWiki\Parser\Parser;
+use MediaWiki\Parser\ParserOptions;
 use MediaWiki\Title\Title;
 use MediaWiki\Title\TitleFactory;
 use MediaWikiIntegrationTestCase;
 use PageImages\Hooks\ParserFileProcessingHookHandlers;
 use PageImages\PageImageCandidate;
 use PageImages\PageImages;
-use ParserOptions;
 use RepoGroup;
-use WANObjectCache;
+use Wikimedia\ObjectCache\WANObjectCache;
 use Wikimedia\Rdbms\IConnectionProvider;
 use Wikimedia\TestingAccessWrapper;
 
