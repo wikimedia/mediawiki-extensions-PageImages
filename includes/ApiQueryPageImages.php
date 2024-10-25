@@ -23,17 +23,11 @@ use Wikimedia\ParamValidator\TypeDef\IntegerDef;
  * @author Sam Smith
  */
 class ApiQueryPageImages extends ApiQueryBase {
-	/** @var RepoGroup */
-	private $repoGroup;
+	private RepoGroup $repoGroup;
 
-	/**
-	 * @param ApiQuery $query API query module
-	 * @param string $moduleName Name of this query module
-	 * @param RepoGroup $repoGroup
-	 */
 	public function __construct(
 		ApiQuery $query,
-		$moduleName,
+		string $moduleName,
 		RepoGroup $repoGroup
 	) {
 		parent::__construct( $query, $moduleName, 'pi' );
