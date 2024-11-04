@@ -2,7 +2,8 @@
 	"@metadata": {
 		"authors": [
 			"Movses",
-			"Okras"
+			"Okras",
+			"Fenixs-ru"
 		]
 	},
 	"apihelp-query+pageimages-description": "Возвращает информацию об изображениях на страницы, такие как эскиз и наличие фотографий.",

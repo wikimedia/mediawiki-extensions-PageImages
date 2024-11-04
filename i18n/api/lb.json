@@ -1,7 +1,8 @@
 {
 	"@metadata": {
 		"authors": [
-			"Robby"
+			"Robby",
+			"Volvox"
 		]
 	},
 	"apihelp-query+pageimages-param-thumbsize": "Maximal Breet a Pixel fir Miniatur-Biller.",
