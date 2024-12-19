@@ -130,10 +130,12 @@ class PageImages implements
 	/**
 	 * Return page image for a given title
 	 *
+	 * @deprecated since 1.45, use getImage instead
 	 * @param Title $title Title to get page image for
 	 * @return File|false
 	 */
 	public static function getPageImage( Title $title ) {
+		wfDeprecated( __METHOD__, '1.45' );
 		// Cast any cacheable null to false
 		return self::factory()->getImage( $title ) ?? false;
 	}
