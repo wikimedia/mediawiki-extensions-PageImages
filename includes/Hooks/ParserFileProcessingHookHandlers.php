@@ -285,8 +285,9 @@ class ParserFileProcessingHookHandlers implements
 	 * @return float
 	 */
 	protected function getScore( PageImageCandidate $image, $position ) {
+		$classes = preg_split( '/\s+/', $image->getFrameClass(), -1, PREG_SPLIT_NO_EMPTY );
 		// Exclude images with class="notpageimage"
-		if ( preg_match( '/(?:^|\s)notpageimage(?=\s|$)/', $image->getFrameClass() ) ) {
+		if ( in_array( 'notpageimage', $classes ) ) {
 			return -1000;
 		}
 
@@ -305,6 +306,12 @@ class ParserFileProcessingHookHandlers implements
 
 		$ratio = intval( $this->getRatio( $image ) * 10 );
 		$score += $this->scoreFromTable( $ratio, $pageImagesScores['ratio'] );
+
+		// T91683: Prefer images with class="pageimage". We're simply adding to the current score rather than returning
+		// earlier, so that the algorithm still helps decide which image to use when multiple have this class.
+		if ( in_array( 'pageimage', $classes ) ) {
+			$score += 1000;
+		}
 
 		$denylist = $this->getDenylist();
 		if ( isset( $denylist[$image->getFileName()] ) ) {
