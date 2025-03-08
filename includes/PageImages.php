@@ -81,13 +81,7 @@ class PageImages implements
 	 * @return PageImages
 	 */
 	private static function factory(): self {
-		$services = MediaWikiServices::getInstance();
-		return new self(
-			$services->getMainConfig(),
-			$services->getDBLoadBalancerFactory(),
-			$services->getRepoGroup(),
-			$services->getUserOptionsLookup()
-		);
+		return MediaWikiServices::getInstance()->getService( 'PageImages.PageImages' );
 	}
 
 	/**
