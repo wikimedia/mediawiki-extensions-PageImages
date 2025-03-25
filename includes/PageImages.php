@@ -20,6 +20,7 @@ use MediaWiki\Request\FauxRequest;
 use MediaWiki\Skin\Skin;
 use MediaWiki\Title\Title;
 use MediaWiki\User\Options\UserOptionsLookup;
+use MediaWiki\Utils\UrlUtils;
 use Wikimedia\Rdbms\IConnectionProvider;
 
 /**
@@ -71,6 +72,9 @@ class PageImages implements
 	/** @var RepoGroup */
 	private $repoGroup;
 
+	/** @var UrlUtils */
+	private $urlUtils;
+
 	/** @var UserOptionsLookup */
 	private $userOptionsLookup;
 
@@ -88,17 +92,20 @@ class PageImages implements
 	 * @param Config $config
 	 * @param IConnectionProvider $dbProvider
 	 * @param RepoGroup $repoGroup
+	 * @param UrlUtils $urlUtils
 	 * @param UserOptionsLookup $userOptionsLookup
 	 */
 	public function __construct(
 		Config $config,
 		IConnectionProvider $dbProvider,
 		RepoGroup $repoGroup,
+		UrlUtils $urlUtils,
 		UserOptionsLookup $userOptionsLookup
 	) {
 		$this->config = $config;
 		$this->dbProvider = $dbProvider;
 		$this->repoGroup = $repoGroup;
+		$this->urlUtils = $urlUtils;
 		$this->userOptionsLookup = $userOptionsLookup;
 	}
 
@@ -303,7 +310,7 @@ class PageImages implements
 		if ( !$imageFile ) {
 			$fallback = $out->getConfig()->get( 'PageImagesOpenGraphFallbackImage' );
 			if ( $fallback ) {
-				$out->addMeta( 'og:image', wfExpandUrl( $fallback, PROTO_CANONICAL ) );
+				$out->addMeta( 'og:image', $this->urlUtils->expand( $fallback, PROTO_CANONICAL ) ?? '' );
 			}
 			return;
 		}
@@ -317,7 +324,7 @@ class PageImages implements
 			if ( !$thumb ) {
 				continue;
 			}
-			$out->addMeta( 'og:image', wfExpandUrl( $thumb->getUrl(), PROTO_CANONICAL ) );
+			$out->addMeta( 'og:image', $this->urlUtils->expand( $thumb->getUrl(), PROTO_CANONICAL ) ?? '' );
 			$out->addMeta( 'og:image:width', strval( $thumb->getWidth() ) );
 			$out->addMeta( 'og:image:height', strval( $thumb->getHeight() ) );
 		}
