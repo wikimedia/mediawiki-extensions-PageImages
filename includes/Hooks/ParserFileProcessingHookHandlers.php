@@ -3,10 +3,11 @@
 namespace PageImages\Hooks;
 
 use Exception;
-use File;
 use FormatMetadata;
 use MediaWiki\Config\Config;
 use MediaWiki\Context\DerivativeContext;
+use MediaWiki\FileRepo\File\File;
+use MediaWiki\FileRepo\RepoGroup;
 use MediaWiki\Hook\ParserAfterTidyHook;
 use MediaWiki\Hook\ParserModifyImageHTMLHook;
 use MediaWiki\Hook\ParserTestGlobalsHook;
@@ -19,7 +20,6 @@ use MediaWiki\Parser\ParserOutput;
 use MediaWiki\Title\TitleFactory;
 use PageImages\PageImageCandidate;
 use PageImages\PageImages;
-use RepoGroup;
 use RuntimeException;
 use Wikimedia\ObjectCache\WANObjectCache;
 use Wikimedia\Rdbms\IConnectionProvider;

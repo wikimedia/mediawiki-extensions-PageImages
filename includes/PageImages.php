@@ -2,7 +2,6 @@
 
 namespace PageImages;
 
-use File;
 use MapCacheLRU;
 use MediaWiki\Api\ApiBase;
 use MediaWiki\Api\ApiMain;
@@ -10,16 +9,17 @@ use MediaWiki\Api\Hook\ApiOpenSearchSuggestHook;
 use MediaWiki\Cache\CacheKeyHelper;
 use MediaWiki\Config\Config;
 use MediaWiki\Context\IContextSource;
+use MediaWiki\FileRepo\File\File;
+use MediaWiki\FileRepo\RepoGroup;
 use MediaWiki\Hook\InfoActionHook;
 use MediaWiki\MainConfigNames;
 use MediaWiki\MediaWikiServices;
 use MediaWiki\Output\Hook\BeforePageDisplayHook;
 use MediaWiki\Output\OutputPage;
 use MediaWiki\Request\FauxRequest;
+use MediaWiki\Skin\Skin;
 use MediaWiki\Title\Title;
 use MediaWiki\User\Options\UserOptionsLookup;
-use RepoGroup;
-use Skin;
 use Wikimedia\Rdbms\IConnectionProvider;
 
 /**

@@ -5,9 +5,9 @@ namespace PageImages;
 use MediaWiki\Api\ApiBase;
 use MediaWiki\Api\ApiQuery;
 use MediaWiki\Api\ApiQueryBase;
+use MediaWiki\FileRepo\RepoGroup;
 use MediaWiki\Page\PageReference;
 use MediaWiki\Page\PageReferenceValue;
-use RepoGroup;
 use Wikimedia\ParamValidator\ParamValidator;
 use Wikimedia\ParamValidator\TypeDef\IntegerDef;
 

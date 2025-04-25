@@ -6,10 +6,10 @@ use MediaWiki\Config\HashConfig;
 use MediaWiki\Context\IContextSource;
 use MediaWiki\Output\OutputPage;
 use MediaWiki\Request\FauxRequest;
+use MediaWiki\Skin\SkinTemplate;
 use MediaWiki\Title\Title;
 use MediaWikiIntegrationTestCase;
 use PageImages\PageImages;
-use SkinTemplate;
 
 /**
  * @covers \PageImages\PageImages

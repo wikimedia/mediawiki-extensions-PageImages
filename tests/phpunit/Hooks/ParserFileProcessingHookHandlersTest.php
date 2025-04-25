@@ -2,9 +2,10 @@
 
 namespace PageImages\Tests\Hooks;
 
-use File;
 use MediaWiki\Config\Config;
 use MediaWiki\Config\HashConfig;
+use MediaWiki\FileRepo\File\File;
+use MediaWiki\FileRepo\RepoGroup;
 use MediaWiki\Http\HttpRequestFactory;
 use MediaWiki\Linker\LinksMigration;
 use MediaWiki\Parser\Parser;
@@ -15,7 +16,6 @@ use MediaWikiIntegrationTestCase;
 use PageImages\Hooks\ParserFileProcessingHookHandlers;
 use PageImages\PageImageCandidate;
 use PageImages\PageImages;
-use RepoGroup;
 use Wikimedia\ObjectCache\WANObjectCache;
 use Wikimedia\Rdbms\IConnectionProvider;
 use Wikimedia\TestingAccessWrapper;
