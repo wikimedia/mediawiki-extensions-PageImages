@@ -74,7 +74,7 @@ class ApiQueryPageImages extends ApiQueryBase {
 	 * Evaluates the parameters, performs the requested retrieval of page images,
 	 * and sets up the result
 	 */
-	public function execute() {
+	public function execute(): void {
 		$params = $this->extractRequestParams();
 		$prop = array_flip( $params['prop'] );
 		if ( !count( $prop ) ) {
@@ -160,7 +160,7 @@ class ApiQueryPageImages extends ApiQueryBase {
 	 * @param array $params Ignored parameters
 	 * @return string Always returns "public"
 	 */
-	public function getCacheMode( $params ) {
+	public function getCacheMode( $params ): string {
 		return 'public';
 	}
 
@@ -171,9 +171,15 @@ class ApiQueryPageImages extends ApiQueryBase {
 	 * @param int $pageId The ID of the page
 	 * @param string $fileName The name of the file to transform
 	 * @param int $size The thumbsize value from the API request
-	 * @param string $lang The language code from the API request
+	 * @param string|null $lang The language code from the API request
 	 */
-	protected function setResultValues( array $prop, $pageId, $fileName, $size, $lang ) {
+	protected function setResultValues(
+		array $prop,
+		int $pageId,
+		string $fileName,
+		int $size,
+		?string $lang
+	): void {
 		$vals = [];
 		if ( isset( $prop['thumbnail'] ) || isset( $prop['original'] ) ) {
 			$file = $this->repoGroup->findFile( $fileName );
@@ -228,9 +234,8 @@ class ApiQueryPageImages extends ApiQueryBase {
 
 	/**
 	 * Return an array describing all possible parameters to this module
-	 * @return array
 	 */
-	public function getAllowedParams() {
+	public function getAllowedParams(): array {
 		return [
 			'prop' => [
 				ParamValidator::PARAM_TYPE => [ 'thumbnail', 'name', 'original' ],
@@ -269,7 +274,7 @@ class ApiQueryPageImages extends ApiQueryBase {
 	/**
 	 * @inheritDoc
 	 */
-	protected function getExamplesMessages() {
+	protected function getExamplesMessages(): array {
 		return [
 			'action=query&prop=pageimages&titles=Albert%20Einstein&pithumbsize=100' =>
 				'apihelp-query+pageimages-example-1',
@@ -278,9 +283,8 @@ class ApiQueryPageImages extends ApiQueryBase {
 
 	/**
 	 * @see ApiBase::getHelpUrls()
-	 * @return string
 	 */
-	public function getHelpUrls() {
+	public function getHelpUrls(): string {
 		return "https://www.mediawiki.org/wiki/Special:MyLanguage/Extension:PageImages#API";
 	}
 

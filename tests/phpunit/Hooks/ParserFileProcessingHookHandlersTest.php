@@ -30,12 +30,7 @@ use Wikimedia\TestingAccessWrapper;
  */
 class ParserFileProcessingHookHandlersTest extends MediaWikiIntegrationTestCase {
 
-	/**
-	 * @param array[] $images
-	 *
-	 * @return Parser
-	 */
-	private function getParser( array $images ) {
+	private function getParser( array $images ): Parser {
 		$parser = $this->getServiceContainer()->getParser();
 		$title = Title::newFromText( 'test' );
 		$options = ParserOptions::newFromAnon();
@@ -44,7 +39,7 @@ class ParserFileProcessingHookHandlersTest extends MediaWikiIntegrationTestCase 
 		return $parser;
 	}
 
-	private function getHtml( $indexes, $nonLeadIndex = INF ) {
+	private function getHtml( array $indexes, $nonLeadIndex = INF ): string {
 		$html = '';
 		$doneSectionBreak = false;
 		foreach ( $indexes as $index ) {
@@ -59,9 +54,8 @@ class ParserFileProcessingHookHandlersTest extends MediaWikiIntegrationTestCase 
 
 	/**
 	 * Required to make RepoGroup::findFile in ParserFileProcessingHookHandlers::getScore return something.
-	 * @return RepoGroup
 	 */
-	private function getRepoGroup() {
+	private function getRepoGroup(): RepoGroup {
 		$file = $this->createMock( File::class );
 		// ugly hack to avoid all the unmockable crap in FormatMetadata
 		$file->method( 'isDeleted' )
@@ -76,8 +70,8 @@ class ParserFileProcessingHookHandlersTest extends MediaWikiIntegrationTestCase 
 
 	private function getHandler( $images, $leadOnly = false ) {
 		return new class ( $images, $leadOnly ) extends ParserFileProcessingHookHandlers {
-			private $images;
-			private $isFreeMap;
+			private array $images;
+			private array $isFreeMap;
 
 			public function __construct( $images, $leadOnly ) {
 				$this->config = new HashConfig( [
@@ -89,11 +83,11 @@ class ParserFileProcessingHookHandlersTest extends MediaWikiIntegrationTestCase 
 				}
 			}
 
-			protected function isImageFree( $fileName ) {
+			protected function isImageFree( $fileName ): bool {
 				return $this->isFreeMap[$fileName] ?? false;
 			}
 
-			protected function getScore( PageImageCandidate $image, $position ) {
+			protected function getScore( PageImageCandidate $image, int $position ) {
 				return $this->images[$position]['score'];
 			}
 		};

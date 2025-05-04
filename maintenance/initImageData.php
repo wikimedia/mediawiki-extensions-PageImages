@@ -104,7 +104,7 @@ class InitImageData extends Maintenance {
 	 *  jobs that can exist when returning
 	 * @param bool $isQuiet When false report on job queue pressure every 10s
 	 */
-	private function waitForMaxPressure( JobQueueGroup $queue, $maxPressure, $isQuiet ) {
+	private function waitForMaxPressure( JobQueueGroup $queue, $maxPressure, $isQuiet ): void {
 		$group = $queue->get( 'InitImageDataJob' );
 		$i = 0;
 		do {

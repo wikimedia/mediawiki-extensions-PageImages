@@ -22,9 +22,6 @@ use ThumbnailImage;
 class SearchResultProvideThumbnailHookHandlerTest extends MediaWikiIntegrationTestCase {
 	/**
 	 * Creates mock object for LocalFile
-	 * @param int $size
-	 * @param LocalFile $file
-	 * @return ThumbnailImage
 	 */
 	private function getMockThumbnailImage(
 		int $size,
@@ -56,11 +53,8 @@ class SearchResultProvideThumbnailHookHandlerTest extends MediaWikiIntegrationTe
 
 	/**
 	 * Creates mock object for LocalFile
-	 * @param int $size
-	 * @param string $filename
-	 * @return LocalFile
 	 */
-	private function getMockLocalFile( int $size, $filename ): LocalFile {
+	private function getMockLocalFile( int $size, string $filename ): LocalFile {
 		$file = $this->getMockBuilder( LocalFile::class )
 			->disableOriginalConstructor()
 			->onlyMethods( [

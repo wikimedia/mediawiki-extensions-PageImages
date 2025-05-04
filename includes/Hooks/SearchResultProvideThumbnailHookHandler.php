@@ -11,20 +11,10 @@ use PageImages\PageImages;
 
 class SearchResultProvideThumbnailHookHandler implements SearchResultProvideThumbnailHook {
 
-	/** @var SearchResultThumbnailProvider */
-	private $thumbnailProvider;
+	private SearchResultThumbnailProvider $thumbnailProvider;
+	private PageProps $pageProps;
+	private RepoGroup $repoGroup;
 
-	/** @var PageProps */
-	private $pageProps;
-
-	/** @var RepoGroup */
-	private $repoGroup;
-
-	/**
-	 * @param SearchResultThumbnailProvider $thumbnailProvider
-	 * @param PageProps $pageProps
-	 * @param RepoGroup $repoGroup
-	 */
 	public function __construct(
 		SearchResultThumbnailProvider $thumbnailProvider,
 		PageProps $pageProps,
