@@ -56,6 +56,20 @@ class PageImages implements
 	public const PROP_NAME_FREE = 'page_image_free';
 
 	/**
+	 * Set dynamic default value for PageImagesNamespaces configuration option.
+	 *
+	 * @param array $extInfo An array containing information about the extension
+	 */
+	public static function onRegistration( array $extInfo ) {
+		global $wgContentNamespaces,
+			$wgPageImagesNamespaces;
+
+		if ( $wgPageImagesNamespaces === false ) {
+			$wgPageImagesNamespaces = $wgContentNamespaces;
+		}
+	}
+
+	/**
 	 * Get property name used in page_props table. When a page image
 	 * is stored it will be stored under this property name on the corresponding
 	 * article.
