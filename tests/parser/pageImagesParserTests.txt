@@ -38,7 +38,6 @@ PageImages with best excluded by wgPageImagesLeadSectionOnly
 property=page_image_free
 !! config
 wgParserEnableLegacyMediaDOM=false
-wgParserEnableLegacyHeadingDOM=false
 !! metadata
 property[page_image_free]=Thumb.png
 !! wikitext
@@ -61,7 +60,6 @@ PageImages with toc and image in heading
 property=page_image_free
 !! config
 wgParserEnableLegacyMediaDOM=false
-wgParserEnableLegacyHeadingDOM=false
 !! wikitext
 __TOC__
 == Hello [[File:Foobar.jpg]] ==
