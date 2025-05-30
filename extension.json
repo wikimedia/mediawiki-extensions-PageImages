@@ -150,5 +150,17 @@
 			"value": false
 		}
 	},
+	"attributes": {
+		"Scribunto": {
+			"LuaExtraTitleAttributes": {
+				"pageImage": {
+					"class": "PageImages\\LuaPageImageResolver",
+					"services": [
+						"PageImages.PageImages"
+					]
+				}
+			}
+		}
+	},
 	"manifest_version": 2
 }
