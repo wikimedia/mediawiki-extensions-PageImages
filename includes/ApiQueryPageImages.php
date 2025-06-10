@@ -8,6 +8,7 @@ use MediaWiki\Api\ApiQueryBase;
 use MediaWiki\FileRepo\RepoGroup;
 use MediaWiki\Page\PageReference;
 use MediaWiki\Page\PageReferenceValue;
+use MediaWiki\Utils\UrlUtils;
 use Wikimedia\ParamValidator\ParamValidator;
 use Wikimedia\ParamValidator\TypeDef\IntegerDef;
 
@@ -24,14 +25,17 @@ use Wikimedia\ParamValidator\TypeDef\IntegerDef;
  */
 class ApiQueryPageImages extends ApiQueryBase {
 	private RepoGroup $repoGroup;
+	private UrlUtils $urlUtils;
 
 	public function __construct(
 		ApiQuery $query,
 		string $moduleName,
-		RepoGroup $repoGroup
+		RepoGroup $repoGroup,
+		UrlUtils $urlUtils
 	) {
 		parent::__construct( $query, $moduleName, 'pi' );
 		$this->repoGroup = $repoGroup;
+		$this->urlUtils = $urlUtils;
 	}
 
 	/**
@@ -185,7 +189,7 @@ class ApiQueryPageImages extends ApiQueryBase {
 						// that will lie about its size but have the original as an image.
 						$reportedSize = $thumb->fileIsSource() ? $file : $thumb;
 						$vals['thumbnail'] = [
-							'source' => wfExpandUrl( $thumb->getUrl(), PROTO_CURRENT ),
+							'source' => $this->urlUtils->expand( $thumb->getUrl(), PROTO_CURRENT ),
 							'width' => $reportedSize->getWidth(),
 							'height' => $reportedSize->getHeight(),
 						];
@@ -204,7 +208,7 @@ class ApiQueryPageImages extends ApiQueryBase {
 							'height' => $originalSize['height']
 						] );
 					}
-					$original_url = wfExpandUrl( $file->getUrl(), PROTO_CURRENT );
+					$original_url = $this->urlUtils->expand( $file->getUrl(), PROTO_CURRENT );
 
 					$vals['original'] = [
 						'source' => $original_url,

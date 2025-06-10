@@ -12,7 +12,8 @@
 		"pageimages": {
 			"class": "PageImages\\ApiQueryPageImages",
 			"services": [
-				"RepoGroup"
+				"RepoGroup",
+				"UrlUtils"
 			]
 		}
 	},
@@ -45,6 +46,7 @@
 				"MainConfig",
 				"DBLoadBalancerFactory",
 				"RepoGroup",
+				"UrlUtils",
 				"UserOptionsLookup"
 			]
 		},
