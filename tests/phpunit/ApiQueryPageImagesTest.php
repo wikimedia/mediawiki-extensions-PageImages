@@ -27,7 +27,7 @@ use Wikimedia\TestingAccessWrapper;
  */
 class ApiQueryPageImagesTest extends MediaWikiIntegrationTestCase {
 
-	private function newInstance() {
+	private function newInstance(): ApiQueryPageImages {
 		$config = new HashConfig( [
 			'PageImagesAPIDefaultLicense' => 'free'
 		] );

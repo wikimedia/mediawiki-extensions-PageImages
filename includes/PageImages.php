@@ -63,38 +63,17 @@ class PageImages implements
 	 */
 	public const PROP_NAME_FREE = 'page_image_free';
 
-	/** @var Config */
-	private $config;
+	private Config $config;
+	private IConnectionProvider $dbProvider;
+	private RepoGroup $repoGroup;
+	private UrlUtils $urlUtils;
+	private UserOptionsLookup $userOptionsLookup;
+	private static ?MapCacheLRU $cache = null;
 
-	/** @var IConnectionProvider */
-	private $dbProvider;
-
-	/** @var RepoGroup */
-	private $repoGroup;
-
-	/** @var UrlUtils */
-	private $urlUtils;
-
-	/** @var UserOptionsLookup */
-	private $userOptionsLookup;
-
-	/** @var MapCacheLRU */
-	private static $cache = null;
-
-	/**
-	 * @return PageImages
-	 */
 	private static function factory(): self {
 		return MediaWikiServices::getInstance()->getService( 'PageImages.PageImages' );
 	}
 
-	/**
-	 * @param Config $config
-	 * @param IConnectionProvider $dbProvider
-	 * @param RepoGroup $repoGroup
-	 * @param UrlUtils $urlUtils
-	 * @param UserOptionsLookup $userOptionsLookup
-	 */
 	public function __construct(
 		Config $config,
 		IConnectionProvider $dbProvider,
@@ -117,7 +96,7 @@ class PageImages implements
 	 * @param bool $isFree Whether the image is a free-license image
 	 * @return string
 	 */
-	public static function getPropName( $isFree ) {
+	public static function getPropName( bool $isFree ): string {
 		return $isFree ? self::PROP_NAME_FREE : self::PROP_NAME;
 	}
 
@@ -132,7 +111,7 @@ class PageImages implements
 	 * specifying whether to return the non-free property name or not
 	 * @return string|array
 	 */
-	public static function getPropNames( $license ) {
+	public static function getPropNames( string $license ) {
 		if ( $license === self::LICENSE_FREE ) {
 			return self::getPropName( true );
 		}
@@ -272,7 +251,7 @@ class PageImages implements
 	 *
 	 * @return array[]
 	 */
-	public static function getImages( array $pageIds, $size = 0 ) {
+	public static function getImages( array $pageIds, int $size = 0 ): array {
 		$ret = [];
 		foreach ( array_chunk( $pageIds, ApiBase::LIMIT_SML1 ) as $chunk ) {
 			$request = [

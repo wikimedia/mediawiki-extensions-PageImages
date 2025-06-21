@@ -9,8 +9,7 @@ use RefreshLinks;
 use Wikimedia\Rdbms\LBFactory;
 
 class InitImageDataJob extends Job {
-	/** @var LBFactory */
-	private $lbFactory;
+	private LBFactory $lbFactory;
 
 	/**
 	 * @param Title $title Title object associated with this job

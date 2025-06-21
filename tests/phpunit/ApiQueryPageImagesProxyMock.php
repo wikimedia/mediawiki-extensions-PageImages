@@ -20,7 +20,7 @@ class ApiQueryPageImagesProxyMock extends ApiQueryPageImages {
 	}
 
 	/** @inheritDoc */
-	public function getTitles() {
+	public function getTitles(): array {
 		return parent::getTitles();
 	}
 }
