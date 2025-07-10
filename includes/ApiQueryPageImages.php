@@ -24,18 +24,13 @@ use Wikimedia\ParamValidator\TypeDef\IntegerDef;
  * @author Sam Smith
  */
 class ApiQueryPageImages extends ApiQueryBase {
-	private RepoGroup $repoGroup;
-	private UrlUtils $urlUtils;
-
 	public function __construct(
 		ApiQuery $query,
 		string $moduleName,
-		RepoGroup $repoGroup,
-		UrlUtils $urlUtils
+		private readonly RepoGroup $repoGroup,
+		private readonly UrlUtils $urlUtils,
 	) {
 		parent::__construct( $query, $moduleName, 'pi' );
-		$this->repoGroup = $repoGroup;
-		$this->urlUtils = $urlUtils;
 	}
 
 	/**

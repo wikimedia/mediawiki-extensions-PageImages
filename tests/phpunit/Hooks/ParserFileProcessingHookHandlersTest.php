@@ -68,16 +68,17 @@ class ParserFileProcessingHookHandlersTest extends MediaWikiIntegrationTestCase 
 		return $repoGroup;
 	}
 
-	private function getHandler( $images, $leadOnly = false ) {
+	private function getHandler( array $images, bool $leadOnly = false ) {
 		return new class ( $images, $leadOnly ) extends ParserFileProcessingHookHandlers {
-			private array $images;
 			private array $isFreeMap;
 
-			public function __construct( $images, $leadOnly ) {
+			public function __construct(
+				private readonly array $images,
+				bool $leadOnly,
+			) {
 				$this->config = new HashConfig( [
 					'PageImagesLeadSectionOnly' => $leadOnly,
 				] );
-				$this->images = $images;
 				foreach ( $images as $image ) {
 					$this->isFreeMap[$image['filename']] = $image['isFree'];
 				}
@@ -166,7 +167,7 @@ class ParserFileProcessingHookHandlersTest extends MediaWikiIntegrationTestCase 
 	 * @dataProvider provideDoParserAfterTidy_lead
 	 * @covers \PageImages\Hooks\ParserFileProcessingHookHandlers::onParserAfterTidy
 	 */
-	public function testDoParserAfterTidy_lead( $leadOnly ) {
+	public function testDoParserAfterTidy_lead( bool $leadOnly ) {
 		$candidates = [
 			[ 'filename' => 'A.jpg', 'score' => 100, 'isFree' => false ],
 			[ 'filename' => 'B.jpg', 'score' => 90, 'isFree' => true ],

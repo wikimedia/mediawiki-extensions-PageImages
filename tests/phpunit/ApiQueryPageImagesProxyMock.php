@@ -7,11 +7,10 @@ use PageImages\ApiQueryPageImages;
 
 class ApiQueryPageImagesProxyMock extends ApiQueryPageImages {
 
-	private ApiPageSet $pageSet;
-
 	/** @inheritDoc */
-	public function __construct( ApiPageSet $pageSet ) {
-		$this->pageSet = $pageSet;
+	public function __construct(
+		private readonly ApiPageSet $pageSet,
+	) {
 	}
 
 	/** @inheritDoc */

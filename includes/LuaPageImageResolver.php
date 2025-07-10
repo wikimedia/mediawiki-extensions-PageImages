@@ -9,10 +9,9 @@ use MediaWiki\Title\Title;
 
 class LuaPageImageResolver extends TitleAttributeResolver {
 
-	private PageImages $pageImages;
-
-	public function __construct( PageImages $pageImages ) {
-		$this->pageImages = $pageImages;
+	public function __construct(
+		private readonly PageImages $pageImages,
+	) {
 	}
 
 	/**

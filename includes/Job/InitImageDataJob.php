@@ -9,8 +9,6 @@ use RefreshLinks;
 use Wikimedia\Rdbms\LBFactory;
 
 class InitImageDataJob extends Job {
-	private LBFactory $lbFactory;
-
 	/**
 	 * @param Title $title Title object associated with this job
 	 * @param array $params Parameters to the job, containing an array of
@@ -20,10 +18,9 @@ class InitImageDataJob extends Job {
 	public function __construct(
 		Title $title,
 		array $params,
-		LBFactory $lbFactory
+		private readonly LBFactory $lbFactory,
 	) {
 		parent::__construct( 'InitImageDataJob', $title, $params );
-		$this->lbFactory = $lbFactory;
 	}
 
 	/**

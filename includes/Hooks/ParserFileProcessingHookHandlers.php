@@ -48,30 +48,15 @@ class ParserFileProcessingHookHandlers implements
 {
 	private const CANDIDATE_REGEX = '/<!--MW-PAGEIMAGES-CANDIDATE-([0-9]+)-->/';
 
-	protected Config $config;
-	private RepoGroup $repoGroup;
-	private WANObjectCache $mainWANObjectCache;
-	private HttpRequestFactory $httpRequestFactory;
-	private IConnectionProvider $connectionProvider;
-	private TitleFactory $titleFactory;
-	private LinksMigration $linksMigration;
-
 	public function __construct(
-		Config $config,
-		RepoGroup $repoGroup,
-		WANObjectCache $mainWANObjectCache,
-		HttpRequestFactory $httpRequestFactory,
-		IConnectionProvider $connectionProvider,
-		TitleFactory $titleFactory,
-		LinksMigration $linksMigration
+		protected Config $config,
+		private readonly RepoGroup $repoGroup,
+		private readonly WANObjectCache $mainWANObjectCache,
+		private readonly HttpRequestFactory $httpRequestFactory,
+		private readonly IConnectionProvider $connectionProvider,
+		private readonly TitleFactory $titleFactory,
+		private readonly LinksMigration $linksMigration,
 	) {
-		$this->config = $config;
-		$this->repoGroup = $repoGroup;
-		$this->mainWANObjectCache = $mainWANObjectCache;
-		$this->httpRequestFactory = $httpRequestFactory;
-		$this->connectionProvider = $connectionProvider;
-		$this->titleFactory = $titleFactory;
-		$this->linksMigration = $linksMigration;
 	}
 
 	/**

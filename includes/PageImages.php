@@ -63,11 +63,6 @@ class PageImages implements
 	 */
 	public const PROP_NAME_FREE = 'page_image_free';
 
-	private Config $config;
-	private IConnectionProvider $dbProvider;
-	private RepoGroup $repoGroup;
-	private UrlUtils $urlUtils;
-	private UserOptionsLookup $userOptionsLookup;
 	private static ?MapCacheLRU $cache = null;
 
 	private static function factory(): self {
@@ -75,17 +70,12 @@ class PageImages implements
 	}
 
 	public function __construct(
-		Config $config,
-		IConnectionProvider $dbProvider,
-		RepoGroup $repoGroup,
-		UrlUtils $urlUtils,
-		UserOptionsLookup $userOptionsLookup
+		private readonly Config $config,
+		private readonly IConnectionProvider $dbProvider,
+		private readonly RepoGroup $repoGroup,
+		private readonly UrlUtils $urlUtils,
+		private readonly UserOptionsLookup $userOptionsLookup,
 	) {
-		$this->config = $config;
-		$this->dbProvider = $dbProvider;
-		$this->repoGroup = $repoGroup;
-		$this->urlUtils = $urlUtils;
-		$this->userOptionsLookup = $userOptionsLookup;
 	}
 
 	/**
