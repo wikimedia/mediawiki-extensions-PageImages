@@ -8,6 +8,7 @@ use RefreshLinks;
 use Wikimedia\Rdbms\ILBFactory;
 
 class InitImageDataJob extends Job {
+
 	/**
 	 * @param array $params Parameters to the job, containing an array of
 	 * page ids representing which pages to process

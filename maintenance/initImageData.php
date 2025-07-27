@@ -16,6 +16,7 @@ use PageImages\Job\InitImageDataJob;
  * @author Max Semenik
  */
 class InitImageData extends Maintenance {
+
 	public function __construct() {
 		parent::__construct();
 		$this->addDescription( 'Initializes PageImages data' );

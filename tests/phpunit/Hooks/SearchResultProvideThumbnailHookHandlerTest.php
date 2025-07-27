@@ -19,6 +19,7 @@ use ThumbnailImage;
  * @group PageImages
  */
 class SearchResultProvideThumbnailHookHandlerTest extends MediaWikiIntegrationTestCase {
+
 	/**
 	 * Creates mock object for LocalFile
 	 */
