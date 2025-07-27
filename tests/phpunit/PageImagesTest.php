@@ -4,6 +4,7 @@ namespace PageImages\Tests;
 
 use MediaWiki\Config\HashConfig;
 use MediaWiki\Context\IContextSource;
+use MediaWiki\MainConfigNames;
 use MediaWiki\Output\OutputPage;
 use MediaWiki\Request\FauxRequest;
 use MediaWiki\Skin\SkinTemplate;
@@ -30,11 +31,6 @@ class PageImagesTest extends MediaWikiIntegrationTestCase {
 	public function testPagePropertyNames() {
 		$this->assertSame( 'page_image', PageImages::PROP_NAME );
 		$this->assertSame( 'page_image_free', PageImages::PROP_NAME_FREE );
-	}
-
-	public function testConstructor() {
-		$pageImages = $this->getInstance();
-		$this->assertInstanceOf( PageImages::class, $pageImages );
 	}
 
 	public function testGivenNonExistingPageGetPageImageReturnsFalse() {
@@ -95,7 +91,7 @@ class PageImagesTest extends MediaWikiIntegrationTestCase {
 	 * @dataProvider provideFallbacks
 	 */
 	public function testGivenFallbackImageOnBeforePageDisplayAddMeta( $expected, $fallback ) {
-		$this->overrideConfigValue( 'CanonicalServer', 'http://wiki.test' );
+		$this->overrideConfigValue( MainConfigNames::CanonicalServer, 'http://wiki.test' );
 		$outputPage = $this->mockOutputPage( [
 			'PageImagesOpenGraph' => true,
 			'PageImagesOpenGraphFallbackImage' => $fallback
