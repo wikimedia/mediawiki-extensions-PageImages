@@ -27,7 +27,7 @@ class PageImageCandidate implements JsonSerializable {
 	/**
 	 * @param File $file
 	 * @param array $fileParams from ParserMakeImageParams hook.
-	 * @return PageImageCandidate
+	 * @return self
 	 */
 	public static function newFromFileAndParams( File $file, array $fileParams ): self {
 		$instance = new self();

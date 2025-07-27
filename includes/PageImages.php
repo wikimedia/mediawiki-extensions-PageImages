@@ -52,7 +52,7 @@ class PageImages implements
 	 * Note changing this value is not advised as it will invalidate all
 	 * existing page property names on a production instance
 	 * and cause them to be regenerated.
-	 * @see PageImages::PROP_NAME_FREE
+	 * @see self::PROP_NAME_FREE
 	 */
 	public const PROP_NAME = 'page_image';
 

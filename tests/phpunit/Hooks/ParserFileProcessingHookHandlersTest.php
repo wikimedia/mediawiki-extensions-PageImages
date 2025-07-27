@@ -30,6 +30,10 @@ use Wikimedia\TestingAccessWrapper;
  */
 class ParserFileProcessingHookHandlersTest extends MediaWikiIntegrationTestCase {
 
+	/**
+	 * @param array[] $images
+	 * @return Parser
+	 */
 	private function getParser( array $images ): Parser {
 		$parser = $this->getServiceContainer()->getParser();
 		$title = Title::newFromText( 'test' );
@@ -39,6 +43,11 @@ class ParserFileProcessingHookHandlersTest extends MediaWikiIntegrationTestCase 
 		return $parser;
 	}
 
+	/**
+	 * @param int[] $indexes
+	 * @param int $nonLeadIndex
+	 * @return string
+	 */
 	private function getHtml( array $indexes, $nonLeadIndex = INF ): string {
 		$html = '';
 		$doneSectionBreak = false;
@@ -68,7 +77,7 @@ class ParserFileProcessingHookHandlersTest extends MediaWikiIntegrationTestCase 
 		return $repoGroup;
 	}
 
-	private function getHandler( array $images, bool $leadOnly = false ) {
+	private function getHandler( array $images, bool $leadOnly = false ): ParserFileProcessingHookHandlers {
 		return new class ( $images, $leadOnly ) extends ParserFileProcessingHookHandlers {
 			private array $isFreeMap;
 
