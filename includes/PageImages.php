@@ -244,11 +244,7 @@ class PageImages implements
 		$pageIds = array_keys( $results );
 		$data = self::getImages( $pageIds, 50 );
 		foreach ( $pageIds as $id ) {
-			if ( isset( $data[$id]['thumbnail'] ) ) {
-				$results[$id]['image'] = $data[$id]['thumbnail'];
-			} else {
-				$results[$id]['image'] = null;
-			}
+			$results[$id]['image'] = $data[$id]['thumbnail'] ?? null;
 		}
 	}
 
@@ -304,17 +300,17 @@ class PageImages implements
 		}
 
 		// Open Graph protocol -- https://ogp.me/
-		// Multiple images are supported according to https://ogp.me/#array
 		// See https://developers.facebook.com/docs/sharing/best-practices?locale=en_US#images
-		// See T282065: WhatsApp expects an image <300kB
-		foreach ( [ 1200, 800, 640 ] as $width ) {
-			$thumb = $imageFile->transform( [ 'width' => $width ] );
-			if ( !$thumb ) {
-				continue;
+		// T295521: Updated in 2025, WhatsApp expects images >300px, but <600KB
+		// See https://developers.facebook.com/docs/whatsapp/link-previews/
+		$thumb = $imageFile->transform( [ 'width' => 1200, 'height' => 1200 ] );
+		if ( $thumb && $thumb->getUrl() ) {
+			$url = $this->urlUtils->expand( $thumb->getUrl(), PROTO_CANONICAL );
+			if ( $url ) {
+				$out->addMeta( 'og:image', $url );
+				$out->addMeta( 'og:image:width', (string)$thumb->getWidth() );
+				$out->addMeta( 'og:image:height', (string)$thumb->getHeight() );
 			}
-			$out->addMeta( 'og:image', $this->urlUtils->expand( $thumb->getUrl(), PROTO_CANONICAL ) ?? '' );
-			$out->addMeta( 'og:image:width', strval( $thumb->getWidth() ) );
-			$out->addMeta( 'og:image:height', strval( $thumb->getHeight() ) );
 		}
 	}
 
