@@ -1,9 +1,10 @@
 {
 	"@metadata": {
 		"authors": [
+			"Aca",
 			"Winston Sung"
 		]
 	},
 	"pageimages-desc": "Sakuplja informacije o slikama što se nalaze na danoj stranici",
-	"pageimages-info-label": "Slika za stranicu"
+	"pageimages-info-label": "Slika stranice"
 }
