@@ -2,7 +2,6 @@
 
 namespace PageImages;
 
-use MapCacheLRU;
 use MediaWiki\Api\ApiBase;
 use MediaWiki\Api\ApiMain;
 use MediaWiki\Api\Hook\ApiOpenSearchSuggestHook;
@@ -21,6 +20,7 @@ use MediaWiki\Skin\Skin;
 use MediaWiki\Title\Title;
 use MediaWiki\User\Options\UserOptionsLookup;
 use MediaWiki\Utils\UrlUtils;
+use Wikimedia\MapCacheLRU\MapCacheLRU;
 use Wikimedia\Rdbms\IConnectionProvider;
 
 /**
