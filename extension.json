@@ -79,7 +79,8 @@
 			"class": "PageImages\\Job\\InitImageDataJob",
 			"services": [
 				"DBLoadBalancerFactory"
-			]
+			],
+			"needsPage": false
 		}
 	},
 	"ServiceWiringFiles": [
