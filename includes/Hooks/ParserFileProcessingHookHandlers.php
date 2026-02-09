@@ -3,18 +3,18 @@
 namespace PageImages\Hooks;
 
 use Exception;
-use FormatMetadata;
 use MediaWiki\Config\Config;
 use MediaWiki\Context\DerivativeContext;
 use MediaWiki\FileRepo\File\File;
 use MediaWiki\FileRepo\RepoGroup;
-use MediaWiki\Hook\ParserAfterTidyHook;
-use MediaWiki\Hook\ParserModifyImageHTMLHook;
 use MediaWiki\Hook\ParserTestGlobalsHook;
 use MediaWiki\Http\HttpRequestFactory;
 use MediaWiki\Linker\LinksMigration;
 use MediaWiki\MainConfigNames;
+use MediaWiki\Media\FormatMetadata;
 use MediaWiki\Page\PageReference;
+use MediaWiki\Parser\Hook\ParserAfterTidyHook;
+use MediaWiki\Parser\Hook\ParserModifyImageHTMLHook;
 use MediaWiki\Parser\Parser;
 use MediaWiki\Parser\ParserOutput;
 use MediaWiki\Title\TitleFactory;

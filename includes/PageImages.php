@@ -2,6 +2,7 @@
 
 namespace PageImages;
 
+use MediaWiki\Actions\Hook\InfoActionHook;
 use MediaWiki\Api\ApiBase;
 use MediaWiki\Api\ApiMain;
 use MediaWiki\Api\Hook\ApiOpenSearchSuggestHook;
@@ -9,7 +10,6 @@ use MediaWiki\Config\Config;
 use MediaWiki\Context\IContextSource;
 use MediaWiki\FileRepo\File\File;
 use MediaWiki\FileRepo\RepoGroup;
-use MediaWiki\Hook\InfoActionHook;
 use MediaWiki\MainConfigNames;
 use MediaWiki\Output\Hook\BeforePageDisplayHook;
 use MediaWiki\Output\OutputPage;
