@@ -446,7 +446,7 @@ class ParserFileProcessingHookHandlers implements
 	private function getUrlDenylist( string $url ): array {
 		$list = [];
 		$text = $this->httpRequestFactory->get( $url, [ 'timeout' => 3 ], __METHOD__ );
-		$fileExtensions = $this->config->get( 'FileExtensions' );
+		$fileExtensions = $this->config->get( MainConfigNames::FileExtensions );
 		$regex = '/\[\[:([^|\#]*?\.(?:' . implode( '|', $fileExtensions ) . '))/i';
 
 		if ( $text && preg_match_all( $regex, $text, $matches ) ) {
