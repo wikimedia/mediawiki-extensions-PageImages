@@ -127,7 +127,6 @@
 		},
 		"PageImagesOpenGraph": {
 			"description": "Enable the OpenGraph meta tags",
-			"public": true,
 			"value": true
 		},
 		"PageImagesDenylistExpiry": {
