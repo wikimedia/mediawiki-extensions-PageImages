@@ -87,8 +87,7 @@ class ParserFileProcessingHookHandlers implements
 		array $params,
 		string &$html
 	): void {
-		$page = $parser->getPage();
-		if ( !$page || !$this->processThisTitle( $page ) ) {
+		if ( !$this->processThisTitle( $parser->getPage() ) ) {
 			return;
 		}
 
