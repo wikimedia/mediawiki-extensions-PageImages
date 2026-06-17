@@ -121,7 +121,7 @@ class PageImagesTest extends MediaWikiIntegrationTestCase {
 	}
 
 	private function newTitle(): Title {
-		$title = Title::newFromText( 'New' );
+		$title = Title::makeTitle( NS_MAIN, 'New' );
 		$title->resetArticleID( 0 );
 		return $title;
 	}

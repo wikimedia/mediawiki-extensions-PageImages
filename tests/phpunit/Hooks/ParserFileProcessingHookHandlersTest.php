@@ -7,9 +7,9 @@ use MediaWiki\FileRepo\File\File;
 use MediaWiki\FileRepo\RepoGroup;
 use MediaWiki\Http\HttpRequestFactory;
 use MediaWiki\Linker\LinksMigration;
+use MediaWiki\Page\PageReferenceValue;
 use MediaWiki\Parser\Parser;
 use MediaWiki\Parser\ParserOptions;
-use MediaWiki\Title\Title;
 use MediaWiki\Title\TitleFactory;
 use MediaWikiIntegrationTestCase;
 use PageImages\Hooks\ParserFileProcessingHookHandlers;
@@ -35,7 +35,7 @@ class ParserFileProcessingHookHandlersTest extends MediaWikiIntegrationTestCase 
 	 */
 	private function getParser( array $images ): Parser {
 		$parser = $this->getServiceContainer()->getParser();
-		$title = Title::newFromText( 'test' );
+		$title = PageReferenceValue::localReference( NS_MAIN, 'Test' );
 		$options = ParserOptions::newFromAnon();
 		$parser->startExternalParse( $title, $options, Parser::OT_HTML );
 		$parser->getOutput()->setExtensionData( 'pageImages', $images );
