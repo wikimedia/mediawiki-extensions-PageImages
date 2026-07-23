@@ -44,7 +44,7 @@
 			"class": "PageImages\\PageImages",
 			"services": [
 				"MainConfig",
-				"DBLoadBalancerFactory",
+				"ConnectionProvider",
 				"RepoGroup",
 				"UrlUtils",
 				"UserOptionsLookup"
@@ -57,7 +57,7 @@
 				"RepoGroup",
 				"MainWANObjectCache",
 				"HttpRequestFactory",
-				"DBLoadBalancerFactory",
+				"ConnectionProvider",
 				"TitleFactory",
 				"LinksMigration"
 			]
