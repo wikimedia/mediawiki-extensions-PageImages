@@ -1,4 +1,14 @@
 {
+	"name": "mediawiki/page-images",
+	"type": "mediawiki-extension",
+	"description": "Collects information about images used on page",
+	"keywords": [
+		"wiki",
+		"MediaWiki",
+		"extension"
+	],
+	"homepage": "https://www.mediawiki.org/wiki/Special:MyLanguage/Extension:PageImages",
+	"license": "WTFPL",
 	"require-dev": {
 		"mediawiki/mediawiki-codesniffer": "52.0.0",
 		"mediawiki/mediawiki-phan-config": "0.20.0",
