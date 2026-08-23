@@ -5,6 +5,7 @@ namespace PageImages\Hooks;
 use Exception;
 use MediaWiki\Config\Config;
 use MediaWiki\Context\DerivativeContext;
+use MediaWiki\Deferred\LinksUpdate\LinksTable;
 use MediaWiki\FileRepo\File\File;
 use MediaWiki\FileRepo\RepoGroup;
 use MediaWiki\Hook\ParserTestGlobalsHook;
@@ -22,7 +23,7 @@ use PageImages\PageImageCandidate;
 use PageImages\PageImages;
 use RuntimeException;
 use Wikimedia\ObjectCache\WANObjectCache;
-use Wikimedia\Rdbms\IConnectionProvider;
+use Wikimedia\Rdbms\ILBFactory;
 
 /**
  * Handlers for parser hooks.
@@ -53,7 +54,7 @@ class ParserFileProcessingHookHandlers implements
 		private readonly RepoGroup $repoGroup,
 		private readonly WANObjectCache $mainWANObjectCache,
 		private readonly HttpRequestFactory $httpRequestFactory,
-		private readonly IConnectionProvider $connectionProvider,
+		private readonly ILBFactory $lbFactory,
 		private readonly TitleFactory $titleFactory,
 		private readonly LinksMigration $linksMigration,
 	) {
@@ -413,7 +414,7 @@ class ParserFileProcessingHookHandlers implements
 			return [];
 		}
 
-		$dbr = $this->connectionProvider->getReplicaDatabase( $dbName );
+		$dbr = $this->lbFactory->getRemoteReplicaDatabase( $dbName, LinksTable::VIRTUAL_DOMAIN );
 		$id = $dbr->newSelectQueryBuilder()
 			->select( 'page_id' )
 			->from( 'page' )

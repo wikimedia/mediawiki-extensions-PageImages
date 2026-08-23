@@ -57,7 +57,7 @@
 				"RepoGroup",
 				"MainWANObjectCache",
 				"HttpRequestFactory",
-				"ConnectionProvider",
+				"DBLoadBalancerFactory",
 				"TitleFactory",
 				"LinksMigration"
 			]

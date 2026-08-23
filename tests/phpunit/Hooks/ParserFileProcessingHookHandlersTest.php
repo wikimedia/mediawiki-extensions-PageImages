@@ -16,7 +16,7 @@ use PageImages\Hooks\ParserFileProcessingHookHandlers;
 use PageImages\PageImageCandidate;
 use PageImages\PageImages;
 use Wikimedia\ObjectCache\WANObjectCache;
-use Wikimedia\Rdbms\IConnectionProvider;
+use Wikimedia\Rdbms\ILBFactory;
 use Wikimedia\TestingAccessWrapper;
 
 /**
@@ -216,7 +216,7 @@ class ParserFileProcessingHookHandlersTest extends MediaWikiIntegrationTestCase 
 					$this->getRepoGroup(),
 					$this->createMock( WANObjectCache::class ),
 					$this->createMock( HttpRequestFactory::class ),
-					$this->createMock( IConnectionProvider::class ),
+					$this->createMock( ILBFactory::class ),
 					$this->createMock( TitleFactory::class ),
 					$this->createMock( LinksMigration::class ),
 				] )
@@ -307,7 +307,7 @@ class ParserFileProcessingHookHandlersTest extends MediaWikiIntegrationTestCase 
 				$this->getRepoGroup(),
 				$this->createMock( WANObjectCache::class ),
 				$this->createMock( HttpRequestFactory::class ),
-				$this->createMock( IConnectionProvider::class ),
+				$this->createMock( ILBFactory::class ),
 				$this->createMock( TitleFactory::class ),
 				$this->createMock( LinksMigration::class )
 			)
@@ -372,7 +372,7 @@ class ParserFileProcessingHookHandlersTest extends MediaWikiIntegrationTestCase 
 					$this->getRepoGroup(),
 					$this->createMock( WANObjectCache::class ),
 					$this->createMock( HttpRequestFactory::class ),
-					$this->createMock( IConnectionProvider::class ),
+					$this->createMock( ILBFactory::class ),
 					$this->createMock( TitleFactory::class ),
 					$this->createMock( LinksMigration::class ),
 				] )
