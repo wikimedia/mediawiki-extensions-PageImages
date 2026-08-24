@@ -1,27 +1,21 @@
 !! Version 2
 
-# Disabled: expected HTML needs loading="lazy" now that
-# $wgNativeImageLazyLoading defaults to true (T148047).
 !! test
 PageImages with one image
 !! options
-disabled
 property=page_image_free
 !! wikitext
 [[File:Foobar.jpg]]
 !! metadata
 property[page_image_free]=Foobar.jpg
 !! html
-<p><span class="mw-default-size" typeof="mw:File"><a href="/wiki/File:Foobar.jpg" class="mw-file-description"><img src="http://example.com/images/3/3a/Foobar.jpg" decoding="async" width="1941" height="220" class="mw-file-element" /></a></span>
+<p><span class="mw-default-size" typeof="mw:File"><a href="/wiki/File:Foobar.jpg" class="mw-file-description"><img src="http://example.com/images/3/3a/Foobar.jpg" decoding="async" loading="lazy" width="1941" height="220" class="mw-file-element" /></a></span>
 </p>
 !! end
 
-# Disabled: expected HTML needs loading="lazy" now that
-# $wgNativeImageLazyLoading defaults to true (T148047).
 !! test
 PageImages with two images
 !! options
-disabled
 property=page_image_free
 !! wikitext
 [[File:Thumb.png]]
@@ -29,17 +23,14 @@ property=page_image_free
 !! metadata
 property[page_image_free]=Foobar.jpg
 !! html
-<p><span class="mw-default-size" typeof="mw:File"><a href="/wiki/File:Thumb.png" class="mw-file-description"><img src="http://example.com/images/e/ea/Thumb.png" decoding="async" width="135" height="135" class="mw-file-element" /></a></span>
-<span class="mw-default-size" typeof="mw:File"><a href="/wiki/File:Foobar.jpg" class="mw-file-description"><img src="http://example.com/images/3/3a/Foobar.jpg" decoding="async" width="1941" height="220" class="mw-file-element" /></a></span>
+<p><span class="mw-default-size" typeof="mw:File"><a href="/wiki/File:Thumb.png" class="mw-file-description"><img src="http://example.com/images/e/ea/Thumb.png" decoding="async" loading="lazy" width="135" height="135" class="mw-file-element" /></a></span>
+<span class="mw-default-size" typeof="mw:File"><a href="/wiki/File:Foobar.jpg" class="mw-file-description"><img src="http://example.com/images/3/3a/Foobar.jpg" decoding="async" loading="lazy" width="1941" height="220" class="mw-file-element" /></a></span>
 </p>
 !! end
 
-# Disabled: expected HTML needs loading="lazy" now that
-# $wgNativeImageLazyLoading defaults to true (T148047).
 !! test
 PageImages with best excluded by wgPageImagesLeadSectionOnly
 !! options
-disabled
 property=page_image_free
 !! metadata
 property[page_image_free]=Thumb.png
@@ -50,19 +41,16 @@ property[page_image_free]=Thumb.png
 
 [[File:Foobar.jpg]]
 !! html
-<p><span class="mw-default-size" typeof="mw:File"><a href="/wiki/File:Thumb.png" class="mw-file-description"><img src="http://example.com/images/e/ea/Thumb.png" decoding="async" width="135" height="135" class="mw-file-element" /></a></span>
+<p><span class="mw-default-size" typeof="mw:File"><a href="/wiki/File:Thumb.png" class="mw-file-description"><img src="http://example.com/images/e/ea/Thumb.png" decoding="async" loading="lazy" width="135" height="135" class="mw-file-element" /></a></span>
 </p>
 <div class="mw-heading mw-heading2"><h2 id="Section">Section</h2><span class="mw-editsection"><span class="mw-editsection-bracket">[</span><a href="/index.php?title=Parser_test&amp;action=edit&amp;section=1" title="Edit section: Section">edit</a><span class="mw-editsection-bracket">]</span></span></div>
-<p><span class="mw-default-size" typeof="mw:File"><a href="/wiki/File:Foobar.jpg" class="mw-file-description"><img src="http://example.com/images/3/3a/Foobar.jpg" decoding="async" width="1941" height="220" class="mw-file-element" /></a></span>
+<p><span class="mw-default-size" typeof="mw:File"><a href="/wiki/File:Foobar.jpg" class="mw-file-description"><img src="http://example.com/images/3/3a/Foobar.jpg" decoding="async" loading="lazy" width="1941" height="220" class="mw-file-element" /></a></span>
 </p>
 !! end
 
-# Disabled: expected HTML needs loading="lazy" now that
-# $wgNativeImageLazyLoading defaults to true (T148047).
 !! test
 PageImages with toc and image in heading
 !! options
-disabled
 property=page_image_free
 !! wikitext
 __TOC__
@@ -76,5 +64,5 @@ property[page_image_free]=Foobar.jpg
 </ul>
 </div>
 
-<div class="mw-heading mw-heading2"><h2 id="Hello">Hello <span class="mw-default-size" typeof="mw:File"><a href="/wiki/File:Foobar.jpg" class="mw-file-description"><img src="http://example.com/images/3/3a/Foobar.jpg" decoding="async" width="1941" height="220" class="mw-file-element" /></a></span></h2><span class="mw-editsection"><span class="mw-editsection-bracket">[</span><a href="/index.php?title=Parser_test&amp;action=edit&amp;section=1" title="Edit section: Hello">edit</a><span class="mw-editsection-bracket">]</span></span></div>
+<div class="mw-heading mw-heading2"><h2 id="Hello">Hello <span class="mw-default-size" typeof="mw:File"><a href="/wiki/File:Foobar.jpg" class="mw-file-description"><img src="http://example.com/images/3/3a/Foobar.jpg" decoding="async" loading="lazy" width="1941" height="220" class="mw-file-element" /></a></span></h2><span class="mw-editsection"><span class="mw-editsection-bracket">[</span><a href="/index.php?title=Parser_test&amp;action=edit&amp;section=1" title="Edit section: Hello">edit</a><span class="mw-editsection-bracket">]</span></span></div>
 !! end
