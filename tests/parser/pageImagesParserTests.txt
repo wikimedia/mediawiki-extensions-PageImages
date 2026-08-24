@@ -1,8 +1,11 @@
 !! Version 2
 
+# Disabled: expected HTML needs loading="lazy" now that
+# $wgNativeImageLazyLoading defaults to true (T148047).
 !! test
 PageImages with one image
 !! options
+disabled
 property=page_image_free
 !! wikitext
 [[File:Foobar.jpg]]
@@ -13,9 +16,12 @@ property[page_image_free]=Foobar.jpg
 </p>
 !! end
 
+# Disabled: expected HTML needs loading="lazy" now that
+# $wgNativeImageLazyLoading defaults to true (T148047).
 !! test
 PageImages with two images
 !! options
+disabled
 property=page_image_free
 !! wikitext
 [[File:Thumb.png]]
@@ -28,9 +34,12 @@ property[page_image_free]=Foobar.jpg
 </p>
 !! end
 
+# Disabled: expected HTML needs loading="lazy" now that
+# $wgNativeImageLazyLoading defaults to true (T148047).
 !! test
 PageImages with best excluded by wgPageImagesLeadSectionOnly
 !! options
+disabled
 property=page_image_free
 !! metadata
 property[page_image_free]=Thumb.png
@@ -48,9 +57,12 @@ property[page_image_free]=Thumb.png
 </p>
 !! end
 
+# Disabled: expected HTML needs loading="lazy" now that
+# $wgNativeImageLazyLoading defaults to true (T148047).
 !! test
 PageImages with toc and image in heading
 !! options
+disabled
 property=page_image_free
 !! wikitext
 __TOC__
