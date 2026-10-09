@@ -15,7 +15,7 @@ trait PageImagesTestTrait {
 	private function createMockRepoGroup( array $files ): RepoGroup {
 		$repoGroup = $this->getMockBuilder( RepoGroup::class )
 			->disableOriginalConstructor()
-			->onlyMethods( [ 'findFile' ] )
+			->onlyMethods( [ 'findFile', 'findFiles' ] )
 			->getMock();
 
 		$repoGroup->method( 'findFile' )
@@ -58,6 +58,18 @@ trait PageImagesTestTrait {
 				$thumb->method( 'getFile' )->willReturn( $file );
 				$file->method( 'transform' )->willReturn( $thumb );
 				return $file;
+			} );
+
+		$repoGroup->method( 'findFiles' )
+			->willReturnCallback( static function ( $titles ) use ( $repoGroup ) {
+				$files = [];
+				foreach ( $titles as $title ) {
+					$file = $repoGroup->findFile( $title );
+					if ( $file ) {
+						$files[$title] = $file;
+					}
+				}
+				return $files;
 			} );
 
 		return $repoGroup;
