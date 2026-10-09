@@ -107,7 +107,7 @@ class SearchResultProvideThumbnailHookHandlerTest extends MediaWikiIntegrationTe
 
 		$repoGroup = $this->getMockBuilder( RepoGroup::class )
 			->disableOriginalConstructor()
-			->onlyMethods( [ 'findFile' ] )
+			->onlyMethods( [ 'findFile', 'findFiles' ] )
 			->getMock();
 
 		$repoGroup->expects( $this->exactly( 2 ) )
@@ -124,6 +124,18 @@ class SearchResultProvideThumbnailHookHandlerTest extends MediaWikiIntegrationTe
 					default:
 						throw new LogicException( "Unexpected title $title" );
 				}
+			} );
+
+		$repoGroup->method( 'findFiles' )
+			->willReturnCallback( static function ( $titles ) use ( $repoGroup ) {
+				$files = [];
+				foreach ( $titles as $title ) {
+					$file = $repoGroup->findFile( $title );
+					if ( $file ) {
+						$files[$title] = $file;
+					}
+				}
+				return $files;
 			} );
 
 		$provider = new SearchResultThumbnailProvider( $repoGroup, $this->createHookContainer() );
