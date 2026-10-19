@@ -53,13 +53,7 @@
 		"parser": {
 			"class": "PageImages\\Hooks\\ParserFileProcessingHookHandlers",
 			"services": [
-				"MainConfig",
-				"RepoGroup",
-				"MainWANObjectCache",
-				"HttpRequestFactory",
-				"DBLoadBalancerFactory",
-				"TitleFactory",
-				"LinksMigration"
+				"PageImages.PageImageCandidateProcessor"
 			]
 		},
 		"search": {

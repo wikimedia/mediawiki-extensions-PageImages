@@ -3,21 +3,14 @@
 namespace PageImages\Tests\Hooks;
 
 use MediaWiki\Config\HashConfig;
-use MediaWiki\FileRepo\File\File;
-use MediaWiki\FileRepo\RepoGroup;
-use MediaWiki\Http\HttpRequestFactory;
-use MediaWiki\Linker\LinksMigration;
 use MediaWiki\Page\PageReferenceValue;
 use MediaWiki\Parser\Parser;
 use MediaWiki\Parser\ParserOptions;
-use MediaWiki\Title\TitleFactory;
 use MediaWikiIntegrationTestCase;
 use PageImages\Hooks\ParserFileProcessingHookHandlers;
 use PageImages\PageImageCandidate;
+use PageImages\PageImageCandidateProcessor;
 use PageImages\PageImages;
-use Wikimedia\ObjectCache\WANObjectCache;
-use Wikimedia\Rdbms\ILBFactory;
-use Wikimedia\TestingAccessWrapper;
 
 /**
  * @covers \PageImages\Hooks\ParserFileProcessingHookHandlers
@@ -60,24 +53,8 @@ class ParserFileProcessingHookHandlersTest extends MediaWikiIntegrationTestCase 
 		return $html;
 	}
 
-	/**
-	 * Required to make RepoGroup::findFile in ParserFileProcessingHookHandlers::getScore return something.
-	 */
-	private function getRepoGroup(): RepoGroup {
-		$file = $this->createMock( File::class );
-		// ugly hack to avoid all the unmockable crap in FormatMetadata
-		$file->method( 'isDeleted' )
-			->willReturn( true );
-
-		$repoGroup = $this->createMock( RepoGroup::class );
-		$repoGroup->method( 'findFile' )
-			->willReturn( $file );
-
-		return $repoGroup;
-	}
-
 	private function getHandler( array $images, bool $leadOnly = false ): ParserFileProcessingHookHandlers {
-		return new class ( $images, $leadOnly ) extends ParserFileProcessingHookHandlers {
+		$candidateProcessor = new class ( $images, $leadOnly ) extends PageImageCandidateProcessor {
 			private array $isFreeMap;
 
 			public function __construct(
@@ -100,6 +77,7 @@ class ParserFileProcessingHookHandlersTest extends MediaWikiIntegrationTestCase 
 				return $this->images[$position]['score'];
 			}
 		};
+		return new ParserFileProcessingHookHandlers( $candidateProcessor );
 	}
 
 	/**
@@ -202,197 +180,6 @@ class ParserFileProcessingHookHandlersTest extends MediaWikiIntegrationTestCase 
 		return [
 			[ false ],
 			[ true ]
-		];
-	}
-
-	/**
-	 * @dataProvider provideGetScore
-	 */
-	public function testGetScore( $image, $scoreFromTable, $position, $expected ) {
-		$mock = TestingAccessWrapper::newFromObject(
-			$this->getMockBuilder( ParserFileProcessingHookHandlers::class )
-				->setConstructorArgs( [
-					$this->getServiceContainer()->getMainConfig(),
-					$this->getRepoGroup(),
-					$this->createMock( WANObjectCache::class ),
-					$this->createMock( HttpRequestFactory::class ),
-					$this->createMock( ILBFactory::class ),
-					$this->createMock( TitleFactory::class ),
-					$this->createMock( LinksMigration::class ),
-				] )
-				->onlyMethods( [ 'scoreFromTable', 'fetchFileMetadata', 'getRatio', 'getDenylist' ] )
-				->getMock()
-		);
-		$mock->method( 'scoreFromTable' )
-			->willReturn( $scoreFromTable );
-		$mock->method( 'getRatio' )
-			->willReturn( 0 );
-		$mock->method( 'getDenylist' )
-			->willReturn( [ 'denylisted.jpg' => 1 ] );
-
-		$score = $mock->getScore( PageImageCandidate::newFromArray( $image ), $position );
-		$this->assertSame( $expected, $score );
-	}
-
-	public static function provideGetScore() {
-		return [
-			[
-				[ 'filename' => 'A.jpg', 'handler' => [ 'width' => 100 ] ],
-				100,
-				0,
-				// width score + ratio score + position score
-				100 + 100 + 8
-			],
-			[
-				[ 'filename' => 'A.jpg', 'fullwidth' => 100 ],
-				50,
-				1,
-				// width score + ratio score + position score
-				106
-			],
-			[
-				[ 'filename' => 'A.jpg', 'fullwidth' => 100 ],
-				50,
-				2,
-				// width score + ratio score + position score
-				104
-			],
-			[
-				[ 'filename' => 'A.jpg', 'fullwidth' => 100 ],
-				50,
-				3,
-				// width score + ratio score + position score
-				103
-			],
-			[
-				[ 'filename' => 'denylisted.jpg', 'fullwidth' => 100 ],
-				50,
-				3,
-				// denylist score
-				- 1000
-			],
-			[
-				[ 'filename' => 'A.jpg', 'frame' => [ 'class' => 'notpageimage' ] ],
-				0,
-				0,
-				// class="notpageimage"
-				-1000
-			],
-			[
-				[ 'filename' => 'A.jpg', 'fullwidth' => 100, 'frame' => [ 'class' => 'pageimage' ] ],
-				50,
-				1,
-				// width score + ratio score + position score + class="pageimage"
-				106 + 1000
-			],
-			[
-				[ 'filename' => 'A.jpg', 'frame' => [ 'class' => 'pageimage notpageimage' ] ],
-				0,
-				0,
-				// class="pageimage notpageimage" - should be the same as class="notpageimage"
-				-1000
-			],
-		];
-	}
-
-	/**
-	 * @dataProvider provideScoreFromTable
-	 * @covers \PageImages\Hooks\ParserFileProcessingHookHandlers::scoreFromTable
-	 */
-	public function testScoreFromTable( array $scores, $value, $expected ) {
-		/** @var ParserFileProcessingHookHandlers $handlerWrapper */
-		$handlerWrapper = TestingAccessWrapper::newFromObject(
-			new ParserFileProcessingHookHandlers(
-				new HashConfig(),
-				$this->getRepoGroup(),
-				$this->createMock( WANObjectCache::class ),
-				$this->createMock( HttpRequestFactory::class ),
-				$this->createMock( ILBFactory::class ),
-				$this->createMock( TitleFactory::class ),
-				$this->createMock( LinksMigration::class )
-			)
-		);
-
-		$score = $handlerWrapper->scoreFromTable( $value, $scores );
-		$this->assertEquals( $expected, $score );
-	}
-
-	public static function provideScoreFromTable() {
-		return [
-			'no match' => [ [], 100, 0 ],
-			'float' => [ [ 0.5 ], 0, 0.5 ],
-
-			'always min when below range' => [ [ 200 => 2, 800 => 1 ], 0, 2 ],
-			'always max when above range' => [ [ 200 => 2, 800 => 1 ], 1000, 1 ],
-
-			'always min when below range (reversed)' => [ [ 800 => 1, 200 => 2 ], 0, 2 ],
-			'always max when above range (reversed)' => [ [ 800 => 1, 200 => 2 ], 1000, 1 ],
-
-			'min match' => [ [ 200 => 2, 400 => 3, 800 => 1 ], 200, 2 ],
-			'above min' => [ [ 200 => 2, 400 => 3, 800 => 1 ], 201, 3 ],
-			'second last match' => [ [ 200 => 2, 400 => 3, 800 => 1 ], 400, 3 ],
-			'above second last' => [ [ 200 => 2, 400 => 3, 800 => 1 ], 401, 1 ],
-
-			// These test cases use the default values from extension.json
-			[ [ 119 => -100, 400 => 10, 600 => 5, 601 => 0 ], 100, -100 ],
-			[ [ 119 => -100, 400 => 10, 600 => 5, 601 => 0 ], 119, -100 ],
-			[ [ 119 => -100, 400 => 10, 600 => 5, 601 => 0 ], 300, 10 ],
-			[ [ 119 => -100, 400 => 10, 600 => 5, 601 => 0 ], 400, 10 ],
-			[ [ 119 => -100, 400 => 10, 600 => 5, 601 => 0 ], 500, 5 ],
-			[ [ 119 => -100, 400 => 10, 600 => 5, 601 => 0 ], 600, 5 ],
-			[ [ 119 => -100, 400 => 10, 600 => 5, 601 => 0 ], 601, 0 ],
-			[ [ 119 => -100, 400 => 10, 600 => 5, 601 => 0 ], 999, 0 ],
-			[ [ 99 => -100, 100 => 0 ], 99, -100 ],
-			[ [ 99 => -100, 100 => 0 ], 100, 0 ],
-			[ [ 99 => -100, 100 => 0 ], 500, 0 ],
-			[ [ 3 => -100, 5 => 0, 20 => 5, 30 => 0, 31 => -100 ], 1, -100 ],
-			[ [ 3 => -100, 5 => 0, 20 => 5, 30 => 0, 31 => -100 ], 3, -100 ],
-			[ [ 3 => -100, 5 => 0, 20 => 5, 30 => 0, 31 => -100 ], 4, 0 ],
-			[ [ 3 => -100, 5 => 0, 20 => 5, 30 => 0, 31 => -100 ], 5, 0 ],
-			[ [ 3 => -100, 5 => 0, 20 => 5, 30 => 0, 31 => -100 ], 10, 5 ],
-			[ [ 3 => -100, 5 => 0, 20 => 5, 30 => 0, 31 => -100 ], 20, 5 ],
-			[ [ 3 => -100, 5 => 0, 20 => 5, 30 => 0, 31 => -100 ], 25, 0 ],
-			[ [ 3 => -100, 5 => 0, 20 => 5, 30 => 0, 31 => -100 ], 30, 0 ],
-			[ [ 3 => -100, 5 => 0, 20 => 5, 30 => 0, 31 => -100 ], 31, -100 ],
-			[ [ 3 => -100, 5 => 0, 20 => 5, 30 => 0, 31 => -100 ], 40, -100 ],
-
-			'T212013' => [ [ 119 => -100, 400 => 10, 600 => 5, 601 => 0 ], 0, -100 ],
-		];
-	}
-
-	/**
-	 * @dataProvider provideIsFreeImage
-	 * @covers \PageImages\Hooks\ParserFileProcessingHookHandlers::isImageFree
-	 */
-	public function testIsFreeImage( $fileName, $metadata, $expected ) {
-		$mock = TestingAccessWrapper::newFromObject(
-			$this->getMockBuilder( ParserFileProcessingHookHandlers::class )
-				->setConstructorArgs( [
-					$this->getServiceContainer()->getMainConfig(),
-					$this->getRepoGroup(),
-					$this->createMock( WANObjectCache::class ),
-					$this->createMock( HttpRequestFactory::class ),
-					$this->createMock( ILBFactory::class ),
-					$this->createMock( TitleFactory::class ),
-					$this->createMock( LinksMigration::class ),
-				] )
-				->onlyMethods( [ 'fetchFileMetadata' ] )
-				->getMock()
-		);
-		$mock->method( 'fetchFileMetadata' )
-			->willReturn( $metadata );
-		/** @var ParserFileProcessingHookHandlers $mock */
-		$this->assertSame( $expected, $mock->isImageFree( $fileName ) );
-	}
-
-	public static function provideIsFreeImage() {
-		return [
-			[ 'A.jpg', [], true ],
-			[ 'A.jpg', [ 'NonFree' => [ 'value' => '0' ] ], true ],
-			[ 'A.jpg', [ 'NonFree' => [ 'value' => 0 ] ], true ],
-			[ 'A.jpg', [ 'NonFree' => [ 'value' => false ] ], true ],
-			[ 'A.jpg', [ 'NonFree' => [ 'value' => 'something' ] ], false ],
-			[ 'A.jpg', [ 'something' => [ 'value' => 'something' ] ], true ],
 		];
 	}
 }
