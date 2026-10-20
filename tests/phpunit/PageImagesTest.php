@@ -2,13 +2,11 @@
 
 namespace PageImages\Tests;
 
-use MediaWiki\Context\IContextSource;
 use MediaWiki\Context\RequestContext;
 use MediaWiki\FileRepo\File\LocalFile;
 use MediaWiki\MainConfigNames;
 use MediaWiki\Output\OutputPage;
 use MediaWiki\Page\WikiPage;
-use MediaWiki\Request\FauxRequest;
 use MediaWiki\Skin\SkinTemplate;
 use MediaWiki\Tests\FileRepo\TestRepoTrait;
 use MediaWiki\Title\Title;
@@ -65,7 +63,6 @@ class PageImagesTest extends MediaWikiIntegrationTestCase {
 			MainConfigNames::UseParsoidParser => false,
 			'PageImagesAPIDefaultLicense' => 'free',
 		] );
-		$this->clearHooks();
 	}
 
 	private function getInstance(): PageImages {
@@ -79,6 +76,13 @@ class PageImagesTest extends MediaWikiIntegrationTestCase {
 
 	public function testGetImage_existingWithCandidate() {
 		$this->assertInstanceOf( LocalFile::class, $this->getInstance()->getImage( self::$page->getTitle() ) );
+	}
+
+	public function testGetImage_existingFilePage() {
+		$this->assertInstanceOf(
+			LocalFile::class,
+			$this->getInstance()->getImage( Title::newFromText( 'File:Landscape-plain.jpg' ) )
+		);
 	}
 
 	public function testGetImage_nonExistingArticle() {
@@ -132,6 +136,35 @@ class PageImagesTest extends MediaWikiIntegrationTestCase {
 				[ 'og:image:width', '1200' ],
 				[ 'og:image:height', '900' ]
 		], $outputPage->getMetaTags() );
+	}
+
+	public function testBeforePageDisplay_existingFilePage() {
+		$this->overrideConfigValues( [
+			'PageImagesOpenGraph' => true,
+			'PageImagesOpenGraphFallbackImage' => false
+		] );
+		$outputPage = $this->createOutputPage( Title::newFromText( 'File:Landscape-plain.jpg' ) );
+		$skinTemplate = new SkinTemplate();
+
+		$this->getInstance()->onBeforePageDisplay( $outputPage, $skinTemplate );
+		$this->assertSame( [
+				[ 'og:image', 'http://wiki.test/w/images/b/b0/Landscape-plain.jpg' ],
+				[ 'og:image:width', '1200' ],
+				[ 'og:image:height', '900' ]
+		], $outputPage->getMetaTags() );
+	}
+
+	public function testBeforePageDisplay_existingFilePageWithoutUpload() {
+		$this->overrideConfigValues( [
+			'PageImagesOpenGraph' => true,
+			'PageImagesOpenGraphFallbackImage' => false
+		] );
+		$title = $this->getExistingTestPage( 'File:Without-upload.jpg' )->getTitle();
+		$outputPage = $this->createOutputPage( $title );
+		$skinTemplate = new SkinTemplate();
+
+		$this->getInstance()->onBeforePageDisplay( $outputPage, $skinTemplate );
+		$this->assertSame( [], $outputPage->getMetaTags() );
 	}
 
 	public function testBeforePageDisplay_disabled() {
@@ -188,15 +221,12 @@ class PageImagesTest extends MediaWikiIntegrationTestCase {
 	}
 
 	private function createOutputPage( ?Title $title = null ): OutputPage {
-		$context = $this->createMock( IContextSource::class );
-		$context->method( 'getTitle' )
-			->willReturn( $title ?? Title::makeTitle( NS_SPECIAL, 'Blankpage/PageImagesTest' ) );
-		$context->method( 'getRequest' )->willReturn( new FauxRequest() );
-		$context->method( 'getConfig' )
-			->willReturn( $this->getServiceContainer()->getMainConfig() );
-
+		$context = RequestContext::newExtraneousContext(
+			$title ?? Title::makeTitle( NS_SPECIAL, 'Blankpage/PageImagesTest' )
+		);
 		$outputPage = new OutputPage( $context );
 		if ( $title ) {
+			$outputPage->setArticleFlag( true );
 			$page = new WikiPage( $title );
 			$pout = $page->getParserOutput();
 			if ( $pout ) {

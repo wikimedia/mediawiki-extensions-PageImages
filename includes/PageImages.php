@@ -113,8 +113,7 @@ class PageImages implements
 	/**
 	 * Return page image for a given title
 	 *
-	 * @param Title $title Title to get page image for
-	 * @return File|null
+	 * NOTE: Don't call during pageview to avoid DB queries (T347123), call getImageForPageview instead.
 	 */
 	public function getImage( Title $title ): ?File {
 		self::$cache ??= new MapCacheLRU( 100 );
@@ -127,11 +126,7 @@ class PageImages implements
 		return $file;
 	}
 
-	/**
-	 * @param Title $title Title to get page image for
-	 * @return File|null
-	 */
-	private function fetchPageImage( Title $title ) {
+	private function fetchPageImage( Title $title ): ?File {
 		if ( !$title->canExist() ) {
 			// Optimization: Do not query for special pages or other titles never in the database
 			return null;
@@ -159,6 +154,26 @@ class PageImages implements
 			->orderBy( 'pp_propname' )
 			->caller( __METHOD__ )
 			->fetchField();
+		if ( !$fileName ) {
+			return null;
+		}
+
+		// Cast false to null
+		return $this->repoGroup->findFile( $fileName ) ?: null;
+	}
+
+	public function getImageForPageview( OutputPage $output ): ?File {
+		$title = $output->getTitle();
+		if ( !$title || !$title->canExist() ) {
+			return null;
+		}
+
+		if ( $title->inNamespace( NS_FILE ) ) {
+			return $this->repoGroup->findFile( $title ) ?: null;
+		}
+
+		$fileName = $output->getMetadata()->getPageProperty( self::PROP_NAME )
+			?: $output->getMetadata()->getPageProperty( self::PROP_NAME_FREE );
 		if ( !$fileName ) {
 			return null;
 		}
@@ -261,7 +276,9 @@ class PageImages implements
 		if ( !$out->getConfig()->get( 'PageImagesOpenGraph' ) ) {
 			return;
 		}
-		$imageFile = $this->getImage( $out->getContext()->getTitle() );
+		$imageFile = $out->isArticle()
+			? $this->getImageForPageview( $out )
+			: $this->getImage( $out->getContext()->getTitle() );
 		if ( !$imageFile ) {
 			$fallback = $out->getConfig()->get( 'PageImagesOpenGraphFallbackImage' );
 			if ( $fallback ) {
