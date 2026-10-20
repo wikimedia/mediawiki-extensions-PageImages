@@ -99,10 +99,10 @@ class SearchResultProvideThumbnailHookHandlerTest extends MediaWikiIntegrationTe
 				(array)PageImages::getPropNames( PageImages::LICENSE_FREE )
 			)->willReturn( [
 				1 => [
-					PageImages::getPropName( true ) => 'File1_free.jpg'
+					PageImages::PROP_NAME_FREE => 'File1_free.jpg'
 				],
 				2 => [
-					PageImages::getPropName( true ) => 'File2_free.jpg',
+					PageImages::PROP_NAME_FREE => 'File2_free.jpg',
 				] ] );
 
 		$repoGroup = $this->getMockBuilder( RepoGroup::class )

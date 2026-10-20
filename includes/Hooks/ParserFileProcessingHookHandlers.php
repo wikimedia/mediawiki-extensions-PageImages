@@ -120,12 +120,12 @@ class ParserFileProcessingHookHandlers implements
 		[ $bestImageName, $freeImageName ] = $this->candidateProcessor->findBestImages( $images );
 
 		if ( $freeImageName ) {
-			$parserOutput->setPageProperty( PageImages::getPropName( true ), $freeImageName );
+			$parserOutput->setPageProperty( PageImages::PROP_NAME_FREE, $freeImageName );
 		}
 
 		// Only store the image if it's not free. Free image (if any) has already been stored above.
 		if ( $bestImageName && $bestImageName !== $freeImageName ) {
-			$parserOutput->setPageProperty( PageImages::getPropName( false ), $bestImageName );
+			$parserOutput->setPageProperty( PageImages::PROP_NAME, $bestImageName );
 		}
 
 		// Strip comments from indicators (T298930)

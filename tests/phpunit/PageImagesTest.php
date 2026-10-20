@@ -28,7 +28,7 @@ class PageImagesTest extends MediaWikiIntegrationTestCase {
 		return $services->getService( 'PageImages.PageImages' );
 	}
 
-	public function testPagePropertyNames() {
+	public function testConstants() {
 		$this->assertSame( 'page_image', PageImages::PROP_NAME );
 		$this->assertSame( 'page_image_free', PageImages::PROP_NAME_FREE );
 	}
@@ -36,11 +36,6 @@ class PageImagesTest extends MediaWikiIntegrationTestCase {
 	public function testGivenNonExistingPageGetPageImageReturnsFalse() {
 		$title = $this->newTitle();
 		$this->assertNull( $this->getInstance()->getImage( $title ) );
-	}
-
-	public function testGetPropName() {
-		$this->assertSame( 'page_image', PageImages::getPropName( false ) );
-		$this->assertSame( 'page_image_free', PageImages::getPropName( true ) );
 	}
 
 	public function testGetPropNames() {

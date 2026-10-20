@@ -127,7 +127,7 @@ class ApiQueryPageImages extends ApiQueryBase {
 			$res = $this->select( __METHOD__ );
 
 			$buffer = [];
-			$propNameAny = PageImages::getPropName( false );
+			$propNameAny = PageImages::PROP_NAME;
 			foreach ( $res as $row ) {
 				$pageId = $row->pp_page;
 				if ( !array_key_exists( $pageId, $buffer ) || $row->pp_propname === $propNameAny ) {

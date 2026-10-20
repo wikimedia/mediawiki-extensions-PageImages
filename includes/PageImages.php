@@ -34,32 +34,28 @@ class PageImages implements
 	BeforePageDisplayHook,
 	InfoActionHook
 {
-	/**
-	 * @const value for free images
-	 */
+	/** Parameter for PageImages::getPropNames */
 	public const LICENSE_FREE = 'free';
 
-	/**
-	 * @const value for images with any type of license
-	 */
+	/** Parameter for PageImages::getPropNames */
 	public const LICENSE_ANY = 'any';
 
 	/**
-	 * Page property used to store the best page image information.
+	 * Page property used to store the best page image name.
+	 *
 	 * If the best image is the same as the best image with free license,
 	 * then nothing is stored under this property.
-	 * Note changing this value is not advised as it will invalidate all
-	 * existing page property names on a production instance
-	 * and cause them to be regenerated.
+	 *
+	 * NOTE: Avoid changing this property, because it would invalidate all
+	 * existing page_prop data in production and cause data to be appear
+	 * missing until regenerated.
+	 *
 	 * @see self::PROP_NAME_FREE
 	 */
 	public const PROP_NAME = 'page_image';
 
 	/**
-	 * Page property used to store the best free page image information
-	 * Note changing this value is not advised as it will invalidate all
-	 * existing page property names on a production instance
-	 * and cause them to be regenerated.
+	 * Page property used to store the best freely-licensed page image name.
 	 */
 	public const PROP_NAME_FREE = 'page_image_free';
 
@@ -93,18 +89,6 @@ class PageImages implements
 	}
 
 	/**
-	 * Get property name used in page_props table. When a page image
-	 * is stored it will be stored under this property name on the corresponding
-	 * article.
-	 *
-	 * @param bool $isFree Whether the image is a free-license image
-	 * @return string
-	 */
-	public static function getPropName( bool $isFree ): string {
-		return $isFree ? self::PROP_NAME_FREE : self::PROP_NAME;
-	}
-
-	/**
 	 * Get property names used in page_props table
 	 *
 	 * If the license is free, then only the free property name will be returned,
@@ -117,9 +101,9 @@ class PageImages implements
 	 */
 	public static function getPropNames( string $license ) {
 		if ( $license === self::LICENSE_FREE ) {
-			return self::getPropName( true );
+			return self::PROP_NAME_FREE;
 		}
-		return [ self::getPropName( true ), self::getPropName( false ) ];
+		return [ self::PROP_NAME_FREE, self::PROP_NAME ];
 	}
 
 	/**
@@ -169,6 +153,7 @@ class PageImages implements
 				'pp_page' => $pageId,
 				'pp_propname' => [ self::PROP_NAME, self::PROP_NAME_FREE ]
 			] )
+			// If best and free are both set, we return best (which sorts first).
 			->orderBy( 'pp_propname' )
 			->caller( __METHOD__ )
 			->fetchField();

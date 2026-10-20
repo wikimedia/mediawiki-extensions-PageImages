@@ -178,9 +178,9 @@ class ApiQueryPageImagesTest extends MediaWikiIntegrationTestCase {
 
 		$license = $requestParams['license'] ?? 'free';
 		if ( $license == PageImages::LICENSE_ANY ) {
-			$propName = [ PageImages::getPropName( true ), PageImages::getPropName( false ) ];
+			$propName = [ PageImages::PROP_NAME_FREE, PageImages::PROP_NAME ];
 		} else {
-			$propName = PageImages::getPropName( true );
+			$propName = PageImages::PROP_NAME_FREE;
 		}
 		$mock->expects( $this->exactly( count( $queryPageIds ) > 0 ? 1 : 0 ) )
 			->method( 'addWhere' )
