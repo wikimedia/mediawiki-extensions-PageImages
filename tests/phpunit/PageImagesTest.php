@@ -81,8 +81,13 @@ class PageImagesTest extends MediaWikiIntegrationTestCase {
 		$this->assertInstanceOf( LocalFile::class, $this->getInstance()->getImage( self::$page->getTitle() ) );
 	}
 
-	public function testGetImage_nonExistingPage() {
+	public function testGetImage_nonExistingArticle() {
 		$title = $this->getNonexistingTestPage()->getTitle();
+		$this->assertNull( $this->getInstance()->getImage( $title ) );
+	}
+
+	public function testGetImage_nonExistingFilePage() {
+		$title = $this->getNonexistingTestPage( 'File:Notfound.jpg' )->getTitle();
 		$this->assertNull( $this->getInstance()->getImage( $title ) );
 	}
 

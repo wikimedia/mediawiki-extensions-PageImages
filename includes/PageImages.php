@@ -120,28 +120,26 @@ class PageImages implements
 			fn () => $this->fetchPageImage( $title )
 		);
 
-		// Cast false to null
-		return $file ?: null;
+		return $file;
 	}
 
 	/**
 	 * @param Title $title Title to get page image for
-	 * @return File|null|false
+	 * @return File|null
 	 */
 	private function fetchPageImage( Title $title ) {
 		if ( !$title->canExist() ) {
 			// Optimization: Do not query for special pages or other titles never in the database
-			return false;
+			return null;
 		}
 
 		if ( $title->inNamespace( NS_FILE ) ) {
-			return $this->repoGroup->findFile( $title );
+			return $this->repoGroup->findFile( $title ) ?: null;
 		}
 
 		$pageId = $title->getArticleID();
 		if ( !$pageId ) {
 			// No page id to select from
-			// Allow caching, cast null to false later
 			return null;
 		}
 
@@ -158,11 +156,11 @@ class PageImages implements
 			->caller( __METHOD__ )
 			->fetchField();
 		if ( !$fileName ) {
-			// Return not found without caching.
-			return false;
+			return null;
 		}
 
-		return $this->repoGroup->findFile( $fileName );
+		// Cast false to null
+		return $this->repoGroup->findFile( $fileName ) ?: null;
 	}
 
 	/**
