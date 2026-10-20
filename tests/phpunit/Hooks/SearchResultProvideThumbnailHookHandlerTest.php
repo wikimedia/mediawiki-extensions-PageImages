@@ -2,16 +2,13 @@
 
 namespace PageImages\Tests\Hooks;
 
-use LogicException;
-use MediaWiki\FileRepo\File\LocalFile;
-use MediaWiki\FileRepo\RepoGroup;
-use MediaWiki\Media\ThumbnailImage;
 use MediaWiki\Page\PageIdentityValue;
 use MediaWiki\Page\PageProps;
 use MediaWiki\Search\SearchResultThumbnailProvider;
 use MediaWikiIntegrationTestCase;
 use PageImages\Hooks\SearchResultProvideThumbnailHookHandler;
 use PageImages\PageImages;
+use PageImages\Tests\PageImagesTestTrait;
 
 /**
  * @covers \PageImages\Hooks\SearchResultProvideThumbnailHookHandler
@@ -19,65 +16,7 @@ use PageImages\PageImages;
  * @group PageImages
  */
 class SearchResultProvideThumbnailHookHandlerTest extends MediaWikiIntegrationTestCase {
-
-	/**
-	 * Creates mock object for LocalFile
-	 */
-	private function getMockThumbnailImage(
-		int $size,
-		LocalFile $file
-	): ThumbnailImage {
-		$thumbnail = $this->getMockBuilder( ThumbnailImage::class )
-			->disableOriginalConstructor()
-			->onlyMethods( [
-				'getWidth',
-				'getFile',
-				'getUrl'
-			] )
-			->getMock();
-
-			$thumbnail->expects( $this->once() )
-				->method( 'getUrl' )
-				->willReturn( 'https://example.org/test.url' );
-
-			$thumbnail->expects( $this->once() )
-				->method( 'getWidth' )
-				->willReturn( $size );
-
-			$thumbnail->expects( $this->once() )
-				->method( 'getFile' )
-				->willReturn( $file );
-
-		return $thumbnail;
-	}
-
-	/**
-	 * Creates mock object for LocalFile
-	 */
-	private function getMockLocalFile( int $size, string $filename ): LocalFile {
-		$file = $this->getMockBuilder( LocalFile::class )
-			->disableOriginalConstructor()
-			->onlyMethods( [
-				'getName',
-				'transform',
-				'getMimeType'
-			] )
-			->getMock();
-
-		$file->expects( $this->once() )
-			->method( 'getName' )
-			->willReturn( $filename );
-
-		$file->expects( $this->once() )
-			->method( 'transform' )
-			->willReturn( $this->getMockThumbnailImage( $size, $file ) );
-
-		$file->expects( $this->once() )
-			->method( 'getMimeType' )
-			->willReturn( 'image/jpg' );
-
-		return $file;
-	}
+	use PageImagesTestTrait;
 
 	public function testProvideThumbnail() {
 		$pageProps = $this->getMockBuilder( PageProps::class )
@@ -105,26 +44,10 @@ class SearchResultProvideThumbnailHookHandlerTest extends MediaWikiIntegrationTe
 					PageImages::PROP_NAME_FREE => 'File2_free.jpg',
 				] ] );
 
-		$repoGroup = $this->getMockBuilder( RepoGroup::class )
-			->disableOriginalConstructor()
-			->onlyMethods( [ 'findFile' ] )
-			->getMock();
-
-		$repoGroup->expects( $this->exactly( 2 ) )
-			->method( 'findFile' )
-			->willReturnCallback( function ( $title ) {
-				switch ( $title ) {
-					case 'File1_free.jpg':
-						return $this->getMockLocalFile(
-							SearchResultThumbnailProvider::THUMBNAIL_SIZE,
-							$title
-						);
-					case 'File2_free.jpg':
-						return null;
-					default:
-						throw new LogicException( "Unexpected title $title" );
-				}
-			} );
+		$repoGroup = $this->createMockRepoGroup( [
+			'File1_free.jpg' => SearchResultThumbnailProvider::THUMBNAIL_SIZE,
+			'File2_free.jpg' => null,
+		] );
 
 		$provider = new SearchResultThumbnailProvider( $repoGroup, $this->createHookContainer() );
 		$handler = new SearchResultProvideThumbnailHookHandler( $provider, $pageProps, $repoGroup );
