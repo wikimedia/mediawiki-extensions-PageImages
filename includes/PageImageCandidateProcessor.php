@@ -241,7 +241,7 @@ class PageImageCandidateProcessor {
 	/**
 	 * Return a list of images denylisted from influencing this extension's output
 	 *
-	 * @return int[] Flipped associative array in format "image BDB key" => int
+	 * @return array<string,int> Flipped associative array in format "image BDB key" => int
 	 * @throws Exception
 	 */
 	protected function getDenylist(): array {
@@ -251,24 +251,13 @@ class PageImageCandidateProcessor {
 			function () {
 				$list = [];
 				foreach ( $this->config->get( 'PageImagesDenylist' ) as $source ) {
-					switch ( $source['type'] ) {
-						case 'db':
-							$list = array_merge(
-								$list,
-								$this->getDbDenylist( $source['db'], $source['page'] )
-							);
-							break;
-						case 'url':
-							$list = array_merge(
-								$list,
-								$this->getUrlDenylist( $source['url'] )
-							);
-							break;
-						default:
-							throw new RuntimeException(
-								"unrecognized image denylist type '{$source['type']}'"
-							);
-					}
+					array_push( $list, ...match ( $source['type'] ) {
+						'db' => $this->getDbDenylist( $source['db'], $source['page'] ),
+						'url' => $this->getUrlDenylist( $source['url'] ),
+						default => throw new RuntimeException(
+							"unrecognized image denylist type '{$source['type']}'"
+						)
+					} );
 				}
 
 				return array_flip( $list );

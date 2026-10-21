@@ -93,7 +93,7 @@ class InitImageData extends Maintenance {
 				$queue->push( $job );
 				$this->waitForMaxPressure( $queue, $maxPressure, $isQuiet );
 			}
-			$lastId = end( $pageIds );
+			$lastId = array_last( $pageIds );
 			$this->output( "$lastId\n" );
 		} while ( $pageIds );
 		$this->output( "done\n" );

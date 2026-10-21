@@ -17,7 +17,6 @@ class PageImageCandidate implements JsonSerializable {
 	private string $frameClass = '';
 
 	/**
-	 * Private constructor.
 	 * Use self::newFromFileAndParams to instantiate.
 	 */
 	private function __construct() {
