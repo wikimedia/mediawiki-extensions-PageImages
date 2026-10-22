@@ -65,6 +65,7 @@ class PageImagesTest extends MediaWikiIntegrationTestCase {
 			MainConfigNames::UseParsoidParser => false,
 			'PageImagesAPIDefaultLicense' => 'free',
 		] );
+		$this->clearHooks();
 	}
 
 	private function getInstance(): PageImages {
