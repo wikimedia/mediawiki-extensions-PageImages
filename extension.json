@@ -76,6 +76,19 @@
 	"ServiceWiringFiles": [
 		"includes/ServiceWiring.php"
 	],
+	"ParsoidModules": [
+		{
+			"name": "PageImages",
+			"domProcessors": [
+				{
+					"class": "PageImages\\Parsoid\\PageImagesDOMProcessor",
+					"services": [
+						"PageImages.PageImageCandidateProcessor"
+					]
+				}
+			]
+		}
+	],
 	"callback": "PageImages\\PageImages::onRegistration",
 	"config": {
 		"PageImagesScores": {

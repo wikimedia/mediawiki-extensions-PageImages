@@ -11,6 +11,7 @@ use MediaWiki\Parser\ParserOutput;
 use PageImages\PageImageCandidate;
 use PageImages\PageImageCandidateProcessor;
 use PageImages\PageImages;
+use PageImages\Parsoid\PageImagesDOMProcessor;
 
 /**
  * Handlers for parser hooks.
@@ -24,6 +25,9 @@ use PageImages\PageImages;
  * temporary comments and saves the resulting best images to page_props.
  *
  * The various query interfaces will retrieve the lead image from page_props.
+ *
+ * This is the legacy parser support only.
+ * @see PageImagesDOMProcessor for the Parsoid version
  *
  * @license WTFPL
  * @author Max Semenik
@@ -69,11 +73,11 @@ class ParserFileProcessingHookHandlers implements
 		array $params,
 		string &$html
 	): void {
-		if ( !$this->candidateProcessor->processThisTitle( $parser->getPage() ) ) {
+		if ( !$this->candidateProcessor->inProcessedNamespace( $parser->getPage()->getNamespace() ) ) {
 			return;
 		}
 
-		$this->candidateProcessor->calcWidth( $params, $file );
+		$this->candidateProcessor->calcWidth( $params, (int)$file->getWidth(), (int)$file->getHeight() );
 
 		$index = $this->addPageImageCandidateToParserOutput(
 			PageImageCandidate::newFromFileAndParams( $file, $params ),
@@ -91,6 +95,7 @@ class ParserFileProcessingHookHandlers implements
 	 */
 	public function onParserAfterTidy( $parser, &$text ) {
 		$parserOutput = $parser->getOutput();
+		// TODO we can remove these from ParserOutput after getting them as they are not used anywhere except here
 		$allImages = $parserOutput->getExtensionData( 'pageImages' );
 		if ( !$allImages ) {
 			return;

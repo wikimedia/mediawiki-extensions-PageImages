@@ -86,6 +86,10 @@ class PageImages implements
 				$settings->getConfig()->get( MainConfigNames::ContentNamespaces )
 			);
 		}
+		// Tests that parse images can run without database access. The denylist needs the database.
+		if ( defined( 'MW_PHPUNIT_TEST' ) ) {
+			$settings->overrideConfigValue( 'PageImagesDenylist', [] );
+		}
 	}
 
 	/**

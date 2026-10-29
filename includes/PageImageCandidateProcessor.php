@@ -12,7 +12,6 @@ use MediaWiki\Http\HttpRequestFactory;
 use MediaWiki\Linker\LinksMigration;
 use MediaWiki\MainConfigNames;
 use MediaWiki\Media\FormatMetadata;
-use MediaWiki\Page\PageReference;
 use MediaWiki\Title\TitleFactory;
 use RuntimeException;
 use Wikimedia\ObjectCache\WANObjectCache;
@@ -84,13 +83,13 @@ class PageImageCandidateProcessor {
 	}
 
 	/**
-	 * Returns true if data for this title should be saved
+	 * Returns true if data for pages in this namespace should be saved
 	 */
-	public function processThisTitle( PageReference $pageReference ): bool {
+	public function inProcessedNamespace( int $namespace ): bool {
 		static $flipped = null;
 		$flipped ??= array_flip( $this->config->get( 'PageImagesNamespaces' ) );
 
-		return isset( $flipped[$pageReference->getNamespace()] );
+		return isset( $flipped[$namespace] );
 	}
 
 	/**
@@ -98,14 +97,14 @@ class PageImageCandidateProcessor {
 	 * calculation algorithm precisely because it's not required and editor's intentions are more
 	 * important than the precise number.
 	 */
-	public function calcWidth( array &$params, File $file ): void {
+	public function calcWidth( array &$params, int $fileWidth, int $fileHeight ): void {
 		if ( isset( $params['handler']['width'] ) ) {
 			return;
 		}
 
-		if ( isset( $params['handler']['height'] ) && $file->getHeight() > 0 ) {
-			$params['handler']['width'] =
-				$file->getWidth() * ( $params['handler']['height'] / $file->getHeight() );
+		$height = $params['handler']['height'] ?? null;
+		if ( $height !== null && $fileHeight > 0 ) {
+			$params['handler']['width'] = $fileWidth * ( $height / $fileHeight );
 		} elseif ( isset( $params['frame']['thumbnail'] )
 			|| isset( $params['frame']['thumb'] )
 			|| isset( $params['frame']['frameless'] )
@@ -115,7 +114,7 @@ class PageImageCandidateProcessor {
 			$params['handler']['width'] = $thumbLimits[$defaultUserOptions['thumbsize']]
 				?? 250;
 		} else {
-			$params['handler']['width'] = $file->getWidth();
+			$params['handler']['width'] = $fileWidth;
 		}
 	}
 

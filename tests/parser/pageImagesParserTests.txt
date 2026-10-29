@@ -1,4 +1,7 @@
-!! Version 2
+!! options
+parsoid-compatible=wt2html
+version=2
+!! end
 
 !! test
 PageImages with one image
@@ -8,9 +11,11 @@ property=page_image_free
 [[File:Foobar.jpg]]
 !! metadata
 property[page_image_free]=Foobar.jpg
-!! html
+!! html/php
 <p><span class="mw-default-size" typeof="mw:File"><a href="/wiki/File:Foobar.jpg" class="mw-file-description"><img src="http://example.com/images/3/3a/Foobar.jpg" decoding="async" loading="lazy" width="1941" height="220" class="mw-file-element" /></a></span>
 </p>
+!! html/parsoid
+<p><span class="mw-default-size" typeof="mw:File" data-parsoid='{"optList":[]}'><a href="./File:Foobar.jpg" class="mw-file-description"><img resource="./File:Foobar.jpg" src="http://example.com/images/3/3a/Foobar.jpg" decoding="async" loading="lazy" data-file-width="1941" data-file-height="220" data-file-type="bitmap" height="220" width="1941" class="mw-file-element" data-parsoid='{"a":{"resource":"./File:Foobar.jpg","height":"220","width":"1941"},"sa":{"resource":"File:Foobar.jpg"}}'/></a></span></p>
 !! end
 
 !! test
@@ -22,17 +27,45 @@ property=page_image_free
 [[File:Foobar.jpg]]
 !! metadata
 property[page_image_free]=Foobar.jpg
-!! html
+!! html/php
 <p><span class="mw-default-size" typeof="mw:File"><a href="/wiki/File:Thumb.png" class="mw-file-description"><img src="http://example.com/images/e/ea/Thumb.png" decoding="async" loading="lazy" width="135" height="135" class="mw-file-element" /></a></span>
 <span class="mw-default-size" typeof="mw:File"><a href="/wiki/File:Foobar.jpg" class="mw-file-description"><img src="http://example.com/images/3/3a/Foobar.jpg" decoding="async" loading="lazy" width="1941" height="220" class="mw-file-element" /></a></span>
 </p>
+!! html/parsoid
+<p><span class="mw-default-size" typeof="mw:File" data-parsoid='{"optList":[]}'><a href="./File:Thumb.png" class="mw-file-description"><img resource="./File:Thumb.png" src="http://example.com/images/e/ea/Thumb.png" decoding="async" loading="lazy" data-file-width="135" data-file-height="135" data-file-type="bitmap" height="135" width="135" class="mw-file-element" data-parsoid='{"a":{"resource":"./File:Thumb.png","height":"135","width":"135"},"sa":{"resource":"File:Thumb.png"}}'/></a></span>
+<span class="mw-default-size" typeof="mw:File" data-parsoid='{"optList":[]}'><a href="./File:Foobar.jpg" class="mw-file-description"><img resource="./File:Foobar.jpg" src="http://example.com/images/3/3a/Foobar.jpg" decoding="async" loading="lazy" data-file-width="1941" data-file-height="220" data-file-type="bitmap" height="220" width="1941" class="mw-file-element" data-parsoid='{"a":{"resource":"./File:Foobar.jpg","height":"220","width":"1941"},"sa":{"resource":"File:Foobar.jpg"}}'/></a></span></p>
 !! end
 
 !! test
 PageImages with best excluded by wgPageImagesLeadSectionOnly
 !! options
 property=page_image_free
+extension=pageImages
 !! metadata
+extension[pageImages]=[
+    {
+        "filename": "Thumb.png",
+        "fullwidth": 135,
+        "fullheight": 135,
+        "handler": {
+            "width": 135
+        },
+        "frame": {
+            "class": ""
+        }
+    },
+    {
+        "filename": "Foobar.jpg",
+        "fullwidth": 1941,
+        "fullheight": 220,
+        "handler": {
+            "width": 1941
+        },
+        "frame": {
+            "class": ""
+        }
+    }
+]
 property[page_image_free]=Thumb.png
 !! wikitext
 [[File:Thumb.png]]
@@ -40,12 +73,18 @@ property[page_image_free]=Thumb.png
 == Section ==
 
 [[File:Foobar.jpg]]
-!! html
+!! html/php
 <p><span class="mw-default-size" typeof="mw:File"><a href="/wiki/File:Thumb.png" class="mw-file-description"><img src="http://example.com/images/e/ea/Thumb.png" decoding="async" loading="lazy" width="135" height="135" class="mw-file-element" /></a></span>
 </p>
 <div class="mw-heading mw-heading2"><h2 id="Section">Section</h2><span class="mw-editsection"><span class="mw-editsection-bracket">[</span><a href="/index.php?title=Parser_test&amp;action=edit&amp;section=1" title="Edit section: Section">edit</a><span class="mw-editsection-bracket">]</span></span></div>
 <p><span class="mw-default-size" typeof="mw:File"><a href="/wiki/File:Foobar.jpg" class="mw-file-description"><img src="http://example.com/images/3/3a/Foobar.jpg" decoding="async" loading="lazy" width="1941" height="220" class="mw-file-element" /></a></span>
 </p>
+!! html/parsoid
+<p><span class="mw-default-size" typeof="mw:File" data-parsoid='{"optList":[]}'><a href="./File:Thumb.png" class="mw-file-description"><img resource="./File:Thumb.png" src="http://example.com/images/e/ea/Thumb.png" decoding="async" loading="lazy" data-file-width="135" data-file-height="135" data-file-type="bitmap" height="135" width="135" class="mw-file-element" data-parsoid='{"a":{"resource":"./File:Thumb.png","height":"135","width":"135"},"sa":{"resource":"File:Thumb.png"}}'/></a></span></p>
+
+<h2 id="Section">Section</h2>
+
+<p><span class="mw-default-size" typeof="mw:File" data-parsoid='{"optList":[]}'><a href="./File:Foobar.jpg" class="mw-file-description"><img resource="./File:Foobar.jpg" src="http://example.com/images/3/3a/Foobar.jpg" decoding="async" loading="lazy" data-file-width="1941" data-file-height="220" data-file-type="bitmap" height="220" width="1941" class="mw-file-element" data-parsoid='{"a":{"resource":"./File:Foobar.jpg","height":"220","width":"1941"},"sa":{"resource":"File:Foobar.jpg"}}'/></a></span></p>
 !! end
 
 !! test
@@ -57,7 +96,7 @@ __TOC__
 == Hello [[File:Foobar.jpg]] ==
 !! metadata
 property[page_image_free]=Foobar.jpg
-!! html
+!! html/php
 <div id="toc" class="toc" role="navigation" aria-labelledby="mw-toc-heading"><input type="checkbox" role="button" id="toctogglecheckbox" class="toctogglecheckbox" style="display:none" /><div class="toctitle" lang="en" dir="ltr"><h2 id="mw-toc-heading">Contents</h2><span class="toctogglespan"><label class="toctogglelabel" for="toctogglecheckbox"></label></span></div>
 <ul>
 <li class="toclevel-1 tocsection-1"><a href="#Hello"><span class="tocnumber">1</span> <span class="toctext">Hello</span></a></li>
@@ -65,4 +104,195 @@ property[page_image_free]=Foobar.jpg
 </div>
 
 <div class="mw-heading mw-heading2"><h2 id="Hello">Hello <span class="mw-default-size" typeof="mw:File"><a href="/wiki/File:Foobar.jpg" class="mw-file-description"><img src="http://example.com/images/3/3a/Foobar.jpg" decoding="async" loading="lazy" width="1941" height="220" class="mw-file-element" /></a></span></h2><span class="mw-editsection"><span class="mw-editsection-bracket">[</span><a href="/index.php?title=Parser_test&amp;action=edit&amp;section=1" title="Edit section: Hello">edit</a><span class="mw-editsection-bracket">]</span></span></div>
+!! html/parsoid
+<meta property="mw:PageProp/toc" data-parsoid='{"src":"__TOC__","magicSrc":"__TOC__"}'/>
+<h2 id="Hello">Hello <span class="mw-default-size" typeof="mw:File" data-parsoid='{"optList":[]}'><a href="./File:Foobar.jpg" class="mw-file-description"><img resource="./File:Foobar.jpg" src="http://example.com/images/3/3a/Foobar.jpg" decoding="async" loading="lazy" data-file-width="1941" data-file-height="220" data-file-type="bitmap" height="220" width="1941" class="mw-file-element" data-parsoid='{"a":{"resource":"./File:Foobar.jpg","height":"220","width":"1941"},"sa":{"resource":"File:Foobar.jpg"}}'/></a></span></h2>
+!! end
+
+!! test
+PageImages with explicit size on a framed image
+!! options
+property=page_image_free
+extension=pageImages
+!! wikitext
+[[File:Foobar.jpg|150px]]
+[[File:Thumb.png|frame|300px]]
+!! metadata
+extension[pageImages]=[
+    {
+        "filename": "Foobar.jpg",
+        "fullwidth": 1941,
+        "fullheight": 220,
+        "handler": {
+            "width": 150
+        },
+        "frame": {
+            "class": ""
+        }
+    },
+    {
+        "filename": "Thumb.png",
+        "fullwidth": 135,
+        "fullheight": 135,
+        "handler": {
+            "width": 300
+        },
+        "frame": {
+            "class": ""
+        }
+    }
+]
+property[page_image_free]=Thumb.png
+!! html/php
+<p><span typeof="mw:File"><a href="/wiki/File:Foobar.jpg" class="mw-file-description"><img src="http://example.com/images/thumb/3/3a/Foobar.jpg/150px-Foobar.jpg" decoding="async" loading="lazy" width="150" height="17" class="mw-file-element" srcset="http://example.com/images/thumb/3/3a/Foobar.jpg/300px-Foobar.jpg 2x" /></a></span>
+</p>
+<figure typeof="mw:File/Frame"><a href="/wiki/File:Thumb.png" class="mw-file-description"><img src="http://example.com/images/e/ea/Thumb.png" decoding="async" loading="lazy" width="135" height="135" class="mw-file-element" /></a><figcaption></figcaption></figure>
+!! html/parsoid
+<p><span typeof="mw:File" data-parsoid='{"optList":[{"ck":"width","ak":"150px"}]}'><a href="./File:Foobar.jpg" class="mw-file-description"><img resource="./File:Foobar.jpg" src="http://example.com/images/thumb/3/3a/Foobar.jpg/150px-Foobar.jpg" decoding="async" loading="lazy" srcset="http://example.com/images/thumb/3/3a/Foobar.jpg/300px-Foobar.jpg 2x" data-file-width="1941" data-file-height="220" data-file-type="bitmap" height="17" width="150" class="mw-file-element" data-parsoid='{"a":{"resource":"./File:Foobar.jpg","height":"17","width":"150"},"sa":{"resource":"File:Foobar.jpg"}}'/></a></span></p>
+<figure typeof="mw:File/Frame" data-parsoid='{"optList":[{"ck":"framed","ak":"frame"},{"ck":"bogus","ak":"300px"}]}'><a href="./File:Thumb.png" class="mw-file-description"><img resource="./File:Thumb.png" src="http://example.com/images/e/ea/Thumb.png" decoding="async" loading="lazy" data-file-width="135" data-file-height="135" data-file-type="bitmap" height="135" width="135" class="mw-file-element" data-parsoid='{"a":{"resource":"./File:Thumb.png","height":"135","width":"135"},"sa":{"resource":"File:Thumb.png"}}'/></a><figcaption></figcaption></figure>
+!! end
+
+!! test
+PageImages with gallery
+!! options
+property=page_image_free
+extension=pageImages
+!! wikitext
+<gallery>
+File:Thumb.png
+File:Foobar.jpg
+</gallery>
+!! metadata
+extension[pageImages]=[
+    {
+        "filename": "Thumb.png",
+        "fullwidth": 135,
+        "fullheight": 135,
+        "handler": {
+            "width": 135
+        },
+        "frame": {
+            "class": ""
+        }
+    },
+    {
+        "filename": "Foobar.jpg",
+        "fullwidth": 1941,
+        "fullheight": 220,
+        "handler": {
+            "width": 1941
+        },
+        "frame": {
+            "class": ""
+        }
+    }
+]
+property[page_image_free]=Foobar.jpg
+!! html/php
+<ul class="gallery mw-gallery-traditional">
+		<li class="gallerybox" style="width: 155px">
+			<div class="thumb" style="width: 150px; height: 150px;"><span typeof="mw:File"><a href="/wiki/File:Thumb.png" class="mw-file-description"><img src="http://example.com/images/thumb/e/ea/Thumb.png/120px-Thumb.png" decoding="async" loading="lazy" width="120" height="120" class="mw-file-element" srcset="http://example.com/images/e/ea/Thumb.png 2x" /></a></span></div>
+			<div class="gallerytext"></div>
+		</li>
+		<li class="gallerybox" style="width: 155px">
+			<div class="thumb" style="width: 150px; height: 150px;"><span typeof="mw:File"><a href="/wiki/File:Foobar.jpg" class="mw-file-description"><img src="http://example.com/images/thumb/3/3a/Foobar.jpg/120px-Foobar.jpg" decoding="async" loading="lazy" width="120" height="14" class="mw-file-element" srcset="http://example.com/images/thumb/3/3a/Foobar.jpg/240px-Foobar.jpg 2x" /></a></span></div>
+			<div class="gallerytext"></div>
+		</li>
+</ul>
+!! html/parsoid
+<ul class="gallery mw-gallery-traditional" typeof="mw:Extension/gallery" about="#mwt1" data-mw='{"name":"gallery","attrs":{},"body":{}}'>
+<li class="gallerybox" style="width: 155px;"><div class="thumb" style="width: 150px; height: 150px;"><span typeof="mw:File" data-parsoid='{"optList":[{"ck":"width","ak":"120x120px"}]}'><a href="./File:Thumb.png" class="mw-file-description"><img resource="./File:Thumb.png" src="http://example.com/images/thumb/e/ea/Thumb.png/120px-Thumb.png" decoding="async" loading="lazy" srcset="http://example.com/images/e/ea/Thumb.png 2x" data-file-width="135" data-file-height="135" data-file-type="bitmap" height="120" width="120" class="mw-file-element" data-parsoid='{"a":{"resource":"./File:Thumb.png","height":"120","width":"120"},"sa":{"resource":"File:Thumb.png"}}'/></a></span></div><div class="gallerytext"></div></li>
+<li class="gallerybox" style="width: 155px;"><div class="thumb" style="width: 150px; height: 150px;"><span typeof="mw:File" data-parsoid='{"optList":[{"ck":"width","ak":"120x120px"}]}'><a href="./File:Foobar.jpg" class="mw-file-description"><img resource="./File:Foobar.jpg" src="http://example.com/images/thumb/3/3a/Foobar.jpg/120px-Foobar.jpg" decoding="async" loading="lazy" srcset="http://example.com/images/thumb/3/3a/Foobar.jpg/240px-Foobar.jpg 2x" data-file-width="1941" data-file-height="220" data-file-type="bitmap" height="14" width="120" class="mw-file-element" data-parsoid='{"a":{"resource":"./File:Foobar.jpg","height":"14","width":"120"},"sa":{"resource":"File:Foobar.jpg"}}'/></a></span></div><div class="gallerytext"></div></li>
+</ul>
+!! end
+
+!! test
+PageImages with missing file
+!! options
+property=page_image_free
+extension=pageImages
+!! wikitext
+[[File:Missing.jpg|class=pageimage]]
+[[File:Thumb.png]]
+!! metadata
+extension[pageImages]=[
+    {
+        "filename": "Thumb.png",
+        "fullwidth": 135,
+        "fullheight": 135,
+        "handler": {
+            "width": 135
+        },
+        "frame": {
+            "class": ""
+        }
+    }
+]
+property[page_image_free]=Thumb.png
+!! html/php
+<p><span class="mw-default-size pageimage" typeof="mw:Error mw:File"><a href="/index.php?title=Special:Upload&amp;wpDestFile=Missing.jpg" class="new" title="File:Missing.jpg"><span class="mw-file-element mw-broken-media">File:Missing.jpg</span></a></span>
+<span class="mw-default-size" typeof="mw:File"><a href="/wiki/File:Thumb.png" class="mw-file-description"><img src="http://example.com/images/e/ea/Thumb.png" decoding="async" loading="lazy" width="135" height="135" class="mw-file-element" /></a></span>
+</p>
+!! html/parsoid
+<p><span class="mw-default-size pageimage" typeof="mw:Error mw:File" data-parsoid='{"optList":[{"ck":"class","ak":"class=pageimage"}]}' data-mw='{"errors":[{"key":"apierror-filedoesnotexist","message":"This image does not exist."}]}'><a href="./Special:Upload?wpDestFile=Missing.jpg" class="new" title="File:Missing.jpg"><span class="mw-file-element mw-broken-media" resource="./File:Missing.jpg" data-parsoid='{"a":{"resource":"./File:Missing.jpg"},"sa":{"resource":"File:Missing.jpg"}}'>File:Missing.jpg</span></a></span>
+<span class="mw-default-size" typeof="mw:File" data-parsoid='{"optList":[]}'><a href="./File:Thumb.png" class="mw-file-description"><img resource="./File:Thumb.png" src="http://example.com/images/e/ea/Thumb.png" decoding="async" loading="lazy" data-file-width="135" data-file-height="135" data-file-type="bitmap" height="135" width="135" class="mw-file-element" data-parsoid='{"a":{"resource":"./File:Thumb.png","height":"135","width":"135"},"sa":{"resource":"File:Thumb.png"}}'/></a></span></p>
+!! end
+
+!! test
+PageImages with alignment, border and class options
+!! options
+property=page_image_free
+extension=pageImages
+!! wikitext
+[[File:Foobar.jpg|middle]]
+[[File:Thumb.png|left|border|class=pageimage]]
+!! metadata
+extension[pageImages]=[
+    {
+        "filename": "Foobar.jpg",
+        "fullwidth": 1941,
+        "fullheight": 220,
+        "handler": {
+            "width": 1941
+        },
+        "frame": {
+            "class": ""
+        }
+    },
+    {
+        "filename": "Thumb.png",
+        "fullwidth": 135,
+        "fullheight": 135,
+        "handler": {
+            "width": 135
+        },
+        "frame": {
+            "class": "pageimage"
+        }
+    }
+]
+property[page_image_free]=Thumb.png
+!! html/php
+<p><span class="mw-default-size mw-valign-middle" typeof="mw:File"><a href="/wiki/File:Foobar.jpg" class="mw-file-description"><img src="http://example.com/images/3/3a/Foobar.jpg" decoding="async" loading="lazy" width="1941" height="220" class="mw-file-element" /></a></span>
+</p>
+<figure class="mw-default-size mw-halign-left mw-image-border pageimage" typeof="mw:File"><a href="/wiki/File:Thumb.png" class="mw-file-description"><img src="http://example.com/images/e/ea/Thumb.png" decoding="async" loading="lazy" width="135" height="135" class="mw-file-element" /></a><figcaption></figcaption></figure>
+!! html/parsoid
+<p><span class="mw-default-size mw-valign-middle" typeof="mw:File" data-parsoid='{"optList":[{"ck":"middle","ak":"middle"}]}'><a href="./File:Foobar.jpg" class="mw-file-description"><img resource="./File:Foobar.jpg" src="http://example.com/images/3/3a/Foobar.jpg" decoding="async" loading="lazy" data-file-width="1941" data-file-height="220" data-file-type="bitmap" height="220" width="1941" class="mw-file-element" data-parsoid='{"a":{"resource":"./File:Foobar.jpg","height":"220","width":"1941"},"sa":{"resource":"File:Foobar.jpg"}}'/></a></span></p>
+<figure class="mw-default-size mw-image-border mw-halign-left pageimage" typeof="mw:File" data-parsoid='{"optList":[{"ck":"left","ak":"left"},{"ck":"border","ak":"border"},{"ck":"class","ak":"class=pageimage"}]}'><a href="./File:Thumb.png" class="mw-file-description"><img resource="./File:Thumb.png" src="http://example.com/images/e/ea/Thumb.png" decoding="async" loading="lazy" data-file-width="135" data-file-height="135" data-file-type="bitmap" height="135" width="135" class="mw-file-element" data-parsoid='{"a":{"resource":"./File:Thumb.png","height":"135","width":"135"},"sa":{"resource":"File:Thumb.png"}}'/></a><figcaption></figcaption></figure>
+!! end
+
+!! test
+PageImages ignores media elements that are not files
+!! options
+wgRawHtml=1
+!! wikitext
+[[File:Foobar.jpg]]
+<html><span>map</span><figure typeof="mw:File/Thumb"><a><img class="mw-file-element" src="http://example.com/map.png" width="100" height="100"></a></figure></html>
+!! html/php
+<p><span class="mw-default-size" typeof="mw:File"><a href="/wiki/File:Foobar.jpg" class="mw-file-description"><img src="http://example.com/images/3/3a/Foobar.jpg" decoding="async" loading="lazy" width="1941" height="220" class="mw-file-element" /></a></span>
+<span>map</span></p><figure typeof="mw:File/Thumb"><a><img class="mw-file-element" src="http://example.com/map.png" width="100" height="100" /></a></figure>
+<p class="mw-empty-elt"></p>
+!! html/parsoid
+<p><span class="mw-default-size" typeof="mw:File"><a class="mw-file-description" href="./File:Foobar.jpg"><img class="mw-file-element" data-file-height="220" data-file-type="bitmap" data-file-width="1941" decoding="async" height="220" loading="lazy" resource="./File:Foobar.jpg" src="http://example.com/images/3/3a/Foobar.jpg" width="1941"/></a></span></p>
+<span data-mw='{"name":"html","attrs":{},"body":{"extsrc":"&lt;span>map&lt;/span>&lt;figure typeof=\"mw:File/Thumb\">&lt;a>&lt;img class=\"mw-file-element\" src=\"http://example.com/map.png\" width=\"100\" height=\"100\">&lt;/a>&lt;/figure>"}}' typeof="mw:Extension/html">map</span><figure typeof="mw:File/Thumb"><a><img class="mw-file-element" height="100" src="http://example.com/map.png" width="100"/></a></figure>
 !! end

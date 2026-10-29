@@ -1,0 +1,5 @@
+{
+	"PageImages with explicit size on a framed image": {
+		"metadata": "extension[pageImages]=[\n    {\n        \"filename\": \"Foobar.jpg\",\n        \"fullwidth\": 1941,\n        \"fullheight\": 220,\n        \"handler\": {\n            \"width\": 150\n        },\n        \"frame\": {\n            \"class\": \"\"\n        }\n    },\n    {\n        \"filename\": \"Thumb.png\",\n        \"fullwidth\": 135,\n        \"fullheight\": 135,\n        \"handler\": {\n            \"width\": 135\n        },\n        \"frame\": {\n            \"class\": \"\"\n        }\n    }\n]\nproperty[page_image_free]=Foobar.jpg"
+	}
+}
