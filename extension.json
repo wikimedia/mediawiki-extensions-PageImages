@@ -36,8 +36,7 @@
 		"ParserAfterTidy": "parser",
 		"ParserModifyImageHTML": "parser",
 		"ParserTestGlobals": "parser",
-		"SearchResultProvideThumbnail": "search",
-		"SpecialMobileEditWatchlist::images": "mobile"
+		"SearchResultProvideThumbnail": "search"
 	},
 	"HookHandlers": {
 		"main": {
@@ -63,9 +62,6 @@
 				"PageProps",
 				"RepoGroup"
 			]
-		},
-		"mobile": {
-			"class": "PageImages\\Hooks\\MobileFrontendHookHandlers"
 		}
 	},
 	"JobClasses": {
