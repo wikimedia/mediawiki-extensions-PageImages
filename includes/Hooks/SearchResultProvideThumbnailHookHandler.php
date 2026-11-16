@@ -57,9 +57,8 @@ class SearchResultProvideThumbnailHookHandler implements SearchResultProvideThum
 	public function onSearchResultProvideThumbnail( array $pageIdentities, &$results, ?int $size = null ): void {
 		$fileNamesByPageId = $this->getFileNamesByPageId( $pageIdentities );
 		$results ??= [];
-		$files = $fileNamesByPageId ? $this->repoGroup->findFiles( $fileNamesByPageId ) : [];
 		foreach ( $fileNamesByPageId as $pageId => $fileName ) {
-			$file = $files[$fileName] ?? null;
+			$file = $this->repoGroup->findFile( $fileName );
 			if ( !$file ) {
 				continue;
 			}
