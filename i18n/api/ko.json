@@ -17,5 +17,5 @@
 	"apihelp-query+pageimages-param-limit": "반환할 페이지 수에 대한 속성입니다.",
 	"apihelp-query+pageimages-param-license": "문서 이미지 사용 권한을 특정 라이선스 유형으로 제한합니다:",
 	"apihelp-query+pageimages-paramvalue-license-free": "무료 이미지만입니다.",
-	"apihelp-query+pageimages-paramvalue-license-any": "무료이든 아니든 최고의 이미지만입니다."
+	"apihelp-query+pageimages-paramvalue-license-any": "자유이든 아니든 최고의 이미지만입니다."
 }
